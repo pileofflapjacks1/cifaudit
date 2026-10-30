@@ -51,7 +51,10 @@ def main(argv=None):
         return 2
 
     tally = collections.Counter()
+    kinds = {}
     sev = collections.Counter()
+    rsev = collections.Counter()
+    struct_clean = 0
     per_file = []
     clean = crashed = unparseable = 0
     t0 = time.time()
@@ -77,10 +80,17 @@ def main(argv=None):
         found = sorted({f["code"] for f in d["findings"]})
         if not found:
             clean += 1
+        if not [f for f in d["findings"]
+                if f.get("kind", "structural") == "structural"]:
+            struct_clean += 1
         for code in found:
             tally[code] += 1
         for f in d["findings"]:
-            sev[f["severity"]] += 1
+            kinds[f["code"]] = f.get("kind", "structural")
+            if kinds[f["code"]] == "reporting":
+                rsev[f["severity"]] += 1
+            else:
+                sev[f["severity"]] += 1
         rec.update(status=d["status"], counts=d["counts"], codes=found)
         per_file.append(rec)
 
@@ -92,16 +102,20 @@ def main(argv=None):
     print()
     print("- audited: **%d**   unparseable: %d   crashed: **%d**" %
           (audited, unparseable, crashed))
-    print("- files with zero findings: **%d/%d (%.0f%%)**" %
+    print("- files with zero findings of any kind: **%d/%d (%.0f%%)**" %
           (clean, audited, 100.0 * clean / audited if audited else 0))
-    print("- findings by severity: %s" % (dict(sev) or "none"))
+    print("- files with no STRUCTURAL findings: **%d/%d (%.0f%%)**" %
+          (struct_clean, audited, 100.0 * struct_clean / audited if audited else 0))
+    print("- structural findings by severity: %s" % (dict(sev) or "none"))
+    print("- reporting findings by severity: %s" % (dict(rsev) or "none"))
     print("- %.1fs total, %.2fs per file" % (elapsed, elapsed / n))
     print()
-    print("| check | files | rate |")
-    print("|---|---|---|")
+    print("| check | kind | files | rate |")
+    print("|---|---|---|---|")
     for code, k in tally.most_common():
-        print("| `%s` | %d/%d | %.0f%% |" %
-              (code, k, audited, 100.0 * k / audited if audited else 0))
+        print("| `%s` | %s | %d/%d | %.0f%% |" %
+              (code, kinds.get(code, "structural"), k, audited,
+               100.0 * k / audited if audited else 0))
     if not tally:
         print("| _none fired_ | 0 | 0% |")
 
@@ -110,7 +124,9 @@ def main(argv=None):
             json.dump({"directory": a.directory, "n": n, "audited": audited,
                        "clean": clean, "crashed": crashed,
                        "unparseable": unparseable, "seconds": elapsed,
-                       "rates": dict(tally), "severity": dict(sev),
+                       "structural_clean": struct_clean,
+                       "rates": dict(tally), "kinds": kinds,
+                       "severity": dict(sev), "reporting_severity": dict(rsev),
                        "files": per_file}, fh, indent=2)
         print("\nwrote %s" % a.json_out, file=sys.stderr)
     return 1 if crashed else 0

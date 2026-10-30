@@ -96,3 +96,43 @@ def test_thresholds_are_overridable(cif):
     assert "CELL_VOLUME_MISMATCH" in {f["code"] for f in default["findings"]}
     loose = audit(cif("bad_volume"), options={"volume_rel_tol": 1.0}).to_dict()
     assert "CELL_VOLUME_MISMATCH" not in {f["code"] for f in loose["findings"]}
+
+
+def test_findings_are_split_into_structural_and_reporting(run):
+    """A missing optional data name is not the same kind of thing as an NPD atom.
+
+    Over 500 deposited COD structures, _chemical_formula_moiety was absent in
+    74% of files and _cell_volume lacked a standard uncertainty in 40%. Counting
+    those alongside structural problems made the structural signal unreadable.
+    """
+    from cifaudit.model import REPORTING, STRUCTURAL
+    r = run("no_cell")
+    assert "reporting_counts" in r
+    for f in r["findings"]:
+        assert f["kind"] in (REPORTING, STRUCTURAL)
+
+
+def test_reporting_findings_do_not_inflate_structural_counts(cif):
+    from cifaudit import audit
+    # triclinic.cif has no _cell_volume and no moiety formula: reporting only.
+    d = audit(cif("triclinic")).to_dict()
+    reporting = [f for f in d["findings"] if f["kind"] == "reporting"]
+    assert reporting, "expected reporting findings in this fixture"
+    assert sum(d["counts"].values()) == len(
+        [f for f in d["findings"] if f["kind"] == "structural"])
+
+
+def test_absent_optional_metadata_is_reporting_not_structural(cif):
+    from cifaudit import audit
+    d = audit(cif("triclinic")).to_dict()
+    by_code = {f["code"]: f["kind"] for f in d["findings"]}
+    for code in ("FORMULA_MOIETY_ABSENT", "CELL_VOLUME_ABSENT"):
+        if code in by_code:
+            assert by_code[code] == "reporting", code
+
+
+def test_npd_is_structural(cif):
+    from cifaudit import audit
+    d = audit(cif("npd")).to_dict()
+    npd = [f for f in d["findings"] if f["code"] == "ADP_NPD"][0]
+    assert npd["kind"] == "structural"

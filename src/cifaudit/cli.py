@@ -14,19 +14,29 @@ def _text_report(d):
     out = []
     out.append("datablock: %s   status: %s" % (d["datablock"], d["status"]))
     c = d["counts"]
-    out.append("findings:  %d error, %d warn, %d info"
+    rc = d.get("reporting_counts", {"error": 0, "warn": 0, "info": 0})
+    out.append("structural: %d error, %d warn, %d info"
                % (c["error"], c["warn"], c["info"]))
+    out.append("reporting:  %d error, %d warn, %d info   "
+               "(the CIF does not say something, or says it inconsistently)"
+               % (rc["error"], rc["warn"], rc["info"]))
     out.append("")
     if not d["findings"]:
         out.append("  no findings from the checks that ran")
-    for f in d["findings"]:
-        cc = ", ".join(x["code"] for x in f["checkcif"])
-        out.append("  [%-5s] %s" % (f["severity"], f["code"]))
-        out.append("          %s" % f["message"])
-        if cc:
-            out.append("          checkCIF: %s" % cc)
-        if f["sites"]:
-            out.append("          sites: %s" % ", ".join(f["sites"][:8]))
+    for group, title in (("structural", "STRUCTURAL"), ("reporting", "REPORTING")):
+        rows = [f for f in d["findings"] if f.get("kind", "structural") == group]
+        if not rows:
+            continue
+        out.append("%s:" % title)
+        for f in rows:
+            cc = ", ".join(x["code"] for x in f["checkcif"])
+            out.append("  [%-5s] %s" % (f["severity"], f["code"]))
+            out.append("          %s" % f["message"])
+            if cc:
+                out.append("          checkCIF: %s" % cc)
+            if f["sites"]:
+                out.append("          sites: %s" % ", ".join(f["sites"][:8]))
+        out.append("")
     out.append("")
     out.append("NOT TESTED (%d areas):" % len(d["not_tested"]))
     for n in d["not_tested"]:
@@ -54,8 +64,12 @@ def main(argv=None):
                         % ", ".join(sorted(DEFAULTS)))
     p.add_argument("--fail-on", choices=["error", "warn", "never"],
                    default="error",
-                   help="exit non-zero when a finding at this level or above is "
-                        "present (default: error)")
+                   help="exit non-zero when a STRUCTURAL finding at this level "
+                        "or above is present (default: error). Reporting "
+                        "findings never affect the exit code unless "
+                        "--fail-on-reporting is given.")
+    p.add_argument("--fail-on-reporting", action="store_true",
+                   help="also count reporting findings towards the exit code")
     p.add_argument("--version", action="version", version=__version__)
     a = p.parse_args(argv)
 
@@ -105,7 +119,10 @@ def main(argv=None):
                 print(path)
                 print("=" * 72)
             print(_text_report(d))
-        c = d["counts"]
+        c = dict(d["counts"])
+        if a.fail_on_reporting:
+            for k, v in d.get("reporting_counts", {}).items():
+                c[k] = c.get(k, 0) + v
         if c[ERROR]:
             worst = min(worst, 1)
         elif c[WARN]:
