@@ -100,7 +100,58 @@ def _pairwise_min(cell, sites):
     return dists
 
 
-def bond_graph(sites, cell, radius_fn, tolerance, xh_max):
+def exclusive_pairs(sites, dists, max_sep, occ_tol, radius_fn=None,
+                    bond_fraction=0.5):
+    """Pairs of sites that are mutually exclusive ALTERNATIVES, not neighbours.
+
+    Two atoms can share one crystallographic position with partial occupancies -
+    COD 1000241 has Sb1 and W1 both at (0,0,0) on Wyckoff 16c with occupancy 0.5
+    each. In any given unit cell only one is present. Treating them as two
+    co-existing atoms makes every such site read as atoms 0.000 A apart, which
+    was 27% of 500 deposited structures.
+
+    Two criteria, either sufficient:
+
+    * DECLARED - different `_atom_site_disorder_group` within the same
+      `_atom_site_disorder_assembly`. 274 of those 500 files declare groups.
+    * GEOMETRIC - within `max_sep` of each other, AND closer than any bond
+      between those two elements could be, AND occupancies that cannot both be
+      fully present (sum <= 1). This covers substitution at one site (separation
+      0) and split positions a few tenths of an Angstrom apart.
+
+      The bond guard is essential. Without it, a disordered C-H pair at 0.930 A
+      with both occupancies 0.5 sums to exactly 1.0 and was classified as the
+      hydrogen being an "alternative" to the carbon it is bonded to - which
+      orphaned 55 more files with ISOLATED_H than it fixed. Alternatives occupy
+      the SAME position; they are never a bond length apart.
+
+    Full-occupancy atoms on top of each other are NOT excluded: that is a real
+    error and must still be reported.
+    """
+    excl = set()
+    _missing = ("", ".", "?")
+    for (i, j), (d, _img) in dists.items():
+        a, b = sites[i], sites[j]
+        ga = (getattr(a, "disorder_group", None) or "").strip()
+        gb = (getattr(b, "disorder_group", None) or "").strip()
+        if ga not in _missing and gb not in _missing and ga != gb:
+            aa = (getattr(a, "disorder_assembly", None) or "").strip()
+            ab = (getattr(b, "disorder_assembly", None) or "").strip()
+            if aa == ab:
+                excl.add((i, j))
+                continue
+        if d > max_sep or (a.occ + b.occ) > 1.0 + occ_tol:
+            continue
+        if radius_fn is not None:
+            ra, rb = radius_fn(a.element), radius_fn(b.element)
+            if ra is not None and rb is not None and d > bond_fraction * (ra + rb):
+                continue        # far enough apart to be a bond, not one site
+        excl.add((i, j))
+    return excl
+
+
+def bond_graph(sites, cell, radius_fn, tolerance, xh_max,
+               shared_site_max=0.0, occ_tol=1e-3, bond_fraction=0.5):
     """Pairwise shortest distances, the covalent bond graph, and H candidates.
 
     Heavy-atom bonding uses an ADDITIVE tolerance, which is the convention the
@@ -126,7 +177,10 @@ def bond_graph(sites, cell, radius_fn, tolerance, xh_max):
     H...H is never treated as a bond. Dihydrogen complexes exist and are not
     modelled.
 
-    Returns (dists, adj, h_candidates), where h_candidates maps an H index to
+    Mutually exclusive alternatives (see exclusive_pairs) never bond to one
+    another, and the set is returned so callers apply the same definition.
+
+    Returns (dists, adj, h_candidates, exclusive). h_candidates maps an H index to
     every heavy atom within xh_max as (index, distance) - so PLAT303's
     "more than one connection" case can still be reported even though only the
     nearest is bonded.
@@ -137,8 +191,12 @@ def bond_graph(sites, cell, radius_fn, tolerance, xh_max):
     radii = [radius_fn(s.element) for s in sites]
     is_h = [(s.element or "").upper() in ("H", "D") for s in sites]
     h_candidates = {}
+    excl = exclusive_pairs(sites, dists, shared_site_max, occ_tol,
+                           radius_fn, bond_fraction)
 
     for (i, j), (d, _img) in dists.items():
+        if (i, j) in excl:
+            continue        # mutually exclusive alternatives never bond
         if is_h[i] and is_h[j]:
             continue
         if is_h[i] or is_h[j]:
@@ -156,7 +214,7 @@ def bond_graph(sites, cell, radius_fn, tolerance, xh_max):
         adj[h_idx].add(x_idx)
         adj[x_idx].add(h_idx)
 
-    return (dists, adj, h_candidates)
+    return (dists, adj, h_candidates, excl)
 
 
 def within_bonds(adj, max_depth):

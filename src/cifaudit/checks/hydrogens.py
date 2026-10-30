@@ -61,8 +61,10 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
 
     usable = [s for s in sites
               if s.element and all(x is not None for x in s.fract)]
-    _dists, adj, h_cands = bond_graph(
-        usable, cell, radius, ctx["bond_tolerance"], ctx["xh_bond_max"])
+    _dists, adj, h_cands, excl = bond_graph(
+        usable, cell, radius, ctx["bond_tolerance"], ctx["xh_bond_max"],
+        ctx["shared_site_max"], ctx["occ_tol"],
+        ctx["shared_site_bond_fraction"])
 
     for idx, s in enumerate(usable):
         if s.element not in ("H", "D"):
@@ -82,7 +84,21 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
         x_idx, d = min(cands, key=lambda t: t[1])
         x = usable[x_idx]
 
-        if len(cands) > 1:
+        # Two candidates that are alternatives for one another are one site,
+        # not two connections. COD 1000241's H sat on the shared Sb/W position.
+        def _alt(p, q):
+            return (min(p, q), max(p, q)) in excl
+
+        groups = []
+        for k, dd in sorted(cands, key=lambda t: t[1]):
+            for grp in groups:
+                if all(_alt(k, m) for m, _ in grp):
+                    grp.append((k, dd))
+                    break
+            else:
+                groups.append([(k, dd)])
+
+        if len(groups) > 1:
             # PLAT303: "Hydrogen atoms are generally connected to only one other
             # atom. A hydrogen atom between two oxygen atoms is a special case.
             # Investigate whether this hydrogen atom is better described with a
@@ -92,17 +108,18 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             others = sorted(cands, key=lambda t: t[1])
             f.append(Finding(
                 code="H_MULTIPLE_CONNECTIONS", severity=INFO,
-                message="H atom %s has %d heavy atoms within %.2f A (%s). It is "
-                        "bonded to the nearest. A hydrogen between two "
-                        "electronegative atoms may be better modelled as "
+                message="H atom %s has %d distinct heavy sites within %.2f A "
+                        "(%s). It is bonded to the nearest. A hydrogen between "
+                        "two electronegative atoms may be better modelled as "
                         "disorder over two partially occupied sites."
-                        % (s.label, len(cands), ctx["xh_bond_max"],
+                        % (s.label, len(groups), ctx["xh_bond_max"],
                            ", ".join("%s %.2f A" % (usable[k].label, dd)
                                      for k, dd in others[:4])),
                 plat=["PLAT303"],
                 based_on=["_atom_site_fract_x"],
                 sites=[s.label] + [usable[k].label for k, _ in others[:4]],
                 evidence={"n_candidates": len(cands),
+                          "n_distinct_sites": len(groups),
                           "bonded_to": x.label,
                           "distance": round(d, 4)}))
 

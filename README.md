@@ -218,12 +218,32 @@ a false-positive rate. And it is in-sample again, because those fixes were made
 in response to these 500 files. A third independent draw is the test that would
 confirm it; it costs about three minutes now and has not been done.
 
-**The largest remaining false-positive source is not a threshold.**
-`ATOMS_TOO_CLOSE` is stuck at 27% because cifaudit does not model **shared
-crystallographic sites** — two elements occupying one position with partial
-occupancies, which is routine inorganic chemistry. Every such site reads as atoms
-on top of each other. Treat `ATOMS_TOO_CLOSE`, `H_MULTIPLE_CONNECTIONS` and part
-of `FORMULA_SITES_MISMATCH` as unreliable on structures with mixed occupancy.
+### Shared sites
+
+Two elements can occupy one crystallographic position with partial occupancies —
+routine inorganic chemistry, and modelling them as co-existing atoms made every
+such site read as atoms 0.000 Å apart. They are now treated as mutually
+exclusive **alternatives**: never bonded, excused from distance tests, but still
+required to have occupancies that can coexist (`SHARED_SITE_OCC_GT_ONE`). Atoms
+flagged `_atom_site_calc_flag = dum` are dropped from geometry and kept in the
+composition.
+
+| | before | after |
+|---|---|---|
+| no structural findings | 207/500 (41%) | **231/500 (46%)** |
+| structural errors | 885 | **114** |
+| `ATOMS_TOO_CLOSE` | 137 (27%) | **30 (6%)** |
+| `H_MULTIPLE_CONNECTIONS` | 65 | **30** |
+
+The first attempt at this made things *worse* (36% clean) in two ways worth
+knowing: a disordered C–H at 0.930 Å with both occupancies 0.5 sums to exactly
+1.0 and was classified as the hydrogen being an alternative to its own carbon, and
+`_atom_site_symmetry_multiplicity` turns out to carry two incompatible meanings in
+the wild. Both are described in the write-up, and both have regression tests.
+
+Residual false positives against the previous baseline: `ISOLATED_H` 21 vs 10,
+`SHORT_HH_CONTACT` 34 vs 27, `ISOLATED_ATOM` 38 vs 33 — not yet checked case by
+case.
 
 Full write-up in
 [`data/processed/cod_benchmark.md`](data/processed/cod_benchmark.md).
@@ -297,7 +317,7 @@ asked a different question.
 pip install -e ".[test]" && pytest
 ```
 
-89 tests. Every planted defect has a fixture; the clean reference must produce
+97 tests. Every planted defect has a fixture; the clean reference must produce
 zero findings. Several exist because they caught real bugs:
 
 - `test_geminal_pairs_are_not_short_contacts` — the first implementation flagged a

@@ -215,3 +215,89 @@ The 41% is therefore an in-sample figure again. A third independent draw is the
 test that would confirm it, and it has not been done — it now costs about three
 minutes of compute, so there is no excuse other than that the conventions should
 settle first.
+
+---
+
+# Shared crystallographic sites
+
+The largest remaining false-positive source, and not a threshold.
+`ATOMS_TOO_CLOSE` had been stuck at 137/500 (27%).
+
+## Three distinct problems in one file
+
+COD 1000241 contains all three:
+
+```
+O1  O2-  48 f 0.3148(4) 0.125     0.125     1.   0 d
+Sb1 Sb5+ 16 c 0.        0.        0.        0.5  0 d
+W1  W6+  16 c 0.        0.        0.        0.5  0 d
+O2  O2-  32 e 0.4179(7) 0.4179(7) 0.4179(7) 0.25 2 d
+H1  H1+  32 ? -1.       -1.       -1.       0.75 0 dum
+```
+
+1. **Sb1 and W1 share one site** — both at the origin on Wyckoff 16c, occupancy
+   0.5 each. Only one is present in any unit cell. Modelled as co-existing
+   atoms, every such site read as atoms 0.000 Å apart.
+2. **H1 is a dummy** — `_atom_site_calc_flag` = `dum`, coordinates `(-1,-1,-1)`,
+   which wrap onto that same shared site. That single placeholder produced the
+   "H bonded to two heavy atoms 0.000 Å away" finding.
+3. **A dummy still counts towards composition.** Dropping H1 from geometry made
+   the formula check fail: declared `H3 O7 Sb W`, computed 0 H. Keeping it gave
+   1.5, because gemmi expands the meaningless coordinates to 16 copies while the
+   CIF declares multiplicity **32**: 32 × 0.75 / 8 = exactly 3.
+
+## What was implemented
+
+- **Mutual exclusion.** Two sites are alternatives when the CIF declares it
+  (different `_atom_site_disorder_group` in one assembly — 274 of the 500 files
+  declare groups) or the geometry implies it. Alternatives never bond and are
+  excused from every distance test. Two *full*-occupancy atoms on one point are
+  still an error.
+- **Dummy atoms** are dropped from geometry, kept in composition.
+- **`SHARED_SITE_OCC_GT_ONE`**, a new error, replaces what was being
+  mis-reported: atoms sharing a position whose occupancies oversubscribe it.
+  Fires on 2 of the 500.
+
+## The first version made things worse
+
+| | conventions | shared v1 | shared v2 |
+|---|---|---|---|
+| no structural findings | 207/500 (41%) | **181 (36%)** | **231 (46%)** |
+| structural errors | 885 | 82 | 114 |
+| `ATOMS_TOO_CLOSE` | 137 | 16 | 30 |
+| `H_MULTIPLE_CONNECTIONS` | 65 | 15 | 30 |
+| `FORMULA_SITES_MISMATCH` | 94 | **167** | 85 |
+| `ISOLATED_H` | 10 | **64** | 21 |
+
+v1 cut errors ten-fold and still came out *behind* on clean files. Two causes,
+both found by tracing individual files rather than reasoning about them — and
+the first two hypotheses were wrong:
+
+**A disordered bond is not a shared site.** COD 4321002 has H4 at 0.930 Å from
+C4, both occupancy 0.5. Their sum is exactly 1.0, so "close together and cannot
+both be fully present" classified the hydrogen as an alternative to the carbon it
+is bonded to, orphaning it — 55 more files with `ISOLATED_H` than the rule fixed.
+Atoms sharing a site are never a bond length apart, so an alternative must also
+be closer than `shared_site_bond_fraction` × (r_i + r_j), default 0.5. For C–H
+that is 0.535 Å; for Sb/W at 0.0 Å the exclusion still applies.
+
+**`_atom_site_symmetry_multiplicity` has two incompatible meanings** — Wyckoff
+multiplicity in IUCr-style inorganic CIFs, site-symmetry order in SHELX-style
+ones. Preferring it for every site was right for COD 1000241 and wrong for the
+whole `4321xxx` range, taking `FORMULA_SITES_MISMATCH` from 94 to 167. It is now
+used only for dummy sites, whose coordinates cannot be expanded at all.
+
+## Where it stands
+
+**231/500 (46%)** of deposited structures have no structural finding, against 41%
+before this work. Errors are down from 885 to 114 and total findings by about
+40%. `ATOMS_TOO_CLOSE` is 6%, from 27%.
+
+Honest residuals against the 41% baseline: `ISOLATED_H` is 21 against 10,
+`SHORT_HH_CONTACT` 34 against 27, `ISOLATED_ATOM` 38 against 33. Some of that is
+correct — dropping a dummy legitimately orphans a hydrogen whose only neighbour
+was the placeholder — but it has not been checked case by case, so treat those
+three as still carrying false positives.
+
+Everything here remains **in-sample**: these 500 files drove the fixes. A third
+independent draw is still the test that would confirm any of it.

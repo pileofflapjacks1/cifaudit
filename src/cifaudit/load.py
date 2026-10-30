@@ -107,7 +107,18 @@ class Site:
     multiplicity: Optional[float]
     disorder_group: Optional[str]
     disorder_assembly: Optional[str]
+    calc_flag: Optional[str] = None          # d | calc | dum  (dum = dummy atom)
     uij: Optional[Dict[str, float]] = None   # U11..U23 when anisotropic
+
+    @property
+    def is_dummy(self) -> bool:
+        """_atom_site_calc_flag 'dum' marks a placeholder, not a real atom.
+
+        COD 1000241 carries `H1 ... -1. -1. -1. 0.75 0 dum`, which wraps onto
+        the Sb/W site at the origin and read as a hydrogen bonded to two heavy
+        atoms 0.000 A away.
+        """
+        return (self.calc_flag or "").strip().lower().startswith("dum")
 
     @property
     def is_hydrogen(self) -> bool:
@@ -177,6 +188,7 @@ _SITE_LOOP = [
     "?_atom_site_adp_type", "?_atom_site_site_symmetry_multiplicity",
     "?_atom_site_symmetry_multiplicity",
     "?_atom_site_disorder_group", "?_atom_site_disorder_assembly",
+    "?_atom_site_calc_flag",
 ]
 
 _ANISO_LOOP = ["_atom_site_aniso_label",
@@ -277,11 +289,12 @@ def load(text: str, datablock: Optional[str] = None) -> Block:
             mult, _ = parse_number(row[9] if row.has(9) else None)
         dgroup = sanitise(gemmi.cif.as_string(row[10])) if row.has(10) else None
         dasm = sanitise(gemmi.cif.as_string(row[11])) if row.has(11) else None
+        cflag = sanitise(gemmi.cif.as_string(row[12])) if row.has(12) else None
         sites.append(Site(
             label=label, type_symbol=tsym, element=element_of(tsym, label),
             fract=(fx, fy, fz), occupancy=occ, occupancy_su=occ_su, uiso=uiso,
             adp_type=adp, multiplicity=mult, disorder_group=dgroup,
-            disorder_assembly=dasm, uij=aniso.get(label)))
+            disorder_assembly=dasm, calc_flag=cflag, uij=aniso.get(label)))
 
     symops = []
     for tag in ("_symmetry_equiv_pos_as_xyz", "_space_group_symop_operation_xyz"):

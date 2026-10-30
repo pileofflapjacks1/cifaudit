@@ -33,6 +33,14 @@ DEFAULTS: Dict[str, Any] = {
     "hbond_min": 1.2,           # A; below this an H...acceptor approach is
                                 # too short even for a hydrogen bond
     "bond_tolerance": 0.45,     # A; d <= r_cov_i + r_cov_j + tol => bonded
+    "shared_site_max": 1.0,     # A; partial-occupancy atoms this close, whose
+                                # occupancies cannot both be full, are treated
+                                # as mutually exclusive alternatives
+    "coincident_max": 0.10,     # A; closer than this counts as the SAME site
+    "shared_site_bond_fraction": 0.5,
+                                # alternatives must be closer than this fraction
+                                # of (r_i + r_j): atoms sharing a site are never
+                                # a bond length apart
     "xh_bond_max": 1.35,        # A; an H bonds to its nearest heavy atom within
                                 # this. Metal hydrides reach ~1.8 A and will
                                 # need this raised.

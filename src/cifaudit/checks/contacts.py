@@ -49,8 +49,10 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
         return (f, nt)
 
     hard = ctx["hard_floor"]
-    dists, adj, _h_cands = bond_graph(
-        sites, cell, radius, ctx["bond_tolerance"], ctx["xh_bond_max"])
+    dists, adj, _h_cands, excl = bond_graph(
+        sites, cell, radius, ctx["bond_tolerance"], ctx["xh_bond_max"],
+        ctx["shared_site_max"], ctx["occ_tol"],
+        ctx["shared_site_bond_fraction"])
     near = within_bonds(adj, ctx["exclude_within_bonds"])
 
     # A site sitting on its own lattice image means the cell or the coordinates
@@ -88,6 +90,32 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
     for (i, j), (d, img) in sorted(dists.items(), key=lambda kv: kv[1][0]):
         a, b = sites[i], sites[j]
         pair = tuple(sorted((a.label, b.label)))
+        if (i, j) in excl:
+            continue    # mutually exclusive alternatives: never both present
+
+        # Coincident but NOT excluded means the occupancies do not work out.
+        # Two full-occupancy atoms on one point is a different error from a
+        # shared site whose partial occupancies oversubscribe it.
+        if d <= ctx["coincident_max"]:
+            total = a.occ + b.occ
+            partial = a.occ < 1.0 - ctx["occ_tol"] or b.occ < 1.0 - ctx["occ_tol"]
+            if partial and total > 1.0 + ctx["occ_tol"]:
+                if ("shared", pair) not in reported:
+                    reported.add(("shared", pair))
+                    f.append(Finding(
+                        code="SHARED_SITE_OCC_GT_ONE", severity=ERROR,
+                        message="%s and %s share one site (%.3f A apart) but "
+                                "their occupancies sum to %.3f, which is more "
+                                "than one atom's worth."
+                                % (a.label, b.label, d, total),
+                        plat=["PLAT075", "PLAT077"],
+                        based_on=["_atom_site_occupancy", "_atom_site_fract_x"],
+                        sites=[a.label, b.label],
+                        evidence={"distance": round(d, 4),
+                                  "occupancies": [a.occ, b.occ],
+                                  "sum": round(total, 4)}))
+                continue
+
         if d < hard:
             if ("hard", pair) in reported:
                 continue

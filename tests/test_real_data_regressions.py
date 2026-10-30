@@ -177,8 +177,11 @@ def test_hydrogen_bonds_to_exactly_one_heavy_atom(cif):
     b = load(cif("clean"))
     sites, cell = expand(b)
     sites = [s for s in sites if s.element and all(v is not None for v in s.fract)]
-    _d, adj, _c = bond_graph(sites, cell, radius, DEFAULTS["bond_tolerance"],
-                             DEFAULTS["xh_bond_max"])
+    _d, adj, _c, _x = bond_graph(sites, cell, radius,
+                                 DEFAULTS["bond_tolerance"],
+                                 DEFAULTS["xh_bond_max"],
+                                 DEFAULTS["shared_site_max"],
+                                 DEFAULTS["occ_tol"])
     for i, s in enumerate(sites):
         if (s.element or "").upper() in ("H", "D"):
             heavy = [k for k in adj[i]
@@ -237,3 +240,131 @@ def test_ueq_range_is_tested_per_element_type(cif):
     assert "by_element" in src
     i = src.index('code="UEQ_RANGE_WIDE"')
     assert "element" in src[i:i + 600]
+
+
+def test_two_elements_sharing_one_site_are_not_a_clash(run):
+    """COD 1000241 has Sb1 and W1 both at (0,0,0) on Wyckoff 16c, occupancy 0.5
+    each - substitutional sharing. Only one is present in any unit cell.
+
+    Modelling them as co-existing atoms made every such site read as atoms
+    0.000 A apart: 137 of 500 deposited structures, 27%.
+    """
+    c = codes(run("shared_site"))
+    assert "ATOMS_TOO_CLOSE" not in c
+    assert "SITE_ON_OWN_IMAGE" not in c
+    assert "SHARED_SITE_OCC_GT_ONE" not in c
+
+
+def test_shared_site_with_impossible_occupancy_is_an_error(run):
+    """Alternatives are excused from the clash test, but their occupancies must
+    still be able to coexist. 0.5 + 0.9 = 1.4 cannot."""
+    r = run("shared_site_bad")
+    hits = [f for f in r["findings"] if f["code"] == "SHARED_SITE_OCC_GT_ONE"]
+    assert hits, codes(r)
+    assert hits[0]["severity"] == "error"
+    assert hits[0]["evidence"]["sum"] > 1.0
+
+
+def test_shared_site_atoms_do_not_bond_to_each_other(cif):
+    from cifaudit.audit import DEFAULTS
+    from cifaudit.elements import radius
+    from cifaudit.expand import expand
+    from cifaudit.geom import bond_graph
+    from cifaudit.load import load
+    b = load(cif("shared_site"))
+    sites, cell = expand(b)
+    _d, adj, _c, excl = bond_graph(sites, cell, radius,
+                                   DEFAULTS["bond_tolerance"],
+                                   DEFAULTS["xh_bond_max"],
+                                   DEFAULTS["shared_site_max"],
+                                   DEFAULTS["occ_tol"])
+    idx = {s.label: i for i, s in enumerate(sites)}
+    i, j = idx["Sb1"], idx["W1"]
+    assert (min(i, j), max(i, j)) in excl
+    assert j not in adj[i] and i not in adj[j]
+
+
+def test_dummy_atoms_are_excluded_from_geometry(cif):
+    """_atom_site_calc_flag 'dum' marks a placeholder whose position is
+    undetermined. COD 1000241 carries its H at (-1,-1,-1), which wraps onto the
+    shared Sb/W site and read as an H bonded to two heavy atoms 0.000 A away."""
+    from cifaudit.expand import expand
+    from cifaudit.load import load
+    b = load(cif("dummy_atom"))
+    assert [s.label for s in b.sites if s.is_dummy] == ["H1"]
+    geom, _c = expand(b)
+    assert "H1" not in {s.label for s in geom}
+
+
+def test_dummy_atoms_still_count_towards_the_formula(run):
+    """A dummy atom's position is undetermined but it IS part of the
+    composition. COD 1000241 declares 'H3 O7 Sb W' with Z=8 and carries its
+    hydrogen as a dummy with occupancy 0.75 on a 32-fold site: 32 x 0.75 / 8 = 3.
+    """
+    assert "FORMULA_SITES_MISMATCH" not in codes(run("dummy_atom"))
+
+
+def test_composition_prefers_the_declared_multiplicity(cif):
+    """The CIF states _atom_site_symmetry_multiplicity; expansion can disagree.
+
+    For COD 1000241's dummy H the declared multiplicity is 32 while gemmi
+    expands the placeholder coordinates to 16 copies, so geometric expansion
+    gave 1.5 H per formula unit against the declared 3.
+    """
+    from cifaudit import audit
+    src = cif("dummy_atom")
+    d = audit(src).to_dict()
+    assert "FORMULA_SITES_MISMATCH" not in {f["code"] for f in d["findings"]}
+    # strip the multiplicities and the basis must fall back to expansion
+    stripped = src.replace("_atom_site_symmetry_multiplicity\n", "")
+    stripped = stripped.replace("O1 O 1 0.20000", "O1 O 0.20000")
+    stripped = stripped.replace("H1 H 2 -1.00000", "H1 H -1.00000")
+    audit(stripped).to_dict()      # must not raise
+
+
+def test_a_disordered_bond_is_not_a_shared_site(run, cif):
+    """COD 4321002 has H4 at 0.930 A from C4, both occupancy 0.5.
+
+    Their occupancies sum to exactly 1.0, so the first version of the
+    shared-site rule classified the hydrogen as an ALTERNATIVE to the carbon it
+    is bonded to. That orphaned the H and, across the 500-structure sample,
+    added ISOLATED_H to 55 more files than the rule fixed.
+
+    Atoms sharing one site are never a bond length apart, so an alternative must
+    also be closer than `shared_site_bond_fraction` x (r_i + r_j).
+    """
+    c = codes(run("disordered_ch"))
+    assert "ISOLATED_H" not in c
+
+    from cifaudit.audit import DEFAULTS
+    from cifaudit.elements import radius
+    from cifaudit.expand import expand
+    from cifaudit.geom import bond_graph
+    from cifaudit.load import load
+    b = load(cif("disordered_ch"))
+    sites, cell = expand(b)
+    _d, adj, _h, excl = bond_graph(sites, cell, radius,
+                                   DEFAULTS["bond_tolerance"],
+                                   DEFAULTS["xh_bond_max"],
+                                   DEFAULTS["shared_site_max"],
+                                   DEFAULTS["occ_tol"],
+                                   DEFAULTS["shared_site_bond_fraction"])
+    idx = {s.label: i for i, s in enumerate(sites)}
+    i, j = idx["C4"], idx["H4"]
+    assert (min(i, j), max(i, j)) not in excl, "bonded pair marked as alternatives"
+    assert j in adj[i], "the disordered C-H bond was dropped"
+
+
+def test_composition_uses_expansion_except_for_dummies(cif):
+    """`_atom_site_symmetry_multiplicity` carries two incompatible meanings in
+    the wild - Wyckoff multiplicity in IUCr-style inorganic CIFs, site-symmetry
+    order in SHELX-style ones. Preferring it for every site made
+    FORMULA_SITES_MISMATCH fire on 167 of 500 files instead of 94, so it is now
+    used only for dummy sites, whose coordinates cannot be expanded."""
+    from cifaudit import audit
+    d = audit(cif("dummy_atom")).to_dict()
+    assert "FORMULA_SITES_MISMATCH" not in {f["code"] for f in d["findings"]}
+    hits = [f for f in audit(cif("shared_site_bad")).to_dict()["findings"]
+            if f["code"] == "FORMULA_SITES_MISMATCH"]
+    if hits:
+        assert "expansion" in hits[0]["evidence"]["basis"]
