@@ -21,6 +21,11 @@ dependencies = [
   "gemmi>=0.6",
 ]
 
+[project.urls]
+Homepage = "https://github.com/pileofflapjacks1/cifaudit"
+Repository = "https://github.com/pileofflapjacks1/cifaudit"
+Issues = "https://github.com/pileofflapjacks1/cifaudit/issues"
+
 [project.optional-dependencies]
 # spglib enables the ADDSYM-equivalent missed-symmetry check. Without it that
 # check abstains rather than silently passing.

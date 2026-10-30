@@ -75,10 +75,20 @@ NOT TESTED (8 areas):
 
 ## Install
 
+**Not on PyPI yet.** Install from the repository:
+
 ```bash
-pip install cifaudit                 # library + CLI
-pip install "cifaudit[symmetry]"     # + spglib, enables the missed-symmetry check
-pip install "cifaudit[mcp]"          # + MCP server (needs Python >= 3.10)
+pip install "git+https://github.com/pileofflapjacks1/cifaudit"
+pip install "cifaudit[symmetry] @ git+https://github.com/pileofflapjacks1/cifaudit"   # + spglib
+pip install "cifaudit[mcp] @ git+https://github.com/pileofflapjacks1/cifaudit"        # + MCP server (needs Python >= 3.10)
+```
+
+Or from a clone:
+
+```bash
+git clone https://github.com/pileofflapjacks1/cifaudit
+cd cifaudit
+pip install -e ".[symmetry]"
 ```
 
 Without `spglib` the missed-symmetry check **abstains** instead of silently
