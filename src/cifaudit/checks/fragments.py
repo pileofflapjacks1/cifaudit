@@ -47,7 +47,8 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                    "be decided",
             plat=["PLAT305"]))
 
-    _dists, adj = bond_graph(sites, cell, ctx["bond_factor"], radius)
+    _dists, adj, _h_cands = bond_graph(
+        sites, cell, radius, ctx["bond_tolerance"], ctx["xh_bond_max"])
 
     seen: Set[int] = set()
     comps: List[List[int]] = []

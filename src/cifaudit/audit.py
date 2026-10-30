@@ -16,7 +16,14 @@ DEFAULTS: Dict[str, Any] = {
     "volume_rel_tol": 0.005,    # fractional disagreement allowed on _cell_volume
     "occ_tol": 1e-3,
     "disorder_sum_tol": 0.02,
-    "adp_ratio_max": 10.0,      # max/min eigenvalue of U(i,j)
+    # PLATON PLAT213 tests SQRT(U3/U1) of the principal axes, not the raw
+    # eigenvalue ratio: U is a mean-square displacement in A^2, so the square
+    # root is the ratio of ellipsoid AXIS LENGTHS in A. Measured over 12,899
+    # non-H anisotropic atoms in 500 deposited COD structures, sqrt(U3/U1) has
+    # median 1.66, p95 2.81 and p99 4.01, so 4.0 flags the top ~1% of atoms.
+    # The old default of 10 was on the RAW ratio, i.e. sqrt = 3.16, which is
+    # only the 97.5th percentile and fired on 24% of files.
+    "adp_axis_ratio_max": 4.0,
     "ueq_ratio_max": 10.0,
     "ueq_min_atoms": 3,
     "symprec": 0.05,            # Angstrom, passed to spglib
@@ -25,7 +32,10 @@ DEFAULTS: Dict[str, Any] = {
     "hh_min": 2.0,              # A; shortest acceptable H...H contact
     "hbond_min": 1.2,           # A; below this an H...acceptor approach is
                                 # too short even for a hydrogen bond
-    "bond_factor": 1.2,         # d <= bond_factor * (r_cov_i + r_cov_j) => bonded
+    "bond_tolerance": 0.45,     # A; d <= r_cov_i + r_cov_j + tol => bonded
+    "xh_bond_max": 1.35,        # A; an H bonds to its nearest heavy atom within
+                                # this. Metal hydrides reach ~1.8 A and will
+                                # need this raised.
     "exclude_within_bonds": 3,  # skip contacts between atoms <=N bonds apart
     "xh_short_tol": 0.10,       # A below the X-ray X-H target before reporting
     "formula_tol": 0.05,

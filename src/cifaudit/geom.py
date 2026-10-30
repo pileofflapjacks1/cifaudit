@@ -100,22 +100,63 @@ def _pairwise_min(cell, sites):
     return dists
 
 
-def bond_graph(sites, cell, bond_factor, radius_fn):
-    """Pairwise shortest distances plus the covalent bond graph.
+def bond_graph(sites, cell, radius_fn, tolerance, xh_max):
+    """Pairwise shortest distances, the covalent bond graph, and H candidates.
 
-    Returns (dists, adj) where dists maps (i, j) with i < j to (distance, image)
-    and adj maps index -> set of bonded indices. Pairs involving an element with
-    no tabulated radius are present in dists but never bonded.
+    Heavy-atom bonding uses an ADDITIVE tolerance, which is the convention the
+    field actually uses:
+
+        d(i,j) <= r_i + r_j + epsilon
+
+    epsilon is "usually ranging between 0.35 A and 0.45 A" (arXiv 2601.02017,
+    bonding radii derived from 519,021 COD records); Jmol-style/MaterialsCoord
+    use 0.45 A, CCDC's recommended figure is about 0.4 A, and CoRE MOF 2019 uses
+    Cordero radii plus 0.2 A for metals under 1.95 A and 0.4 A above. cifaudit
+    previously used a MULTIPLICATIVE 1.2x, which is not a convention anyone else
+    follows.
+
+    Hydrogen is handled separately and deliberately. The COD-derived radii set
+    above has no hydrogen value at all and discards every contact involving
+    hydrogen, because radius-based bonding does not work for H: the standard
+    epsilon would make H-O bonding MORE generous (1.42 A) than the old 1.2x rule
+    (1.16 A), not less. So an H is bonded to exactly ONE heavy atom - its
+    nearest within `xh_max` - which matches PLATON PLAT303: "Hydrogen atoms are
+    generally connected to only one other atom."
+
+    H...H is never treated as a bond. Dihydrogen complexes exist and are not
+    modelled.
+
+    Returns (dists, adj, h_candidates), where h_candidates maps an H index to
+    every heavy atom within xh_max as (index, distance) - so PLAT303's
+    "more than one connection" case can still be reported even though only the
+    nearest is bonded.
     """
     dists = _pairwise_min(cell, sites)
-    adj = {i: set() for i in range(len(sites))}
+    n = len(sites)
+    adj = {i: set() for i in range(n)}
     radii = [radius_fn(s.element) for s in sites]
+    is_h = [(s.element or "").upper() in ("H", "D") for s in sites]
+    h_candidates = {}
+
     for (i, j), (d, _img) in dists.items():
+        if is_h[i] and is_h[j]:
+            continue
+        if is_h[i] or is_h[j]:
+            h_idx, x_idx = (i, j) if is_h[i] else (j, i)
+            if radii[x_idx] is not None and d <= xh_max:
+                h_candidates.setdefault(h_idx, []).append((x_idx, d))
+            continue
         ri, rj = radii[i], radii[j]
-        if ri is not None and rj is not None and d <= (ri + rj) * bond_factor:
+        if ri is not None and rj is not None and d <= ri + rj + tolerance:
             adj[i].add(j)
             adj[j].add(i)
-    return (dists, adj)
+
+    for h_idx, cands in h_candidates.items():
+        x_idx, _d = min(cands, key=lambda t: t[1])
+        adj[h_idx].add(x_idx)
+        adj[x_idx].add(h_idx)
+
+    return (dists, adj, h_candidates)
 
 
 def within_bonds(adj, max_depth):

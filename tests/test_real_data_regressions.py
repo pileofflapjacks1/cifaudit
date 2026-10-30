@@ -146,3 +146,94 @@ def test_special_position_copies_are_deduplicated(cif):
     keys = [(s.label, round(s.fract[0] % 1, 5), round(s.fract[1] % 1, 5),
              round(s.fract[2] % 1, 5)) for s in sites]
     assert len(keys) == len(set(keys)), "coincident duplicates in expansion"
+
+
+def test_bonding_uses_an_additive_tolerance_not_a_factor():
+    """The field's convention is d <= r_i + r_j + epsilon, epsilon ~0.35-0.45 A.
+
+    cifaudit previously used a multiplicative 1.2x, which no standard tool uses.
+    arXiv 2601.02017 derives bonding radii from 519,021 COD records and states
+    epsilon is "usually ranging between 0.35 A and 0.45 A"; Jmol-style and
+    MaterialsCoord use 0.45 A; CoRE MOF 2019 uses Cordero + 0.2/0.4 A.
+    """
+    from cifaudit.audit import DEFAULTS
+    assert "bond_factor" not in DEFAULTS
+    assert 0.35 <= DEFAULTS["bond_tolerance"] <= 0.45
+
+
+def test_hydrogen_bonds_to_exactly_one_heavy_atom(cif):
+    """Radius-based bonding does not work for H.
+
+    The COD-derived radii set has no hydrogen value and discards every contact
+    involving hydrogen. PLATON PLAT303: "Hydrogen atoms are generally connected
+    to only one other atom." So an H is bonded to its nearest heavy atom within
+    xh_bond_max, and never to two.
+    """
+    from cifaudit.audit import DEFAULTS
+    from cifaudit.elements import radius
+    from cifaudit.expand import expand
+    from cifaudit.geom import bond_graph
+    from cifaudit.load import load
+    b = load(cif("clean"))
+    sites, cell = expand(b)
+    sites = [s for s in sites if s.element and all(v is not None for v in s.fract)]
+    _d, adj, _c = bond_graph(sites, cell, radius, DEFAULTS["bond_tolerance"],
+                             DEFAULTS["xh_bond_max"])
+    for i, s in enumerate(sites):
+        if (s.element or "").upper() in ("H", "D"):
+            heavy = [k for k in adj[i]
+                     if (sites[k].element or "").upper() not in ("H", "D")]
+            assert len(heavy) <= 1, "%s bonded to %d heavy atoms" % (s.label,
+                                                                     len(heavy))
+
+
+def test_h_multiple_connections_is_informational_not_a_warning():
+    """PLAT303 says to investigate a disorder model, not that it is an error."""
+    from cifaudit.model import kind_of
+    assert kind_of("H_MULTIPLE_CONNECTIONS") == "structural"
+    import pathlib
+    src = pathlib.Path("src/cifaudit/checks/hydrogens.py").read_text()
+    i = src.index('code="H_MULTIPLE_CONNECTIONS"')
+    assert "severity=INFO" in src[i:i + 120]
+
+
+def test_adp_anisotropy_uses_sqrt_of_the_eigenvalue_ratio():
+    """PLAT213 tests SQRT(U3/U1) of the principal axes, not the raw ratio.
+
+    U is a mean-square displacement in A^2, so the square root is the ratio of
+    ellipsoid axis lengths. The old default of 10 on the raw ratio equals
+    sqrt = 3.16, only the 97.5th percentile over 12,899 non-H anisotropic atoms
+    in 500 deposited COD structures, and it fired on 24% of files.
+    """
+    import math
+    from cifaudit.audit import DEFAULTS
+    assert "adp_ratio_max" not in DEFAULTS
+    assert DEFAULTS["adp_axis_ratio_max"] == 4.0
+    # 4.0 in axis units is 16.0 in raw eigenvalue units
+    assert math.isclose(DEFAULTS["adp_axis_ratio_max"] ** 2, 16.0)
+
+
+def test_adp_anisotropy_finding_reports_axis_ratio_and_shape(cif):
+    """The evidence must carry sqrt(U3/U1) and PLATON's oblate/prolate call."""
+    from cifaudit import audit
+    src = cif("clean")
+    # make C1 extremely prolate: U11 large, U22/U33 small
+    stretched = src.replace("C1 0.0250 0.0250 0.0250 0.0000 0.0000 0.0000",
+                            "C1 0.4000 0.0050 0.0050 0.0000 0.0000 0.0000")
+    hits = [f for f in audit(stretched).to_dict()["findings"]
+            if f["code"] == "ADP_EXTREME_ANISOTROPY"]
+    assert hits, "expected an anisotropy finding"
+    ev = hits[0]["evidence"]
+    assert "axis_ratio_sqrt_U3_U1" in ev and "raw_eigenvalue_ratio" in ev
+    assert ev["shape"] in ("oblate", "prolate")
+    assert "PLAT213" in [c["code"] for c in hits[0]["checkcif"]]
+
+
+def test_ueq_range_is_tested_per_element_type(cif):
+    """PLAT220 exists to catch misassigned species ("O versus N"), so the Ueq
+    range must be compared within one element, not across all non-H atoms."""
+    import pathlib
+    src = pathlib.Path("src/cifaudit/checks/adp.py").read_text()
+    assert "by_element" in src
+    i = src.index('code="UEQ_RANGE_WIDE"')
+    assert "element" in src[i:i + 600]

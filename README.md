@@ -188,16 +188,108 @@ What real data found:
 All seven planted-defect fixtures still fire, so sensitivity was not traded for
 the lower false-positive rate. Each bug has a regression test.
 
-**The honest caveat: this is an in-sample result.** The rules were changed in
-response to these 16 files, so 88% measures fit to them, not behaviour on unseen
-structures. An out-of-sample run over a few hundred independently drawn COD
-entries is the test that would count, and it has not been done. Full write-up,
-including what is still untested and the O(n²) speed problem, in
+### Then 500, drawn independently
+
+The in-sample caveat held. Pulled 500 more via rsync (COD's `robots.txt`
+disallows automated HTTP; rsync is the channel they document for bulk use), from
+six directories disjoint from the first 16: **8% clean, 1,055 errors.** 88% had
+been measuring fit.
+
+That run found a sixth bug and two wrong conventions:
+
+- **The number parser rejected valid CIF.** `1.`, `0.` and `.5` are ubiquitous in
+  older entries; requiring a digit after the point made occupancies unparseable
+  (99 files) and read `0.` ADP components as absent (33 files). Both now 0.
+- **Bonding used a multiplicative factor**; the field uses an additive tolerance.
+- **ADP anisotropy used the raw eigenvalue ratio**; PLAT213 uses its square root.
+
+Where it stands on those 500:
+
+| | pre | + parser fix | + conventions |
+|---|---|---|---|
+| no structural findings | — | — | **207/500 (41%)** |
+| structural errors | 1,055 | 894 | 885 |
+| `ADP_EXTREME_ANISOTROPY` | 114 | 121 | **61** |
+| `UEQ_RANGE_WIDE` | 36 | 36 | **7** |
+| seconds per file | 1.73 | 1.85 | **0.35** |
+
+**41% is the fraction of deposited structures with no *structural* finding** — not
+a false-positive rate. And it is in-sample again, because those fixes were made
+in response to these 500 files. A third independent draw is the test that would
+confirm it; it costs about three minutes now and has not been done.
+
+**The largest remaining false-positive source is not a threshold.**
+`ATOMS_TOO_CLOSE` is stuck at 27% because cifaudit does not model **shared
+crystallographic sites** — two elements occupying one position with partial
+occupancies, which is routine inorganic chemistry. Every such site reads as atoms
+on top of each other. Treat `ATOMS_TOO_CLOSE`, `H_MULTIPLE_CONNECTIONS` and part
+of `FORMULA_SITES_MISMATCH` as unreliable on structures with mixed occupancy.
+
+Full write-up in
 [`data/processed/cod_benchmark.md`](data/processed/cod_benchmark.md).
 
 ```bash
 python3 scripts/run_cod_benchmark.py <dir-of-cifs> --json out.json
 ```
+
+## Conventions, and where they come from
+
+Two judgements decide most of cifaudit's behaviour. Both follow published
+practice rather than taste, and both were wrong in earlier versions.
+
+### Bonding: additive tolerance, and hydrogen handled separately
+
+```
+d(i,j) <= r_i + r_j + epsilon          epsilon = 0.45 A  (bond_tolerance)
+```
+
+An **additive** tolerance is what the field uses. A set of bonding radii derived
+from 519,021 COD records ([arXiv 2601.02017](https://arxiv.org/abs/2601.02017))
+states epsilon is *"usually ranging between 0.35 Å and 0.45 Å"* and uses 0.45 Å;
+Jmol-style/MaterialsCoord use 0.45 Å; the CCDC's recommended figure is about
+0.4 Å; CoRE MOF 2019 uses Cordero radii plus 0.2 Å for metals under 1.95 Å and
+0.4 Å above. cifaudit previously used a **multiplicative 1.2×**, which no
+standard tool uses.
+
+**Hydrogen is excluded from radius-based bonding**, because it does not work for
+H — the standard epsilon would make H–O bonding *more* generous (1.42 Å) than the
+old factor did (1.16 Å). The COD-derived radii set above has no hydrogen value at
+all and discards every contact involving hydrogen. So an H is bonded to exactly
+one heavy atom, its nearest within `xh_bond_max` (1.35 Å; metal hydrides reach
+~1.8 Å and need this raised). Two or more candidates is reported as
+information, following PLAT303: *"Hydrogen atoms are generally connected to only
+one other atom. A hydrogen atom between two oxygen atoms is a special case.
+Investigate whether this hydrogen atom is better described with a disorder model
+with two partially occupied sites."* H···H is never a bond; dihydrogen complexes
+are not modelled.
+
+### ADP anisotropy: the square root of the eigenvalue ratio
+
+PLATON's PLAT213, verbatim: *"The main axes values of the ADP(S) of the main
+residue(s) are determined and ordered: U1 < U2 < U3. The value of **SQRT(U3/U1)**
+main axis ADP ratio (Angstrom Units) is tested."* U is a mean-square displacement
+in Å², so the square root is the ratio of ellipsoid **axis lengths**.
+
+The threshold is set from the deposited corpus. Over **12,899 non-H anisotropic
+atoms in 500 COD structures**:
+
+| percentile | sqrt(U3/U1) |
+|---|---|
+| p50 | 1.66 |
+| p95 | 2.81 |
+| p99 | **4.01** |
+| p99.9 | 9.56 |
+
+`adp_axis_ratio_max` is **4.0** — the 99th percentile, so it flags the top ~1% of
+atoms. The old default of 10 was on the *raw* ratio, equal to sqrt = 3.16, which
+is only the 97.5th percentile and fired on 24% of files. Findings also report
+PLATON's oblate/prolate distinction (*"Oblate criterium: U3 - U2 < U2 - U1.
+Prolate otherwise."*).
+
+`UEQ_RANGE_WIDE` is now compared **within one element type**, which is what
+PLAT220 is for: *"Too high or too low Ueq's may be an indication for incorrectly
+identified atomic species (i.e. O versus N)."* Comparing across all non-H atoms
+asked a different question.
 
 ## Tests
 
@@ -205,7 +297,7 @@ python3 scripts/run_cod_benchmark.py <dir-of-cifs> --json out.json
 pip install -e ".[test]" && pytest
 ```
 
-75 tests. Every planted defect has a fixture; the clean reference must produce
+89 tests. Every planted defect has a fixture; the clean reference must produce
 zero findings. Several exist because they caught real bugs:
 
 - `test_geminal_pairs_are_not_short_contacts` — the first implementation flagged a

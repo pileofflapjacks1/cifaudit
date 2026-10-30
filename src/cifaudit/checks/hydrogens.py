@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 from ..elements import radius
 from ..expand import ExpandError, expand
-from ..geom import min_distance
+from ..geom import bond_graph, min_distance
 from ..model import ERROR, Finding, INFO, NotTested, WARN
 
 NAME = "hydrogens"
@@ -59,43 +59,53 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                             plat=["PLAT305", "PLAT303", "PLAT350"]))
         return (f, nt)
 
-    heavy = [s for s in sites
-             if s.element and s.element not in ("H", "D")
-             and all(v is not None for v in s.fract)]
-    hs = [s for s in sites if s.element in ("H", "D")
-          and all(v is not None for v in s.fract)]
+    usable = [s for s in sites
+              if s.element and all(x is not None for x in s.fract)]
+    _dists, adj, h_cands = bond_graph(
+        usable, cell, radius, ctx["bond_tolerance"], ctx["xh_bond_max"])
 
-    for h in hs:
-        partners = []
-        for x in heavy:
-            rx = radius(x.element)
-            if rx is None:
-                continue
-            d, _ = min_distance(cell, h.fract, x.fract)
-            if d <= (rx + radius("H")) * ctx["bond_factor"]:
-                partners.append((x, d))
-        if not partners:
+    for idx, s in enumerate(usable):
+        if s.element not in ("H", "D"):
+            continue
+        cands = h_cands.get(idx, [])
+        if not cands:
             f.append(Finding(
                 code="ISOLATED_H", severity=WARN,
-                message="H atom %s has no heavy-atom neighbour within bonding "
-                        "distance." % h.label,
+                message="H atom %s has no heavy-atom neighbour within %.2f A."
+                        % (s.label, ctx["xh_bond_max"]),
                 plat=["PLAT305"],
                 based_on=["_atom_site_fract_x", "_atom_site_fract_y",
                           "_atom_site_fract_z"],
-                sites=[h.label]))
+                sites=[s.label]))
             continue
-        if len(partners) > 1:
+
+        x_idx, d = min(cands, key=lambda t: t[1])
+        x = usable[x_idx]
+
+        if len(cands) > 1:
+            # PLAT303: "Hydrogen atoms are generally connected to only one other
+            # atom. A hydrogen atom between two oxygen atoms is a special case.
+            # Investigate whether this hydrogen atom is better described with a
+            # disorder model with two partially occupied sites."
+            # So this is an invitation to look, not an error. The H is still
+            # bonded to its nearest neighbour only.
+            others = sorted(cands, key=lambda t: t[1])
             f.append(Finding(
-                code="H_MULTIPLE_CONNECTIONS", severity=WARN,
-                message="H atom %s is within bonding distance of %d heavy atoms "
-                        "(%s)." % (h.label, len(partners),
-                                   ", ".join("%s %.2f A" % (p.label, d)
-                                             for p, d in partners[:4])),
+                code="H_MULTIPLE_CONNECTIONS", severity=INFO,
+                message="H atom %s has %d heavy atoms within %.2f A (%s). It is "
+                        "bonded to the nearest. A hydrogen between two "
+                        "electronegative atoms may be better modelled as "
+                        "disorder over two partially occupied sites."
+                        % (s.label, len(cands), ctx["xh_bond_max"],
+                           ", ".join("%s %.2f A" % (usable[k].label, dd)
+                                     for k, dd in others[:4])),
                 plat=["PLAT303"],
                 based_on=["_atom_site_fract_x"],
-                sites=[h.label] + [p.label for p, _ in partners[:4]],
-                evidence={"n_partners": len(partners)}))
-        x, d = min(partners, key=lambda t: t[1])
+                sites=[s.label] + [usable[k].label for k, _ in others[:4]],
+                evidence={"n_candidates": len(cands),
+                          "bonded_to": x.label,
+                          "distance": round(d, 4)}))
+
         # Neutron data locates nuclei, so X-H is genuinely longer. The PLATON
         # test descriptions give both: "XRAY: 0.96 NEUT 1.08" for C-H.
         neutron = "neutron" in (blk.radiation_probe or "").lower()
@@ -105,12 +115,12 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             f.append(Finding(
                 code="SHORT_XH", severity=INFO,
                 message="%s-%s is %.3f A, %.3f A shorter than the %s target of "
-                        "%.3f A for %s-H." % (x.label, h.label, d, target - d,
+                        "%.3f A for %s-H." % (x.label, s.label, d, target - d,
                                               "neutron" if neutron else "X-ray",
                                               target, x.element),
                 plat=["PLAT350" if x.element == "C" else
                       ("PLAT352" if x.element == "N" else "PLAT354")],
-                based_on=["_atom_site_fract_x"], sites=[x.label, h.label],
+                based_on=["_atom_site_fract_x"], sites=[x.label, s.label],
                 evidence={"distance": round(d, 4), "target": target,
                           "probe": "neutron" if neutron else "x-ray"}))
 

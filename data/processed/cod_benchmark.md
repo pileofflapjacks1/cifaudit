@@ -110,3 +110,108 @@ Every `not_tested` area, plus: multi-datablock CIFs (all 16 had exactly one),
 macromolecular CIFs, powder data, modulated or twinned structures, CIFs above
 the 400-site cap, and anything that fails to parse — no file in this sample was
 unparseable, so that path has only ever run against fixtures.
+
+---
+
+# Out-of-sample run: 500 COD structures
+
+2026-10-30, after the 16-file in-sample work above. **This is the run that
+counts**, and it began by showing the in-sample result was indeed measuring fit.
+
+## Sample
+
+500 CIFs pulled via **rsync** — `rsync://www.crystallography.net/cif/` — which is
+the channel COD documents for bulk use. COD's `robots.txt` is a blanket
+`User-agent: * / Disallow: /`, so automated HTTP fetching was not used. Six
+directories, deliberately disjoint from the 16 earlier files, spread across the
+ID space for chemical diversity: `1/00/02`, `2/30/50` (empty), `4/32/10`,
+`7/10/50`, `8/10/20`, `9/01/00`. Zero overlap with the earlier sample.
+
+Not committed to this repository: no point redistributing COD's data.
+
+## First result: the in-sample number did not hold
+
+| | in-sample (16) | out-of-sample (500) |
+|---|---|---|
+| files with no findings | 88% | **8%** |
+| errors | 0 | **1,055** |
+| warnings | 0 | 3,887 |
+
+## Bug six: the number parser rejected valid CIF
+
+One bug accounted for 207 findings. `parse_number` required a digit after the
+decimal point, so it rejected CIF's bare-dot form — `1.`, `0.`, `.5` — which is
+valid and ubiquitous in older entries. Occupancies written `1.` read as
+unparseable (99 files); `U13`/`U23` written `0.` read as *absent*, reporting
+complete ADPs as incomplete (33 files). All 14 hand-written fixtures used
+`0.2000` style, so nothing but real data could have caught it.
+
+`OCC_UNPARSEABLE` 99 → 0 files. `ADP_UIJ_INCOMPLETE` 33 → 0.
+
+## Then two conventions, both of which cifaudit had wrong
+
+Researched against published practice rather than chosen (see the README section
+"Conventions, and where they come from"):
+
+- **Bonding** is an additive tolerance, `r_i + r_j + epsilon`, with epsilon
+  0.35–0.45 Å — not the multiplicative 1.2× cifaudit used. Hydrogen is excluded
+  from radius-based bonding and bonds to its single nearest heavy atom.
+- **ADP anisotropy** is `SQRT(U3/U1)` on the principal axes (PLAT213), not the
+  raw eigenvalue ratio. The old default of 10 raw equals 3.16 in axis units —
+  only the 97.5th percentile of 12,899 real atoms. Now 4.0, the p99.
+- **`UEQ_RANGE_WIDE`** belongs per element type, which is what PLAT220 is for:
+  catching misassigned species.
+
+## Where it stands
+
+| | pre-fix | + parser fix | + conventions |
+|---|---|---|---|
+| no structural findings | — | — | **207/500 (41%)** |
+| no findings of any kind | 42/500 (8%) | 42/500 (8%) | 47/500 (9%) |
+| structural errors | 1,055 | 894 | 885 |
+| seconds per file | 1.73 | 1.85 | **0.35** |
+
+Per-check movement on the checks the conventions touched:
+
+| check | pre | + parser | + conventions |
+|---|---|---|---|
+| `OCC_UNPARSEABLE` | 99 | **0** | 0 |
+| `ADP_UIJ_INCOMPLETE` | 33 | **0** | 0 |
+| `ADP_EXTREME_ANISOTROPY` | 114 | 121 | **61** |
+| `UEQ_RANGE_WIDE` | 36 | 36 | **7** |
+| `ISOLATED_H` | 14 | 14 | **10** |
+| `SHORT_NONBONDED_CONTACT` | 24 | 24 | **20** |
+| `SHORT_HH_CONTACT` | 30 | 30 | **27** |
+| `ATOMS_TOO_CLOSE` | 137 | 137 | **137** |
+
+The 5× speedup was incidental: the hydrogens check had its own O(H × heavy)
+distance loop, and routing it through the shared bond graph removed the hot spot.
+
+**41% is the honest headline, and it is not a false-positive rate.** It is the
+fraction of deposited structures with no *structural* finding. Separating
+reporting from structural is what made it legible at all: 74% of files omit
+`_chemical_formula_moiety` and 40% omit a standard uncertainty on the cell
+volume, and while those are real checkCIF tests, counting them next to NPD atoms
+buried the signal.
+
+## The largest remaining false-positive source: shared sites
+
+`ATOMS_TOO_CLOSE` did not move: **137/500 (27%)**, and it is not a threshold.
+Diagnosing the hydrogen findings printed `Sb1 0.00 A, W1 0.00 A` — one H
+coincident with two *different* heavy atoms, because Sb and W **share one
+crystallographic site** with partial occupancies. That is routine mixed-occupancy
+inorganic chemistry, and cifaudit does not model shared sites at all, so every
+one reads as atoms sitting on top of each other. The earlier deduplication only
+caught identical labels at identical positions.
+
+Until that is modelled, treat `ATOMS_TOO_CLOSE`, `H_MULTIPLE_CONNECTIONS` (13%)
+and some of `FORMULA_SITES_MISMATCH` (19%) as unreliable on structures with
+mixed-occupancy sites.
+
+## Still in-sample
+
+Fixes six, and both conventions, were applied in response to **these** 500 files.
+The 41% is therefore an in-sample figure again. A third independent draw is the
+test that would confirm it, and it has not been done — it now costs about three
+minutes of compute, so there is no excuse other than that the conventions should
+settle first.

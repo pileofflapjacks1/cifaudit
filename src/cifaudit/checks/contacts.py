@@ -49,7 +49,8 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
         return (f, nt)
 
     hard = ctx["hard_floor"]
-    dists, adj = bond_graph(sites, cell, ctx["bond_factor"], radius)
+    dists, adj, _h_cands = bond_graph(
+        sites, cell, radius, ctx["bond_tolerance"], ctx["xh_bond_max"])
     near = within_bonds(adj, ctx["exclude_within_bonds"])
 
     # A site sitting on its own lattice image means the cell or the coordinates

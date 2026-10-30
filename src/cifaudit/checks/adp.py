@@ -9,6 +9,8 @@ matrix exactly as given in the CIF is the correct NPD test for ANY cell, with no
 transformation to Cartesian axes required.
 """
 
+import math
+from collections import defaultdict
 from typing import List, Tuple
 
 from ..model import ERROR, Finding, INFO, NotTested, WARN
@@ -75,36 +77,69 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                           "_atom_site_aniso_U_13", "_atom_site_aniso_U_23"],
                 sites=[s.label],
                 evidence={"eigenvalues": [round(e, 6) for e in eig]}))
-        elif eig[2] / eig[0] > ctx["adp_ratio_max"]:
-            f.append(Finding(
-                code="ADP_EXTREME_ANISOTROPY", severity=WARN,
-                message="Site %s has U(i,j) eigenvalue ratio %.1f "
-                        "(max %.5f / min %.5f), an unusually elongated ellipsoid."
-                        % (s.label, eig[2] / eig[0], eig[2], eig[0]),
-                plat=["PLAT215", "PLAT250"],
-                based_on=["_atom_site_aniso_U_11"], sites=[s.label],
-                evidence={"eigenvalues": [round(e, 6) for e in eig],
-                          "ratio": round(eig[2] / eig[0], 3)}))
+        else:
+            # PLAT213: "ordered: U1 < U2 < U3. The value of SQRT(U3/U1) main
+            # axis ADP ratio (Angstrom Units) is tested". U is a mean-square
+            # displacement, so the square root is the ratio of axis lengths.
+            axis_ratio = math.sqrt(eig[2] / eig[0])
+            if axis_ratio > ctx["adp_axis_ratio_max"]:
+                # PLAT213: "Oblate criterium: U3 - U2 < U2 - U1. Prolate
+                # otherwise."
+                shape = ("oblate" if (eig[2] - eig[1]) < (eig[1] - eig[0])
+                         else "prolate")
+                f.append(Finding(
+                    code="ADP_EXTREME_ANISOTROPY", severity=WARN,
+                    message="Site %s has a principal-axis ratio "
+                            "sqrt(U3/U1) = %.2f (%s ellipsoid). Above %.2f, "
+                            "which is the 99th percentile over 12,899 non-H "
+                            "anisotropic atoms in 500 deposited COD structures. "
+                            "Large values may indicate unresolved disorder."
+                            % (s.label, axis_ratio, shape,
+                               ctx["adp_axis_ratio_max"]),
+                    plat=["PLAT213", "PLAT215", "PLAT250"],
+                    based_on=["_atom_site_aniso_U_11"], sites=[s.label],
+                    evidence={"eigenvalues": [round(e, 6) for e in eig],
+                              "axis_ratio_sqrt_U3_U1": round(axis_ratio, 3),
+                              "raw_eigenvalue_ratio": round(eig[2] / eig[0], 3),
+                              "shape": shape}))
 
-    # Ueq spread across non-H atoms.
-    vals = [(s.label, s.uiso) for s in blk.sites
-            if not s.is_hydrogen and s.uiso is not None and s.uiso > 0]
-    if len(vals) >= ctx["ueq_min_atoms"]:
+    # Ueq spread, PER ELEMENT TYPE. PLAT220's purpose is detecting misassigned
+    # atomic species, not overall spread: "Too high or too low Ueq's may be an
+    # indication for incorrectly identified atomic species (i.e. O versus N)".
+    # Comparing max/min across all non-H atoms together asked a different
+    # question and fired on 7% of real files.
+    by_element = defaultdict(list)
+    for s in blk.sites:
+        if s.is_hydrogen or s.uiso is None or s.uiso <= 0:
+            continue
+        if s.element:
+            by_element[s.element].append((s.label, s.uiso))
+    tested_any = False
+    for element, vals in sorted(by_element.items()):
+        if len(vals) < ctx["ueq_min_atoms"]:
+            continue
+        tested_any = True
         lo = min(vals, key=lambda t: t[1])
         hi = max(vals, key=lambda t: t[1])
         if hi[1] / lo[1] > ctx["ueq_ratio_max"]:
             f.append(Finding(
                 code="UEQ_RANGE_WIDE", severity=WARN,
-                message="Ueq across non-H atoms spans a factor of %.1f (%s=%.4f to "
-                        "%s=%.4f)." % (hi[1] / lo[1], lo[0], lo[1], hi[0], hi[1]),
-                plat=["PLAT220"], based_on=["_atom_site_U_iso_or_equiv"],
+                message="Ueq across the %d %s atoms spans a factor of %.1f "
+                        "(%s=%.4f to %s=%.4f). A wide range within one element "
+                        "can mean a site has been assigned the wrong species."
+                        % (len(vals), element, hi[1] / lo[1],
+                           lo[0], lo[1], hi[0], hi[1]),
+                plat=["PLAT220", "PLAT221"],
+                based_on=["_atom_site_U_iso_or_equiv",
+                          "_atom_site_type_symbol"],
                 sites=[lo[0], hi[0]],
-                evidence={"min": lo[1], "max": hi[1],
+                evidence={"element": element, "n": len(vals),
+                          "min": lo[1], "max": hi[1],
                           "ratio": round(hi[1] / lo[1], 3)}))
-    else:
+    if not tested_any:
         nt.append(NotTested(
-            area="Ueq(max)/Ueq(min) range",
-            reason="fewer than %d non-H atoms with a usable "
+            area="Ueq(max)/Ueq(min) range per element type",
+            reason="no element has at least %d non-H atoms with a usable "
                    "_atom_site_U_iso_or_equiv" % ctx["ueq_min_atoms"],
             plat=["PLAT220", "PLAT221"]))
 
