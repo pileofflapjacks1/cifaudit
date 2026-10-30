@@ -12,6 +12,7 @@ NAME = "hydrogens"
 # Target X-H distances for X-ray data, from the PLATON test descriptions
 # (PLAT350/352/354): "XRAY: 0.96" for C-H, 0.87 for N-H, 0.82 for O-H.
 XH_TARGET_XRAY = {"C": 0.96, "N": 0.87, "O": 0.82}
+XH_TARGET_NEUTRON = {"C": 1.08, "N": 1.009, "O": 0.983}
 _MISSING = (None, "", ".", "?")
 
 
@@ -95,17 +96,23 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                 sites=[h.label] + [p.label for p, _ in partners[:4]],
                 evidence={"n_partners": len(partners)}))
         x, d = min(partners, key=lambda t: t[1])
-        target = XH_TARGET_XRAY.get(x.element or "")
+        # Neutron data locates nuclei, so X-H is genuinely longer. The PLATON
+        # test descriptions give both: "XRAY: 0.96 NEUT 1.08" for C-H.
+        neutron = "neutron" in (blk.radiation_probe or "").lower()
+        table = XH_TARGET_NEUTRON if neutron else XH_TARGET_XRAY
+        target = table.get(x.element or "")
         if target is not None and d < target - ctx["xh_short_tol"]:
             f.append(Finding(
                 code="SHORT_XH", severity=INFO,
-                message="%s-%s is %.3f A, %.3f A shorter than the X-ray target of "
-                        "%.2f A for %s-H." % (x.label, h.label, d, target - d,
+                message="%s-%s is %.3f A, %.3f A shorter than the %s target of "
+                        "%.3f A for %s-H." % (x.label, h.label, d, target - d,
+                                              "neutron" if neutron else "X-ray",
                                               target, x.element),
                 plat=["PLAT350" if x.element == "C" else
                       ("PLAT352" if x.element == "N" else "PLAT354")],
                 based_on=["_atom_site_fract_x"], sites=[x.label, h.label],
-                evidence={"distance": round(d, 4), "target_xray": target}))
+                evidence={"distance": round(d, 4), "target": target,
+                          "probe": "neutron" if neutron else "x-ray"}))
 
     if blk.h_treatment in _MISSING:
         nt.append(NotTested(area="hydrogen treatment consistency",

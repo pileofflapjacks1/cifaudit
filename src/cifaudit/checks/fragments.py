@@ -87,16 +87,17 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                       "_atom_site_fract_z"],
             sites=[s.label], evidence={"element": s.element}))
 
+    # Fragment count is NOT reported as a finding. Measured on 16 deposited COD
+    # structures it was >1 for 14 of them (88%): molecular and ionic crystals
+    # have many fragments by construction, so a finding here is pure noise. The
+    # count is still useful context, so it is attached to the isolated-atom
+    # findings and returned as a note instead.
     if len(comps) > 1:
         sizes = sorted((len(c) for c in comps), reverse=True)
-        f.append(Finding(
-            code="MULTIPLE_FRAGMENTS", severity=INFO,
-            message="The unit cell contains %d disconnected fragments (sizes %s). "
-                    "Legitimate for molecular or ionic structures; suspicious for "
-                    "a framework." % (len(comps), sizes[:10]),
-            plat=["PLAT004"],
-            based_on=["_atom_site_fract_x"],
-            evidence={"n_fragments": len(comps), "sizes": sizes[:20]}))
+        ctx.setdefault("_notes", []).append(
+            "connectivity: %d fragments in the unit cell (sizes %s). Normal for "
+            "molecular or ionic structures; unexpected for a framework."
+            % (len(comps), sizes[:10]))
 
     nt.append(NotTested(
         area="polymeric network dimensionality (0D/1D/2D/3D)",

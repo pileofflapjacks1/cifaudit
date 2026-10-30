@@ -1,0 +1,200 @@
+{
+  "directory": "/Users/joe/Projects/grok_phase_solver/data/raw/cod",
+  "n": 16,
+  "audited": 16,
+  "clean": 14,
+  "crashed": 0,
+  "unparseable": 0,
+  "seconds": 97.333664894104,
+  "rates": {
+    "SPACEGROUP_SETTING_DIFFERS": 1,
+    "NON_INTEGRAL_CELL_CONTENT": 1,
+    "PARTIAL_OCC_NO_DISORDER_GROUP": 1
+  },
+  "severity": {
+    "info": 3
+  },
+  "files": [
+    {
+      "file": "1543089.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "1543227.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 1
+      },
+      "codes": [
+        "SPACEGROUP_SETTING_DIFFERS"
+      ]
+    },
+    {
+      "file": "1544230.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "1544651.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "1549607.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "1550274.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "2012000.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "2013000.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "2016430.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "2016452.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "2017775.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 2
+      },
+      "codes": [
+        "NON_INTEGRAL_CELL_CONTENT",
+        "PARTIAL_OCC_NO_DISORDER_GROUP"
+      ]
+    },
+    {
+      "file": "2100301.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "2200000.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "2221836.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "2227862.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    },
+    {
+      "file": "2233297.cif",
+      "datablocks": 1,
+      "status": "ok",
+      "counts": {
+        "error": 0,
+        "warn": 0,
+        "info": 0
+      },
+      "codes": []
+    }
+  ]
+}

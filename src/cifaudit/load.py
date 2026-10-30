@@ -149,6 +149,7 @@ class Block:
     z: Optional[float]
     density_reported: Optional[float]
     h_treatment: Optional[str]
+    radiation_probe: Optional[str]
     present: set = field(default_factory=set)   # CIF data names actually present
     _raw: Any = None
 
@@ -301,4 +302,5 @@ def load(text: str, datablock: Optional[str] = None) -> Block:
         formula_moiety=sanitise(_val(blk, "_chemical_formula_moiety"), 200),
         formula_weight=fw, z=zz, density_reported=dens,
         h_treatment=sanitise(_val(blk, "_atom_sites_solution_hydrogens"), 32),
+        radiation_probe=sanitise(_val(blk, "_diffrn_radiation_probe"), 24),
         present=present, _raw=blk)

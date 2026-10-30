@@ -65,3 +65,31 @@ def bond_graph(sites, cell, bond_factor, radius_fn):
                 adj[i].add(j)
                 adj[j].add(i)
     return (dists, adj)
+
+
+def within_bonds(adj, max_depth):
+    """For each atom, the set of atoms reachable within `max_depth` bonds.
+
+    Contacts between atoms this close in the bond graph are a consequence of
+    molecular geometry, not packing. PLATON separates intra- from
+    inter-molecular contacts for the same reason. Excluding only 1,2 and 1,3
+    was not enough: a 1,4 C...H contact across a planar aromatic ring runs
+    about 2.1-2.2 A and was being reported as a clash (COD 2100301).
+    """
+    out = {}
+    for start in adj:
+        seen = {start}
+        frontier = [start]
+        for _ in range(max_depth):
+            nxt = []
+            for k in frontier:
+                for n in adj[k]:
+                    if n not in seen:
+                        seen.add(n)
+                        nxt.append(n)
+            frontier = nxt
+            if not frontier:
+                break
+        seen.discard(start)
+        out[start] = seen
+    return out

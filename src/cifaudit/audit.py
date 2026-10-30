@@ -23,7 +23,10 @@ DEFAULTS: Dict[str, Any] = {
     "hard_floor": 0.75,         # A; below this two atoms cannot both be real
     "nonbonded_min": 2.2,       # A; shortest acceptable non-bonded heavy contact
     "hh_min": 2.0,              # A; shortest acceptable H...H contact
+    "hbond_min": 1.2,           # A; below this an H...acceptor approach is
+                                # too short even for a hydrogen bond
     "bond_factor": 1.2,         # d <= bond_factor * (r_cov_i + r_cov_j) => bonded
+    "exclude_within_bonds": 3,  # skip contacts between atoms <=N bonds apart
     "xh_short_tol": 0.10,       # A below the X-ray X-H target before reporting
     "formula_tol": 0.05,
 }
@@ -59,6 +62,8 @@ def audit(text: str, datablock: Optional[str] = None,
         res.checked.append(mod.NAME)
         res.findings.extend(found)
         res.not_tested.extend(nt)
+    for note in ctx.pop("_notes", []):
+        res.notes.append(note)
 
     if not blk.sites and not blk.cell.complete():
         res.status = NOT_ENOUGH_DATA

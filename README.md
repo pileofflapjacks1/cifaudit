@@ -158,20 +158,65 @@ returned or echoed; atom labels and space-group symbols are sanitised (control
 characters stripped, length capped) before appearing in a report; and nothing in
 a CIF is ever treated as an instruction. There is a prompt-injection test.
 
+## Against real structures
+
+Until 2026-10-30 every CIF cifaudit had seen was a fixture written by its author,
+including the "clean" reference. The first run over **16 deposited COD
+structures** produced findings on **16/16 files** and exposed five bugs.
+
+| | before | after |
+|---|---|---|
+| files with ≥1 finding | **16/16** | **2/16** |
+| files completely clean | 0/16 | **14/16 (88%)** |
+| total findings | 36 (19 warn, 17 info) | **3 (0 warn, 3 info)** |
+| errors / crashes / unparseable | 0 / 0 / 0 | 0 / 0 / 0 |
+
+What real data found:
+
+1. **The missed-symmetry check fired on 16/16.** spglib derives symmetry from
+   the atoms it is given, and it was given the asymmetric unit — from which it
+   returns P1 for almost any real structure. Expanding first recovers the
+   declared space group on all 16.
+2. **Every short-contact finding was a hydrogen bond** — all 18 were H···O or
+   H···N between 1.3 and 2.2 Å.
+3. **1,4 contacts were reported as clashes.** A 1,4 C···H across a planar
+   aromatic ring is ~2.18 Å; exclusion now runs on topological distance.
+4. **`HO1` was read as holmium** instead of a hydroxyl hydrogen.
+5. **Species numbering used `hash()`**, which Python salts per process — so
+   output could vary between runs of a tool whose claim is determinism.
+
+All seven planted-defect fixtures still fire, so sensitivity was not traded for
+the lower false-positive rate. Each bug has a regression test.
+
+**The honest caveat: this is an in-sample result.** The rules were changed in
+response to these 16 files, so 88% measures fit to them, not behaviour on unseen
+structures. An out-of-sample run over a few hundred independently drawn COD
+entries is the test that would count, and it has not been done. Full write-up,
+including what is still untested and the O(n²) speed problem, in
+[`data/processed/cod_benchmark.md`](data/processed/cod_benchmark.md).
+
+```bash
+python3 scripts/run_cod_benchmark.py <dir-of-cifs> --json out.json
+```
+
 ## Tests
 
 ```bash
 pip install -e ".[test]" && pytest
 ```
 
-67 tests. Every planted defect has a fixture; the clean reference must produce
-zero findings. Two tests exist because they caught real bugs:
+75 tests. Every planted defect has a fixture; the clean reference must produce
+zero findings. Several exist because they caught real bugs:
 
 - `test_geminal_pairs_are_not_short_contacts` — the first implementation flagged a
   normal geminal H···O at 1.995 Å in formaldehyde as a short contact, because it
   excluded only bonded pairs and not 1,3 pairs.
 - `test_no_alert_level_is_asserted` — guards against drifting back into claiming
   an A/B/C/G level that the source does not support.
+- `tests/test_real_data_regressions.py` — eight tests, one per bug that a real
+  deposited structure exposed (see above), including a determinism test that
+  runs the audit under three `PYTHONHASHSEED` values and demands byte-identical
+  output.
 
 ## Limitations
 

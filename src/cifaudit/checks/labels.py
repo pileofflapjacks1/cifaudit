@@ -40,14 +40,20 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
         for s in blk.sites:
             if not s.type_symbol:
                 continue
-            from_label = element_of(None, s.label)
             from_type = element_of(s.type_symbol, None)
-            if from_label and from_type and from_label != from_type:
+            # A label is consistent with the scattering type when it STARTS WITH
+            # that element symbol. Deriving an element from the label greedily is
+            # wrong: "HO1" is a hydroxyl H named for O1, not holmium, and that
+            # misread produced a false positive on COD 2013000.
+            lab = (s.label or "").upper()
+            consistent = bool(from_type) and lab.startswith(from_type.upper())
+            from_label = element_of(None, s.label)
+            if from_type and not consistent:
                 f.append(Finding(
                     code="SCATTERING_TYPE_LABEL_MISMATCH", severity=WARN,
                     message="Site %s has _atom_site_type_symbol %r, which does not "
                             "agree with the element implied by the label (%s)."
-                            % (s.label, s.type_symbol, from_label),
+                            % (s.label, s.type_symbol, from_label or "?"),
                     plat=["PLAT017"],
                     based_on=["_atom_site_label", "_atom_site_type_symbol"],
                     sites=[s.label],
