@@ -101,3 +101,48 @@ def test_output_is_deterministic_across_processes(cif, tmp_path):
         outs.append(subprocess.check_output([sys.executable, "-c", script],
                                             env=env).decode())
     assert outs[0] == outs[1] == outs[2], "output varies with PYTHONHASHSEED"
+
+
+def test_bare_dot_cif_numbers_are_parsed(cif):
+    """CIF writes "1.", "0." and ".5"; older COD entries use them throughout.
+
+    Requiring a digit after the decimal point made parse_number reject them,
+    which over 20 out-of-sample COD structures produced 171 spurious
+    "unparseable occupancy" findings and 36 spurious "incomplete U(i,j)"
+    findings (a "0." U13 read as absent).
+    """
+    from cifaudit.load import load
+    b = load(cif("bare_dot_numbers"))
+    assert b.cell.a == 10.0 and b.cell.volume == 1000.0
+    assert len(b.sites) == 2
+    for s in b.sites:
+        assert s.occupancy == 1.0, s.label
+        assert all(v is not None for v in s.fract), s.label
+        assert s.uij is not None and len(s.uij) == 6, s.label
+
+
+def test_bare_dot_file_produces_no_spurious_findings(run):
+    c = codes(run("bare_dot_numbers"))
+    assert "OCC_UNPARSEABLE" not in c
+    assert "ADP_UIJ_INCOMPLETE" not in c
+    assert "CELL_INCOMPLETE" not in c
+
+
+def test_dot_and_question_mark_are_still_missing_values():
+    """"." and "?" are CIF's inapplicable/unknown markers, not numbers."""
+    from cifaudit.load import parse_number
+    assert parse_number(".") == (None, None)
+    assert parse_number("?") == (None, None)
+
+
+def test_special_position_copies_are_deduplicated(cif):
+    """gemmi's unit-cell expansion can emit coincident copies of an atom on a
+    special position, which then read as two atoms 0.000 A apart (seen on COD
+    1000200, Al1 at 0,0,0 with multiplicity 4)."""
+    from cifaudit.expand import expand
+    from cifaudit.load import load
+    b = load(cif("bare_dot_numbers"))
+    sites, _cell = expand(b)
+    keys = [(s.label, round(s.fract[0] % 1, 5), round(s.fract[1] % 1, 5),
+             round(s.fract[2] % 1, 5)) for s in sites]
+    assert len(keys) == len(set(keys)), "coincident duplicates in expansion"

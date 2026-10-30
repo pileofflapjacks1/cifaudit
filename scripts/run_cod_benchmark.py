@@ -31,9 +31,21 @@ def main(argv=None):
     ap.add_argument("directory")
     ap.add_argument("--json", dest="json_out")
     ap.add_argument("--glob", default="*.cif")
+    ap.add_argument("--recursive", action="store_true",
+                    help="walk subdirectories too")
+    ap.add_argument("--limit", type=int, help="stop after N files")
     a = ap.parse_args(argv)
 
-    files = sorted(glob.glob(os.path.join(a.directory, a.glob)))
+    if a.recursive:
+        files = []
+        for root, _dirs, names in os.walk(a.directory):
+            files.extend(os.path.join(root, n) for n in names
+                         if n.endswith(".cif"))
+        files.sort()
+    else:
+        files = sorted(glob.glob(os.path.join(a.directory, a.glob)))
+    if a.limit:
+        files = files[:a.limit]
     if not files:
         print("no files matching %s in %s" % (a.glob, a.directory), file=sys.stderr)
         return 2

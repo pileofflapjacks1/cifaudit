@@ -31,7 +31,14 @@ MAX_LABEL = 32
 MAX_SITES = 100000
 
 _CTRL = re.compile(r"[\x00-\x1f\x7f]")
-_SU = re.compile(r"^\s*([+-]?[0-9]*\.?[0-9]+(?:[eE][+-]?[0-9]+)?)\s*(?:\(([0-9]+)\))?\s*$")
+# CIF numbers legitimately appear as "1.", "0.", ".5" and "-.5" as well as
+# "0.2000". Requiring a digit after the decimal point rejected "1." and "0.",
+# which are ubiquitous in older COD entries: that single regex produced 171
+# spurious "unparseable occupancy" and 36 spurious "incomplete U(i,j)" findings
+# over 20 out-of-sample structures, because "0." U13/U23 read as absent.
+_SU = re.compile(
+    r"^\s*([+-]?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)"
+    r"\s*(?:\(([0-9]+)\))?\s*$")
 _ELEM = re.compile(r"^([A-Za-z]{1,2})")
 
 
@@ -68,7 +75,7 @@ def parse_number(raw: Optional[str]) -> Tuple[Optional[float], Optional[float]]:
     if m.group(2) is not None:
         digits = m.group(1)
         if "." in digits:
-            dp = len(digits.split(".", 1)[1])
+            dp = len(digits.split(".", 1)[1])      # "1." -> 0 decimal places
         else:
             dp = 0
         su = int(m.group(2)) * (10.0 ** -dp)

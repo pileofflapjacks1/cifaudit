@@ -1,0 +1,35 @@
+data_bare_dot_numbers
+_chemical_formula_sum            'C1 O1'
+_cell_length_a                   10.
+_cell_length_b                   10.
+_cell_length_c                   10.
+_cell_angle_alpha                90.
+_cell_angle_beta                 90.
+_cell_angle_gamma                90.
+_cell_volume                     1000.
+_cell_formula_units_Z            1
+_symmetry_space_group_name_H-M   'P 1'
+loop_
+_symmetry_equiv_pos_as_xyz
+ 'x, y, z'
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_U_iso_or_equiv
+_atom_site_adp_type
+C1 C 0. 0. 0. 1. .025 Uani
+O1 O .121 0. 0. 1. .028 Uani
+loop_
+_atom_site_aniso_label
+_atom_site_aniso_U_11
+_atom_site_aniso_U_22
+_atom_site_aniso_U_33
+_atom_site_aniso_U_12
+_atom_site_aniso_U_13
+_atom_site_aniso_U_23
+C1 .025 .025 .025 0. 0. 0.
+O1 .028 .028 .028 0. 0. 0.

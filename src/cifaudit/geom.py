@@ -12,6 +12,11 @@ try:
 except ImportError:  # pragma: no cover
     gemmi = None
 
+try:
+    import numpy as _np
+except ImportError:  # pragma: no cover
+    _np = None
+
 IMAGES = [t for t in itertools.product((-1, 0, 1), repeat=3)]
 
 
@@ -46,6 +51,55 @@ def self_image_distance(cell, f) -> Optional[float]:
     return best
 
 
+def _cartesian(cell, sites):
+    """Fractional -> Cartesian for every site, once."""
+    out = []
+    for s in sites:
+        p = cell.orthogonalize(gemmi.Fractional(*s.fract))
+        out.append((p.x, p.y, p.z))
+    return out
+
+
+def _image_vectors(cell):
+    """The 27 lattice translations -1..+1 as Cartesian vectors."""
+    origin = cell.orthogonalize(gemmi.Fractional(0.0, 0.0, 0.0))
+    vecs = []
+    for img in IMAGES:
+        p = cell.orthogonalize(gemmi.Fractional(float(img[0]), float(img[1]),
+                                                float(img[2])))
+        vecs.append((p.x - origin.x, p.y - origin.y, p.z - origin.z))
+    return vecs
+
+
+def _pairwise_min(cell, sites):
+    """Shortest distance and image for every pair, vectorised when numpy exists.
+
+    Identical results to the per-pair loop: the same 27 explicit images, in the
+    same order, with ties resolved to the first image. Minimum-image convention
+    is NOT used, because it is wrong for skewed cells.
+    """
+    n = len(sites)
+    cart = _cartesian(cell, sites)
+    vecs = _image_vectors(cell)
+    dists = {}
+    if _np is not None and n > 1:
+        P = _np.asarray(cart, dtype=float)              # (n, 3)
+        V = _np.asarray(vecs, dtype=float)              # (27, 3)
+        for i in range(n - 1):
+            # (n-i-1, 27, 3): every later atom, shifted by every image
+            diff = (P[i + 1:][:, None, :] + V[None, :, :]) - P[i][None, None, :]
+            d2 = (diff * diff).sum(axis=2)              # (n-i-1, 27)
+            k = d2.argmin(axis=1)
+            dmin = _np.sqrt(d2[_np.arange(d2.shape[0]), k])
+            for off, (dd, kk) in enumerate(zip(dmin, k)):
+                dists[(i, i + 1 + off)] = (float(dd), IMAGES[int(kk)])
+        return dists
+    for i in range(n):
+        for j in range(i + 1, n):
+            dists[(i, j)] = min_distance(cell, sites[i].fract, sites[j].fract)
+    return dists
+
+
 def bond_graph(sites, cell, bond_factor, radius_fn):
     """Pairwise shortest distances plus the covalent bond graph.
 
@@ -53,17 +107,14 @@ def bond_graph(sites, cell, bond_factor, radius_fn):
     and adj maps index -> set of bonded indices. Pairs involving an element with
     no tabulated radius are present in dists but never bonded.
     """
-    dists = {}
+    dists = _pairwise_min(cell, sites)
     adj = {i: set() for i in range(len(sites))}
-    for i in range(len(sites)):
-        ri = radius_fn(sites[i].element)
-        for j in range(i + 1, len(sites)):
-            rj = radius_fn(sites[j].element)
-            d, img = min_distance(cell, sites[i].fract, sites[j].fract)
-            dists[(i, j)] = (d, img)
-            if ri is not None and rj is not None and d <= (ri + rj) * bond_factor:
-                adj[i].add(j)
-                adj[j].add(i)
+    radii = [radius_fn(s.element) for s in sites]
+    for (i, j), (d, _img) in dists.items():
+        ri, rj = radii[i], radii[j]
+        if ri is not None and rj is not None and d <= (ri + rj) * bond_factor:
+            adj[i].add(j)
+            adj[j].add(i)
     return (dists, adj)
 
 
