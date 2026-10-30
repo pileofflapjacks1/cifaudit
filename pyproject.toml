@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cifaudit"
+version = "0.1.0"
+description = "Offline, deterministic consistency checks on crystallographic CIF files, with an MCP server. Not checkCIF."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.8"
+keywords = ["crystallography", "CIF", "checkCIF", "PLATON", "validation", "MCP"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Chemistry",
+]
+dependencies = [
+  "gemmi>=0.6",
+]
+
+[project.optional-dependencies]
+# spglib enables the ADDSYM-equivalent missed-symmetry check. Without it that
+# check abstains rather than silently passing.
+symmetry = ["spglib>=2.0"]
+# The MCP server needs the official SDK, which requires Python >= 3.10.
+# The library and CLI do not.
+mcp = ["mcp>=1.2"]
+test = ["pytest>=7", "spglib>=2.0"]
+
+[project.scripts]
+cifaudit = "cifaudit.cli:main"
+cifaudit-mcp = "cifaudit.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+cifaudit = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

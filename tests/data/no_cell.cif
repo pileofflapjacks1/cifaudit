@@ -1,0 +1,2 @@
+data_no_cell
+_chemical_formula_sum 'C1'
