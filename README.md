@@ -243,17 +243,24 @@ all nineteen thresholds recorded and a commitment to change nothing in response:
 700 CIFs from eight COD directories disjoint from both prior samples, zero ID
 overlap.
 
-| | in-sample (500) | **held-out (700)** | held-out, after the precision-study fixes |
-|---|---|---|---|
-| no structural findings | 46% | **47%** | **49%** |
-| crashed / unparseable | 0 / 0 | **0 / 0** | 0 / 0 |
-| seconds per file | 0.69 | 0.44 | 0.38 |
+| | in-sample (500) | **held-out (700)** | + bug fixes | + conventions |
+|---|---|---|---|---|
+| no structural findings | 46% | **47%** | 49% | **62%** |
+| crashed / unparseable | 0 / 0 | **0 / 0** | 0 / 0 | 0 / 0 |
+| seconds per file | 0.69 | 0.44 | 0.38 | 0.25 |
 
 The last column re-runs the same 700 after the four bugs below were fixed
 (`d72fecf`); nothing was tuned to them. Structural findings fell by about
 two-thirds, mostly because each finding is now reported once rather than once
 per symmetry copy. `DUPLICATE_LABELS` fell from 22 files to 2: twenty were
 primed labels misread as duplicates.
+
+The conventions column (`354e9fd`) re-runs the same 700 again. Most of the rise
+to 62% is `NON_INTEGRAL_CELL_CONTENT` going from 143 files to 0: all 143 had a
+formula to compare against, and that check was judged wrong on 10 of 10 sampled
+findings. `FORMULA_SITES_MISMATCH` fell from 124 to 92 and `ISOLATED_ATOM` from
+71 to 49. This is noise removed, not structures becoming more correct, and none
+of these rates is a precision.
 
 It held. Per-check rates move by a few points at most. I had predicted
 materially worse and recorded that prediction before running it.
