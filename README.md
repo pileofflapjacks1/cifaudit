@@ -218,6 +218,35 @@ a false-positive rate. And it is in-sample again, because those fixes were made
 in response to these 500 files. A third independent draw is the test that would
 confirm it; it costs about three minutes now and has not been done.
 
+### Held out: 700 structures the tool had never seen
+
+Everything above was fitted to one 500-file sample over four rounds, so 46% was a
+fitting statistic. Pre-registered a held-out draw against commit `1b705c9` with
+all nineteen thresholds recorded and a commitment to change nothing in response:
+700 CIFs from eight COD directories disjoint from both prior samples, zero ID
+overlap.
+
+| | in-sample (500) | **held-out (700)** |
+|---|---|---|
+| no structural findings | 46% | **47%** |
+| crashed / unparseable | 0 / 0 | **0 / 0** |
+| seconds per file | 0.69 | 0.44 |
+
+It held. Per-check rates move by a few points at most. I had predicted
+materially worse and recorded that prediction before running it.
+
+The likely reason: of nineteen parameters only two were set from the sample.
+Everything else was a conceptual correction — symmetry must come from the
+expanded cell, a hydrogen bond is not a clash, `1.` is a number, `HO1` is not
+holmium, a dummy atom is not an atom, a shared site is one site. Principled
+fixes generalise; tuned constants do not.
+
+**47% is not a quality statistic about COD** and not a false-positive rate — it
+is the fraction of structures with no structural finding. Rates still too high
+for correct published work, and so still carrying false positives:
+`NON_INTEGRAL_CELL_CONTENT` 20%, `FORMULA_SITES_MISMATCH` 18%, `ISOLATED_ATOM`
+12%.
+
 ### Shared sites
 
 Two elements can occupy one crystallographic position with partial occupancies —

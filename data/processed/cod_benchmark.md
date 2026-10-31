@@ -301,3 +301,77 @@ three as still carrying false positives.
 
 Everything here remains **in-sample**: these 500 files drove the fixes. A third
 independent draw is still the test that would confirm any of it.
+
+---
+
+# Held-out draw: 700 structures, never seen
+
+The measurement. Everything up to this point had been fitted to the same 500
+files across four rounds of fixes, so 46% was a fitting statistic.
+
+## Pre-registered
+
+Version under test: commit `1b705c9`, working tree clean and identical to
+`origin/main`. All nineteen thresholds were recorded before the run. **Committed
+in advance to changing nothing in response to the result** — a fix made in
+response would convert this into a fifth round of fitting and require a fourth
+sample to learn anything.
+
+700 CIFs, drawn by rsync from eight directories disjoint from both prior samples
+(`1/01/10`, `2/05/00` empty, `4/11/00`, `4/50/20`, `7/20/30`, `8/10/40`,
+`9/00/50`, `9/01/50`), spanning COD IDs 1011000–9015099. **Zero ID overlap**,
+verified rather than assumed.
+
+## Result: it holds
+
+| | in-sample (500, fitted) | held-out (700, unseen) |
+|---|---|---|
+| no structural findings | 46% | **47%** |
+| no findings of any kind | 10% | 15% |
+| crashed | 0 | **0** |
+| unparseable | 0 | **0** |
+| seconds per file | 0.69 | 0.44 |
+
+Per-check rates move by only a few points, and the largest movers look like
+sample composition rather than overfitting: `CELL_VOLUME_SU_ABSENT` +17 (a
+reporting convention that varies by journal and era), `ISOLATED_ATOM` +4,
+`ADP_EXTREME_ANISOTROPY` −4, `H_MULTIPLE_CONNECTIONS` −4, `DUPLICATE_LABELS` −3.
+No check blew up.
+
+I expected materially worse and said so before running it. The prediction was
+wrong.
+
+## Why it probably generalised
+
+Almost none of the work was threshold tuning. Of nineteen parameters, exactly two
+were set from the sample — `adp_axis_ratio_max` from a percentile of the observed
+distribution, and `shared_site_bond_fraction`. Everything else was a *conceptual*
+correction that happens to be right independent of any sample:
+
+- symmetry must be derived from the expanded cell, not the asymmetric unit
+- a hydrogen bond is not a clash
+- 1,2/1,3/1,4 neighbours are molecular geometry, not packing
+- `1.` and `0.` are numbers
+- `HO1` is a hydroxyl hydrogen, not holmium
+- bonding uses an additive tolerance; `SQRT(U3/U1)` is the ADP ratio
+- a dummy atom is not an atom; a shared site is one site
+
+Principled fixes generalise. Tuned constants do not. That is the useful finding
+here, and it is the opposite of what four rounds of in-sample work felt like
+from the inside.
+
+## What 47% is not
+
+It is **not** "47% of deposited structures are fine", and not a false-positive
+rate. It is the fraction with no structural finding from the checks that ran.
+Several rates remain too high for correct published structures and so still carry
+false positives: `NON_INTEGRAL_CELL_CONTENT` 20%, `FORMULA_SITES_MISMATCH` 18%,
+`ISOLATED_ATOM` 12%. Those are the next things worth diagnosing — on a fresh
+sample, not this one.
+
+Two things appeared for the first time out-of-sample, which is the point of a
+wider draw: checks that had never fired at all (`OCC_ZERO`, `OCC_GT_ONE`,
+`UISO_NEGATIVE`, `SPACEGROUP_UNINTERPRETABLE`, `ADP_ANISO_DECLARED_NO_UIJ`) now
+do; and reporting *errors* jumped from 9 to 144, which is `SPACEGROUP_ABSENT` or
+`SYMOPS_ABSENT` on a large group of files that list no symmetry operators.
+Neither has been investigated, deliberately.
