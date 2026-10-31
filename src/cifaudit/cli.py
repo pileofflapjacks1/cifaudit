@@ -86,15 +86,29 @@ def main(argv=None):
         except ValueError:
             p.error("value for %s must be %s" % (k, type(DEFAULTS[k]).__name__))
 
-    worst = 2
+    # Exit codes, as documented: 0 clean, 1 a finding at or above --fail-on in
+    # ANY file, 2 any file could not be read or parsed.
+    #
+    # The previous implementation tracked a single `worst` value with min()
+    # across files, so a batch containing one file with errors and one clean
+    # file exited 0 in either order - which meant `cifaudit *.cif` in CI passed
+    # as long as any single file was clean. It also returned 1 for a successful
+    # --list-datablocks, 1 rather than 2 for an unparseable CIF, and abandoned
+    # every remaining file the moment one could not be read.
+    any_fail = False
+    any_bad_input = False
     results = []
     for path in a.files:
         try:
             with open(path, "r") as fh:
                 text = fh.read()
         except OSError as exc:
-            print("%s: cannot read: %s" % (path, exc), file=sys.stderr)
-            return 2
+            any_bad_input = True
+            if a.json:
+                results.append({"file": path, "error": "cannot read: %s" % exc})
+            else:
+                print("%s: cannot read: %s" % (path, exc), file=sys.stderr)
+            continue
         try:
             if a.list_datablocks:
                 names = datablock_names(text)
@@ -105,11 +119,11 @@ def main(argv=None):
                 continue
             d = audit(text, a.datablock, options or None).to_dict()
         except CifError as exc:
+            any_bad_input = True
             if a.json:
                 results.append({"file": path, "error": str(exc)})
             else:
                 print("%s: %s" % (path, exc), file=sys.stderr)
-            worst = min(worst, 2)
             continue
         d["file"] = path
         results.append(d)
@@ -123,19 +137,18 @@ def main(argv=None):
         if a.fail_on_reporting:
             for k, v in d.get("reporting_counts", {}).items():
                 c[k] = c.get(k, 0) + v
-        if c[ERROR]:
-            worst = min(worst, 1)
-        elif c[WARN]:
-            worst = min(worst, 1 if a.fail_on == "warn" else 0)
-        else:
-            worst = min(worst, 0)
+        if c[ERROR] or (a.fail_on == "warn" and c[WARN]):
+            any_fail = True
 
     if a.json:
         print(json.dumps(results if len(results) != 1 else results[0], indent=2))
+    # Unreadable input is reported even under --fail-on never: "never" is about
+    # findings, and exit 0 would hide that the tool could not do its job.
+    if any_bad_input:
+        return 2
     if a.fail_on == "never":
         return 0
-    return 0 if worst == 0 else 1
-
+    return 1 if any_fail else 0
 
 if __name__ == "__main__":
     sys.exit(main())

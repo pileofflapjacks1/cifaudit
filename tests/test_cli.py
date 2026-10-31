@@ -73,3 +73,47 @@ def test_report_always_shows_not_tested(capsys):
 def test_report_always_shows_disclaimer(capsys):
     main([p("clean")])
     assert "not checkCIF" in capsys.readouterr().out
+
+
+# ---- exit codes across MULTIPLE files ---------------------------------------
+# No test ran more than one file, so four exit-code bugs went unnoticed until
+# CI was being written. The worst: a batch with one failing and one clean file
+# exited 0, so `cifaudit *.cif` in CI passed as long as any one file was clean.
+
+def test_a_batch_fails_if_ANY_file_fails(capsys):
+    assert main([p("npd"), p("clean")]) == 1
+    capsys.readouterr()
+    assert main([p("clean"), p("npd")]) == 1
+
+
+def test_a_batch_of_clean_files_passes(capsys):
+    assert main([p("clean"), p("clean")]) == 0
+
+
+def test_list_datablocks_success_exits_zero(capsys):
+    assert main([p("multiblock"), "--list-datablocks"]) == 0
+
+
+def test_unparseable_cif_exits_two(capsys, tmp_path):
+    bad = tmp_path / "broken.cif"
+    bad.write_text("data_x\n_this is not valid cif ;;; [\n")
+    assert main([str(bad)]) == 2
+
+
+def test_a_missing_file_does_not_abandon_the_rest(capsys):
+    assert main(["/nonexistent/nope.cif", p("clean")]) == 2
+    out = capsys.readouterr().out
+    assert "datablock: clean" in out, "clean.cif was never audited"
+
+
+def test_bad_input_beats_fail_on_never(capsys, tmp_path):
+    """'never' is about findings; it must not hide that a file was unreadable."""
+    assert main(["/nonexistent/nope.cif", "--fail-on", "never"]) == 2
+
+
+def test_json_batch_reports_every_file_including_errors(capsys):
+    import json
+    main(["/nonexistent/nope.cif", p("clean"), "--json"])
+    rows = json.loads(capsys.readouterr().out)
+    assert len(rows) == 2
+    assert "error" in rows[0] and rows[1]["datablock"] == "clean"

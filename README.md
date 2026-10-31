@@ -1,5 +1,7 @@
 # cifaudit
 
+[![tests](https://github.com/pileofflapjacks1/cifaudit/actions/workflows/ci.yml/badge.svg)](https://github.com/pileofflapjacks1/cifaudit/actions/workflows/ci.yml)
+
 **Offline consistency checks on a crystallographic CIF, as a library, a CLI and an
 MCP server.**
 
@@ -105,8 +107,11 @@ cifaudit structure.cif --set hh_min=1.8       # override any threshold
 cifaudit *.cif --fail-on warn                 # for CI
 ```
 
-Exit codes: `0` clean, `1` findings at or above `--fail-on` (default `error`),
-`2` the file could not be read or parsed.
+Exit codes: `0` clean, `1` a finding at or above `--fail-on` (default `error`)
+in **any** file, `2` any file could not be read or parsed. A batch fails if one
+file fails; an unreadable file does not stop the rest being audited; and
+`--fail-on never` suppresses exit 1 but not exit 2, since an unreadable file
+means the tool could not do its job.
 
 ```python
 from cifaudit import audit
@@ -358,7 +363,7 @@ asked a different question.
 pip install -e ".[test]" && pytest
 ```
 
-112 tests. Every planted defect has a fixture; the clean reference must produce
+119 tests. Every planted defect has a fixture; the clean reference must produce
 zero findings. Several exist because they caught real bugs:
 
 - `test_geminal_pairs_are_not_short_contacts` — the first implementation flagged a
