@@ -48,7 +48,7 @@ Spot-checked by recomputing independently; every claim checked held up.
    *ratios*: in non-orthogonal cells sqrt(U3/U1) must be computed in Cartesian
    axes. P35 is 4.10 raw but 2.76 in Cartesian axes; P38 is 4.30 raw but 3.65.
    The 4.0 threshold was calibrated on the same wrong values and needs
-   recalibrating.  is unaffected.
+   recalibrating. `ADP_NPD` is unaffected.
 3. **Primes are stripped from labels.** Quote-stripping meant for CIF quoting
    turns `C1'` and `C1''` into `C1`, so distinct atoms read as duplicates.
 
