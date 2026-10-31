@@ -52,6 +52,7 @@ PLAT: Dict[str, Any] = {
     "PLAT180": (4, "Check rounding of cell axes and angles"),
     "PLAT211": (2, "Test for NPD ADP's in main residue(s)"),
     "PLAT212": (2, "Test for NPD ADP's in anion? & solvent ?"),
+    "PLAT213": (2, "Test ratio adp max/min in main residue(s)"),
     "PLAT215": (3, "Test for unusual disordered atom ADP in main residue"),
     "PLAT217": (1, "Test for incomplete U(i,j) data"),
     "PLAT220": (2, "Test Ueq(max)/Ueq(Min) range for non-H atoms in non-solvent"),
