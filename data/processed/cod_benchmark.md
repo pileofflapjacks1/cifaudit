@@ -372,6 +372,14 @@ sample, not this one.
 Two things appeared for the first time out-of-sample, which is the point of a
 wider draw: checks that had never fired at all (`OCC_ZERO`, `OCC_GT_ONE`,
 `UISO_NEGATIVE`, `SPACEGROUP_UNINTERPRETABLE`, `ADP_ANISO_DECLARED_NO_UIJ`) now
-do; and reporting *errors* jumped from 9 to 144, which is `SPACEGROUP_ABSENT` or
-`SYMOPS_ABSENT` on a large group of files that list no symmetry operators.
-Neither has been investigated, deliberately.
+do; and reporting *errors* jumped from 9 to 144.
+
+**Correction.** The first version of this write-up guessed that the 144 were
+`SPACEGROUP_ABSENT` or `SYMOPS_ABSENT` across many files with no symmetry
+operator list. That guess was wrong and was committed without being checked.
+Measured afterwards: **`SYMOPS_ABSENT` fires on zero of the 700**, and all 144
+are `ADP_ANISO_DECLARED_NO_UIJ` concentrated in **5 files** — sites such as
+`H1O1A` in COD 4502027 declared `Uani` while absent from the
+`_atom_site_aniso_*` loop. Hydrogens are rarely refined anisotropically, so
+these look like genuine deposition inconsistencies (PLAT217/PLAT806) rather than
+false positives, though they have not been adjudicated.
