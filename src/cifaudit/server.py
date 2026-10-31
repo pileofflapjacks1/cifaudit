@@ -7,6 +7,11 @@ work on 3.8+; only this file needs the newer interpreter.
     pip install "cifaudit[mcp]"
     cifaudit-mcp                    # stdio
 
+Both SDK generations are supported. `mcp` 2.0 renamed `FastMCP` to `MCPServer`
+and moved it to `mcp.server.mcpserver`; the v1 path is kept as a fallback
+because plenty of environments still have it. Their constructor, `tool`
+decorator and `run` method are shape-compatible for what this server needs.
+
 Design notes:
 * Tools are deterministic. No network access, no model in the validation path.
 * `list_datablocks` should be called first on an unfamiliar file, so the wrong
@@ -21,17 +26,25 @@ SDK present; this module contains no behaviour of its own.
 
 from . import tools
 
-try:
-    from mcp.server.fastmcp import FastMCP
-except ImportError as exc:  # pragma: no cover - depends on the interpreter
-    raise SystemExit(
-        "The MCP server needs the 'mcp' package, which requires Python >= 3.10:\n"
-        "    pip install \"cifaudit[mcp]\"\n"
-        "The cifaudit library and CLI work without it on Python 3.8+, and the\n"
-        "tool implementations are importable from cifaudit.tools.\n"
-        "(%s)" % exc)
+SDK_API = None
 
-mcp = FastMCP("cifaudit")
+try:                                            # mcp >= 2
+    from mcp.server.mcpserver import MCPServer as _Server
+    SDK_API = "mcp>=2 (mcp.server.mcpserver.MCPServer)"
+except ImportError:
+    try:                                        # mcp 1.x
+        from mcp.server.fastmcp import FastMCP as _Server
+        SDK_API = "mcp<2 (mcp.server.fastmcp.FastMCP)"
+    except ImportError as exc:                  # pragma: no cover
+        raise SystemExit(
+            "The MCP server needs the 'mcp' package, which requires "
+            "Python >= 3.10:\n"
+            "    pip install \"cifaudit[mcp]\"\n"
+            "The cifaudit library and CLI work without it on Python 3.8+, and\n"
+            "the tool implementations are importable from cifaudit.tools.\n"
+            "(%s)" % exc)
+
+mcp = _Server(name="cifaudit")
 
 for _name, _fn in tools.TOOLS.items():
     mcp.tool(name=_name)(_fn)

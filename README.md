@@ -129,6 +129,11 @@ cifaudit-mcp            # stdio
 | `describe_alert` | Look up a PLAT code; returns PLATON's verbatim description. |
 | `coverage` | What is and is not implemented, so a caller can decide whether checkCIF is required. |
 
+Verified end to end against `mcp` 2.3.0 (protocol 2025-11-25): all four tools
+called over stdio by a real client, including abstention on bad input and the
+prompt-injection fixture. Reproduce with `scripts/mcp_smoke.py`; both SDK
+generations are supported, since 2.0 renamed `FastMCP` to `MCPServer`.
+
 The implementations are importable directly, with no SDK and no MCP runtime:
 
 ```python
@@ -376,13 +381,11 @@ zero findings. Several exist because they caught real bugs:
 - Covalent radii are tabulated for a subset of elements
   ([Cordero et al., *Dalton Trans.* 2008, 2832](https://doi.org/10.1039/B801115J)).
   Elements outside that table cause the dependent checks to abstain.
-- The real `mcp` SDK has never been imported. Every published release requires
-  Python ≥ 3.10 and this was written on 3.8. The four tool implementations live
-  in `cifaudit.tools` as plain functions and are fully tested; `server.py` is a
-  registration layer whose wiring is tested against a stub SDK. What remains
-  unverified is exactly one thing: whether the real SDK accepts these
-  signatures. Until someone runs `cifaudit-mcp`, treat the MCP interface as
-  untried.
+- The MCP server needs Python ≥ 3.10 (every published `mcp` release does), while
+  the library and CLI run on 3.8+. It **has** now been run end to end against
+  the real SDK — `mcp` 2.3.0, protocol 2025-11-25, all four tools called over
+  stdio by a real client — via `scripts/mcp_smoke.py`. That is a script rather
+  than a pytest test because the test environment is 3.8.
 
 ## Not affiliated
 
