@@ -1,0 +1,362 @@
+[
+ {
+  "id": "P01",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Recomputed cell content Ca 3.92, Na 7.88, Al 15.84, Si 16.16; exactly 4 x the declared mineral formula Al3.96 Ca0.98 Na1.97 Si4.04. The non-integral values come from declared Ca/Na and Al/Si site mixing, which is normal for a mineral solid solution."
+ },
+ {
+  "id": "P02",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Fe 1.60, Nb 2.40 per cell equals Z=16 x formula Fe0.1 Nb0.15 (calzirtite). This is declared mixed-site occupancy and is expected for a mineral."
+ },
+ {
+  "id": "P03",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "The counts (Bi 23.07, Pb 55.37, Sb 13.56, Cu 2.6, Fe 1.4) equal Z=2 x the declared izoklakeite formula. Non-integral values reflect normal sulfosalt cation mixing."
+ },
+ {
+  "id": "P04",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "Ba/K/Cr/Mg/Fe are non-integral because of declared site mixing in a magnetoplumbite-type mineral, which is expected. The tool's Fe 6.08 is also wrong: the split Fe2 site (0,0,0.257) occ 0.5 is a 4e position (multiplicity 4) whose images are ~0.3 A apart, and counting both gives Fe 7.08 = 2 x 3.54, as the formula states."
+ },
+ {
+  "id": "P05",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Fe 0.33, Mg 0.82, Ca 1.14, Na 2.41 equal Z=4 x the declared pyroxene formula (Fe0.082 Mg0.205 Ca0.286 Na0.602). This is normal M-site solid solution."
+ },
+ {
+  "id": "P06",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "C 181.5 comes from merging the disordered ethyl acetate atom C4S (occ 0.5, at 0.496,0.489,0.498) with its inversion image 0.34 A away. These are two half-occupied alternative positions, so the correct count is 2 x 0.5 = 1, giving C 182 = 2 x C91, which matches _chemical_formula_sum."
+ },
+ {
+  "id": "P07",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Na 5.64 and O 92.52 equal Z=4 x formula Na1.41 O23.13 (monteregianite). They come from declared partial Na and water sites (e.g. O16W4 0.46, O17W5 0.35), which is expected in a zeolite-like hydrated mineral."
+ },
+ {
+  "id": "P08",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "Na sites with occupancies 0.25+0.13+0.5+0.65 = 1.53 per asymmetric unit, x2 = 3.06, consistent with the declared formula Na1.525. The structure is SQUEEZEd and the partial Na counter-ions are an intentional, declared modelling choice."
+ },
+ {
+  "id": "P09",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Si 11.92, Al 27.24, B 3.92 equal Z=4 x the dumortierite formula Al6.81 B0.98 Si2.98. This is declared site mixing and normal for the mineral."
+ },
+ {
+  "id": "P10",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Mg 5.104, Ni 2.896 equal Z=4 x formula Mg1.276 Ni0.724 (olivine solid solution). The mixed M sites are expected."
+ },
+ {
+  "id": "P11",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "Symmetry expansion gives H 46 per formula unit vs 62 in the formula. The eight water oxygens O1W-O8W carry no H atoms (16 H missing) although the formula includes them."
+ },
+ {
+  "id": "P12",
+  "verdict": "real",
+  "confidence": "low",
+  "reason": "The site list has 31 H per formula unit vs 28: methyl C(10) carries six H atoms (H1(10)-H6(10)), which is a two-orientation disordered methyl. The CIF has no occupancy column, so all six count as full weight. The underlying model is legitimate, but the deposited atom list is inconsistent with the formula."
+ },
+ {
+  "id": "P13",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "H 28 vs 29: the ephedrinium hydroxyl O(10) has no H atom in the site list, while the formula (C10H16NO cation) includes it."
+ },
+ {
+  "id": "P14",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "The tool ignored _atom_site_attached_hydrogens. Methyl carbons C(1)-C(4) each declare attached_hydrogens = 3 (12 H), which with the 4 modelled N-H gives 16 H = the formula C4H16Cl4CoN2."
+ },
+ {
+  "id": "P15",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "H 0 vs 1.88: this is a mica mineral whose OH hydrogen was not located, a standard convention in mineral X-ray refinements. The formula gives the chemical composition, and all heavy-atom contents match exactly (Al 2.908, F 0.12, O 11.88, Si 3.092)."
+ },
+ {
+  "id": "P16",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "H 0 vs 0.12: a trace H in the mica formula, presumably for charge balance, that is not modelled. This is a mineral convention, and all other elements match the formula exactly."
+ },
+ {
+  "id": "P17",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "The tool ignored _atom_site_attached_hydrogens. Water O(5) declares attached_hydrogens = 2, giving 26 + 2 = 28 H = the formula."
+ },
+ {
+  "id": "P18",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "H 14 vs 24: the moiety [(C11H7O3N7)2Cu3(H2O)](BF4)2(H2O)4 has 5 water molecules (10 H), none of which have H atoms in the model, while the formula includes them."
+ },
+ {
+  "id": "P19",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "H 31 vs 32: H atoms are listed for every CH2/CH3 except the terminal methyl C(12) of one butyl chain, which has only H(121)/H(122). One methyl H is missing from the model."
+ },
+ {
+  "id": "P20",
+  "verdict": "real",
+  "confidence": "medium",
+  "reason": "The CIF has no occupancy column, so the dimethylammonium N, which is disordered across an inversion centre, counts twice: N 2 vs 1 is an artefact of the missing occupancy. The H deficit is genuine, though: no methyl H atoms are modelled on C (6 H missing), so the site list really does disagree with the formula."
+ },
+ {
+  "id": "P21",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Br is bonded to Zn at 2.420 A, well within the Cordero-based cutoff of 2.87 A. It is a coordinated bromide (dibromobis(trimethylamine oxide)zinc), not isolated."
+ },
+ {
+  "id": "P22",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "N12 (guest ammonia, on a 2-fold axis) has no atom within the bonding cutoff (nearest heavy atom at 3.26 A, nearest H at 2.45 A). The NH3 hydrogens are not modelled, which is a genuine omission worth flagging."
+ },
+ {
+  "id": "P23",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "Applied the expert's isolated-O rubric clarification. O5 is a 0.25-occupancy lattice water (the formula includes 4 lattice H2O) with an O...F3(BF4) contact at 2.71 A consistent with hydrogen bonding; the 2.37 A contact is to O8, another 0.25-occupancy water site, likely an alternative position. This is ordinary modelled solvent whose H atoms were not located, so the isolated-O flag is not warranted."
+ },
+ {
+  "id": "P24",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "Cl(2) is the uncoordinated chloride counter-ion of a Co(III) salt (moiety lists a separate Cl), with H...Cl contacts at 2.24-2.53 A (hydrogen bonds). An isolated halide counter-ion is expected, not an error."
+ },
+ {
+  "id": "P25",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Tl1 has Tl-N contacts of 2.742 and 2.748 A to the pyridyl/phosphole ligand. These are normal Tl(I)-N coordination bonds that fall just outside the covalent-radius cutoff (2.61 A), so the atom is coordinated, not isolated."
+ },
+ {
+  "id": "P26",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "I12 is the central iodide of a polyiodide (moiety lists I5 and I7 anions), sitting on an inversion centre with I...I contacts of 3.315 A (I13) and 3.509 A (I5). These secondary I...I bonds are part of the anion, so calling it isolated is chemically wrong."
+ },
+ {
+  "id": "P27",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "The Cl is coordinated to Cu at 2.899(4) A, a Jahn-Teller axial Cu-Cl bond listed in the CIF's own bond table (dichlorobis(phenanthroline N-oxide)copper). It just exceeds the 2.79 A cutoff."
+ },
+ {
+  "id": "P28",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "Applied the expert's isolated-O rubric clarification. O17 has O...O contacts of 2.69 and 2.70 A (to O15/O16), consistent with a hydrogen-bonded lattice water, and the formula includes water/solvent H. This is ordinary modelled solvent with unlocated H, so the flag is not warranted. The structure-wide absence of H is captured separately by P48."
+ },
+ {
+  "id": "P29",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Pb8 has Pb-S distances of 2.963, 3.010, 3.116 and 3.164 A, normal Pb-S coordination in a sulfosalt. The shortest misses the 2.96 A cutoff by only 0.003 A."
+ },
+ {
+  "id": "P30",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Cl(2) is bonded to Co at 2.283 A (tetrachlorocobaltate), well within the 2.73 A cutoff, so it is not isolated."
+ },
+ {
+  "id": "P31",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "O(25)-H(25) is 0.703 A, but the CIF reports 0.70(9) A from free refinement with Cu radiation. It is about 1.3 su from the 0.82 A target, which is not a significant deviation for an X-ray O-H."
+ },
+ {
+  "id": "P32",
+  "verdict": "real",
+  "confidence": "low",
+  "reason": "C1A-H1A is freely refined at 0.84(4) A (mixed H treatment), about 3 su below the 0.96 A target and further below the ~1.00 A expected for a methine C-H. Short, though within the range seen for free X-ray C-H refinement."
+ },
+ {
+  "id": "P33",
+  "verdict": "real",
+  "confidence": "low",
+  "reason": "C5-H51 is 0.80(10) A. The methyl group on C5 has freely refined C-H distances of 0.80, 1.06 and 1.26 A, so its H geometry is poorly determined. The individual 0.82 A value is not statistically significant, but the group warrants a look."
+ },
+ {
+  "id": "P34",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "H9'A (occ 0.4) belongs to the minor disorder component C9' (occ 0.4) at 0.949 A. The tool paired it with C9 from the other, mutually exclusive component (occ 0.6) at 0.571 A. The actual C-H distance is normal."
+ },
+ {
+  "id": "P35",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "The tool diagonalised the raw fractional-basis Uij instead of converting to Cartesian (its eigenvalues 0.0134/0.0523/0.2253 match the unconverted matrix exactly). With the proper conversion in this monoclinic (beta 117.4) cell, the eigenvalues are 0.0236/0.0470/0.1805 (Ueq 0.0837, matching the CIF 0.0835), so sqrt(U3/U1) = 2.76 < 4."
+ },
+ {
+  "id": "P36",
+  "verdict": "real",
+  "confidence": "medium",
+  "reason": "With the proper Cartesian conversion (monoclinic cell), O4A's eigenvalues are 0.00052/0.0147/0.0206, giving sqrt(U3/U1) = 6.28 (the tool's 6.57 is slightly off because it skipped the metric). Either way this is an extremely flattened, nearly non-positive-definite ADP worth checking."
+ },
+ {
+  "id": "P37",
+  "verdict": "real",
+  "confidence": "medium",
+  "reason": "Cubic grossular: the Ca U11 = 0.00007 vs U22 = U33 = 0.00142 gives sqrt(U3/U1) = 4.61, which I confirmed. The whole ADP block is implausibly small (values look like beta coefficients mislabelled as U, Ueq about 0.001 A^2), so the flagged anisotropy and the ADP values are both worth checking."
+ },
+ {
+  "id": "P38",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Same metric error as P35. In the triclinic cell, the Cartesian eigenvalues for C68 are 0.0062/0.0302/0.0822 (Ueq 0.0396, matching the CIF), so sqrt(U3/U1) = 3.65 < 4. The tool's eigenvalues are those of the raw fractional Uij."
+ },
+ {
+  "id": "P39",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "C(2) and C(2') (0.609 A apart) are two alternative positions of the disordered cyclohexenone ring: C(1) bonds to both (1.39/1.54 A) and C(3) bonds to both. The old CIF has no occupancy column, so both default to 1, but this is legitimate disorder, not a clash."
+ },
+ {
+  "id": "P40",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "O(9)-H(9A) at 0.702 A is the O-H bond of a water molecule (H(9B) at 0.736 A), not a non-bonded clash. Freely refined X-ray water H atoms with large su often come out at 0.70-0.75 A. Reporting it as atoms that cannot both be real is incorrect."
+ },
+ {
+  "id": "P41",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "H(23a) and H(25b) ride on C(23) and C(25), which are 1.10 A apart. These are two alternative positions of a disordered methyl group on the acetal carbon C(4) (C(4) bonds to C22, C23, C24 and C25, with Ueq 0.18-0.24). The coincident H atoms belong to alternative components; the CIF just lacks occupancies."
+ },
+ {
+  "id": "P42",
+  "verdict": "real",
+  "confidence": "low",
+  "reason": "O3-H3B is a bonded water O-H, so the 'cannot both be real' framing is wrong. But the freely refined distance is 0.62(7) A, about 3 su below 0.82 A and below the 0.75 A floor, a genuinely poor H position that a crystallographer would want flagged."
+ },
+ {
+  "id": "P43",
+  "verdict": "real",
+  "confidence": "low",
+  "reason": "H5B...H11B is 1.780 A (riding H atoms, C-H 1.08 A), intramolecular through 5 bonds (H5B-C5-C4-C3-C11-H11B), so not excluded by the 3-bond rule. A 1.78 A methylene-methyl H...H contact is unusually short and suggests a poor methyl-H orientation."
+ },
+ {
+  "id": "P44",
+  "verdict": "false",
+  "confidence": "low",
+  "reason": "H(3')...H(14) is 1.938 A, only marginally below 2.0 A. H(3') sits 1.45 A from H(3) on the same carbon C(3) of the ene ring, so it looks like an alternative disorder H whose occupancy the CIF does not record (the companion polymorph 2001080 shows ring disorder). Not a meaningful clash."
+ },
+ {
+  "id": "P45",
+  "verdict": "real",
+  "confidence": "low",
+  "reason": "H(2)...H(13) is 1.803 A, through 5 bonds (aromatic H on C(4) vs an N-methyl H on C(15) via N(2)), with calculated H positions. The contact is genuinely short for a dimethylamino methyl beside an ortho H and points to a poor methyl rotation, a minor but legitimate flag."
+ },
+ {
+  "id": "P46",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "H30D (occ 0.484, disorder part 6) contacts its own inversion image across the centre at (0,0,-1/2) at 1.448 A. With occupancy below 0.5 the two copies are mutually exclusive alternatives of the disordered ethyl group (C30B/C31B), so this is normal disorder about a symmetry element."
+ },
+ {
+  "id": "P47",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "Kutnohorite CaMn(CO3)2 is a carbonate mineral with no hydrogen. Having no H atoms is correct."
+ },
+ {
+  "id": "P48",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "The site list has no H atoms, although the formula is C17 H20 Cl18 Mn3 O17 and the cluster has coordinated water (O14-O17) plus solvent carbons. Water and solvent H atoms are absent from the model."
+ },
+ {
+  "id": "P49",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "Organic C20H19NO (a 1-pyrroline): the deposited CIF contains no H atoms at all, so the H coordinates are missing from the deposition."
+ },
+ {
+  "id": "P50",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "Organic C18H16O4S2 photodimer: the deposited CIF contains no H atoms, so the H coordinates are missing."
+ },
+ {
+  "id": "P51",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "C8 has Ueq 0.94 A^2 (U11 0.88, U22 1.53) vs 0.040-0.069 for the other carbons. This is clearly an aberrant site (misassigned or badly disordered)."
+ },
+ {
+  "id": "P52",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "C42 (phenyl ring carbon) has Ueq 0.437(2) while its ring neighbours are 0.034-0.056 and its coordinate su values are the same as theirs. This is almost certainly a transcription error for 0.0437, a genuine inconsistency in the deposited CIF."
+ },
+ {
+  "id": "P53",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "Rigid phenyl ring C21-C26 has Ueq 0.24-0.50 A^2 (C25 U33 = 1.22) vs about 0.04 elsewhere. This is a severely smeared, probably unresolved-disorder ring that warrants attention."
+ },
+ {
+  "id": "P54",
+  "verdict": "real",
+  "confidence": "medium",
+  "reason": "THF solvent atoms C77-C81 refined isotropically with Uiso 0.27-0.40 A^2 vs 0.038 for the best-defined carbons. This points to poorly modelled solvent disorder; the cause is not wrong species, but the spread is genuinely abnormal."
+ },
+ {
+  "id": "P55",
+  "verdict": "real",
+  "confidence": "low",
+  "reason": "The CIF does contain true duplicate rows: H18\", H19', H19\", H20', H20\", H21' and H21\" each appear twice with identical coordinates (lines 150-163). But the labels the tool lists (C1, C10-C18) are not duplicated; C1 and C1' are distinct, so the tool is stripping primes. The verdict holds for the file but the stated labels are wrong."
+ },
+ {
+  "id": "P56",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "There are no literal duplicate labels among the 67 sites. The listed C1-C9 coexist with distinct primed labels C1'-C9', so the tool treats primes as if they were not part of the label."
+ },
+ {
+  "id": "P57",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "There are no literal duplicate labels among the 67 sites. C2/C2', O2/O2', H3/H3' and so on are distinct primed labels that the tool collapsed."
+ },
+ {
+  "id": "P58",
+  "verdict": "real",
+  "confidence": "high",
+  "reason": "The label H11 appears twice for two different H atoms at different coordinates (lines 97-98), presumably meant as H11/H111. This is a genuine duplicate."
+ },
+ {
+  "id": "P59",
+  "verdict": "false",
+  "confidence": "high",
+  "reason": "H21C (occ 0.6, disorder part 1) rides on C211. C411 is in the alternative disorder component (occ 0.4, part 2), so the 1.19 A H21C...C411 contact is between mutually exclusive parts, not a second connection."
+ },
+ {
+  "id": "P60",
+  "verdict": "false",
+  "confidence": "medium",
+  "reason": "H1S2 rides on C1S of a half-occupied ethyl acetate (part -1). O8U and C16U belong to a second, overlapping half-occupied ethyl acetate orientation (C1S...C16U 0.69 A), so the two are mutually exclusive alternatives; the U component simply lacks a disorder-group label."
+ }
+]

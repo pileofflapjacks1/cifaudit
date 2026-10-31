@@ -264,6 +264,23 @@ for correct published work, and so still carrying false positives:
 `NON_INTEGRAL_CELL_CONTENT` 20%, `FORMULA_SITES_MISMATCH` 18%, `ISOLATED_ATOM`
 12%.
 
+### Precision: when a check fires, is it right?
+
+Firing rates say how often a check fires, not whether it is right. A
+pre-registered sample of 60 structural findings from 400 fresh COD structures was
+judged against the full CIFs by an independent model adjudicator. **This is model
+adjudication, not expert review**; the expert pass has not been done.
+
+**Overall precision: 38% (95% CI 27–51%).** Best: `UEQ_RANGE_WIDE` 4/4,
+`NO_HYDROGENS_WITH_CARBON` 3/4, `FORMULA_SITES_MISMATCH` 6/10. Worst:
+`NON_INTEGRAL_CELL_CONTENT` 0/10, `ISOLATED_ATOM` 1/10.
+
+It found three bugs — unwrapped symmetry coordinates breaking the distance
+search, the ADP anisotropy ratio computed without converting to Cartesian axes,
+and primes stripped from atom labels — plus checks that flag normal chemistry.
+Results, reasons and limitations:
+[`data/processed/precision_results.md`](data/processed/precision_results.md).
+
 ### Shared sites
 
 Two elements can occupy one crystallographic position with partial occupancies —

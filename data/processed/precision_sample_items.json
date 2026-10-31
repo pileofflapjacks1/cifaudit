@@ -1,0 +1,1373 @@
+{
+ "seed": 20261031,
+ "files_audited": 400,
+ "firing_files": {
+  "FORMULA_SITES_MISMATCH": 82,
+  "ISOLATED_ATOM": 27,
+  "ATOMS_TOO_CLOSE": 30,
+  "DUPLICATE_LABELS": 18,
+  "SHORT_HH_CONTACT": 27,
+  "H_MULTIPLE_CONNECTIONS": 16,
+  "SHORT_XH": 48,
+  "NO_HYDROGENS_WITH_CARBON": 21,
+  "ISOLATED_H": 12,
+  "SHORT_NONBONDED_CONTACT": 10,
+  "UEQ_RANGE_WIDE": 19,
+  "SYMMETRY_DERIVED_LOWER": 3,
+  "SCATTERING_TYPE_LABEL_MISMATCH": 2,
+  "DISORDER_SUM_NOT_ONE": 15,
+  "ADP_EXTREME_ANISOTROPY": 37,
+  "NON_INTEGRAL_CELL_CONTENT": 55,
+  "DENSITY_BELOW_ONE": 2,
+  "ADP_NPD": 7,
+  "SYMMETRY_POSSIBLY_MISSED": 2,
+  "SHARED_SITE_OCC_GT_ONE": 2
+ },
+ "items": [
+  {
+   "id": "P01",
+   "cod_id": "9001029",
+   "code": "NON_INTEGRAL_CELL_CONTENT",
+   "severity": "info",
+   "message": "Unit-cell contents are non-integral for: Ca 3.92, Na 7.88, Al 15.84, Si 16.16. Common with disorder or SQUEEZE'd solvent.",
+   "evidence": {
+    "counts": [
+     {
+      "element": "Ca",
+      "count": 3.92
+     },
+     {
+      "element": "Na",
+      "count": 7.88
+     },
+     {
+      "element": "Al",
+      "count": 15.84
+     },
+     {
+      "element": "Si",
+      "count": 16.16
+     }
+    ]
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "P02",
+   "cod_id": "9001012",
+   "code": "NON_INTEGRAL_CELL_CONTENT",
+   "severity": "info",
+   "message": "Unit-cell contents are non-integral for: Fe 1.60, Nb 2.40. Common with disorder or SQUEEZE'd solvent.",
+   "evidence": {
+    "counts": [
+     {
+      "element": "Fe",
+      "count": 1.6
+     },
+     {
+      "element": "Nb",
+      "count": 2.4
+     }
+    ]
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "P03",
+   "cod_id": "9001090",
+   "code": "NON_INTEGRAL_CELL_CONTENT",
+   "severity": "info",
+   "message": "Unit-cell contents are non-integral for: Bi 23.07, Pb 55.37, Sb 13.56, Cu 2.60, Fe 1.40. Common with disorder or SQUEEZE'd solvent.",
+   "evidence": {
+    "counts": [
+     {
+      "element": "Bi",
+      "count": 23.072
+     },
+     {
+      "element": "Pb",
+      "count": 55.368
+     },
+     {
+      "element": "Sb",
+      "count": 13.56
+     },
+     {
+      "element": "Cu",
+      "count": 2.6
+     },
+     {
+      "element": "Fe",
+      "count": 1.4
+     }
+    ]
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "P04",
+   "cod_id": "9001072",
+   "code": "NON_INTEGRAL_CELL_CONTENT",
+   "severity": "info",
+   "message": "Unit-cell contents are non-integral for: Ba 1.70, K 0.24, Cr 9.44, Fe 6.08, Mg 1.44. Common with disorder or SQUEEZE'd solvent.",
+   "evidence": {
+    "counts": [
+     {
+      "element": "Ba",
+      "count": 1.7
+     },
+     {
+      "element": "K",
+      "count": 0.24
+     },
+     {
+      "element": "Cr",
+      "count": 9.44
+     },
+     {
+      "element": "Fe",
+      "count": 6.08
+     },
+     {
+      "element": "Mg",
+      "count": 1.44
+     }
+    ]
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "P05",
+   "cod_id": "9001034",
+   "code": "NON_INTEGRAL_CELL_CONTENT",
+   "severity": "info",
+   "message": "Unit-cell contents are non-integral for: Fe 0.33, Mg 0.82, Ca 1.14, Na 2.41. Common with disorder or SQUEEZE'd solvent.",
+   "evidence": {
+    "counts": [
+     {
+      "element": "Fe",
+      "count": 0.328
+     },
+     {
+      "element": "Mg",
+      "count": 0.82
+     },
+     {
+      "element": "Ca",
+      "count": 1.144
+     },
+     {
+      "element": "Na",
+      "count": 2.408
+     }
+    ]
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "P06",
+   "cod_id": "7001035",
+   "code": "NON_INTEGRAL_CELL_CONTENT",
+   "severity": "info",
+   "message": "Unit-cell contents are non-integral for: C 181.50. Common with disorder or SQUEEZE'd solvent.",
+   "evidence": {
+    "counts": [
+     {
+      "element": "C",
+      "count": 181.5
+     }
+    ]
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "P07",
+   "cod_id": "9001050",
+   "code": "NON_INTEGRAL_CELL_CONTENT",
+   "severity": "info",
+   "message": "Unit-cell contents are non-integral for: Na 5.64, O 92.52. Common with disorder or SQUEEZE'd solvent.",
+   "evidence": {
+    "counts": [
+     {
+      "element": "Na",
+      "count": 5.64
+     },
+     {
+      "element": "O",
+      "count": 92.52
+     }
+    ]
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "P08",
+   "cod_id": "7001031",
+   "code": "NON_INTEGRAL_CELL_CONTENT",
+   "severity": "info",
+   "message": "Unit-cell contents are non-integral for: Na 3.06. Common with disorder or SQUEEZE'd solvent.",
+   "evidence": {
+    "counts": [
+     {
+      "element": "Na",
+      "count": 3.06
+     }
+    ]
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "P09",
+   "cod_id": "9001002",
+   "code": "NON_INTEGRAL_CELL_CONTENT",
+   "severity": "info",
+   "message": "Unit-cell contents are non-integral for: Si 11.92, Al 27.24, B 3.92. Common with disorder or SQUEEZE'd solvent.",
+   "evidence": {
+    "counts": [
+     {
+      "element": "Si",
+      "count": 11.92
+     },
+     {
+      "element": "Al",
+      "count": 27.24
+     },
+     {
+      "element": "B",
+      "count": 3.92
+     }
+    ]
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "P10",
+   "cod_id": "9001098",
+   "code": "NON_INTEGRAL_CELL_CONTENT",
+   "severity": "info",
+   "message": "Unit-cell contents are non-integral for: Mg 5.10, Ni 2.90. Common with disorder or SQUEEZE'd solvent.",
+   "evidence": {
+    "counts": [
+     {
+      "element": "Mg",
+      "count": 5.104
+     },
+     {
+      "element": "Ni",
+      "count": 2.896
+     }
+    ]
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "P11",
+   "cod_id": "7050065",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=4, does not match _chemical_formula_sum for: H 46.00 vs 62.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 4.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 46.0,
+      "from_formula": 62.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "P12",
+   "cod_id": "2001095",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=4, does not match _chemical_formula_sum for: H 31.00 vs 28.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 4.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 31.0,
+      "from_formula": 28.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "P13",
+   "cod_id": "2001067",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=2, does not match _chemical_formula_sum for: H 28.00 vs 29.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 2.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 28.0,
+      "from_formula": 29.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "P14",
+   "cod_id": "2001039",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=4, does not match _chemical_formula_sum for: H 4.00 vs 16.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 4.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 4.0,
+      "from_formula": 16.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "P15",
+   "cod_id": "9001056",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=4, does not match _chemical_formula_sum for: H 0.00 vs 1.88. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 4.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 0.0,
+      "from_formula": 1.88
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "P16",
+   "cod_id": "9001058",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=4, does not match _chemical_formula_sum for: H 0.00 vs 0.12. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 4.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 0.0,
+      "from_formula": 0.12
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "P17",
+   "cod_id": "2001009",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=2, does not match _chemical_formula_sum for: H 26.00 vs 28.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 2.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 26.0,
+      "from_formula": 28.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "P18",
+   "cod_id": "7001026",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=4, does not match _chemical_formula_sum for: H 14.00 vs 24.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 4.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 14.0,
+      "from_formula": 24.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "P19",
+   "cod_id": "2001096",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=8, does not match _chemical_formula_sum for: H 31.00 vs 32.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 8.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 31.0,
+      "from_formula": 32.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "P20",
+   "cod_id": "2001034",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=2, does not match _chemical_formula_sum for: H 16.00 vs 20.00, N 2.00 vs 1.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 2.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 16.0,
+      "from_formula": 20.0
+     },
+     {
+      "element": "N",
+      "from_sites": 2.0,
+      "from_formula": 1.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "P21",
+   "cod_id": "2001046",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "Br (Br) has no bonded neighbour anywhere in the unit cell; it may be a counter-ion or free atom.",
+   "evidence": {
+    "element": "Br"
+   },
+   "sites": [
+    "Br"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "P22",
+   "cod_id": "7050001",
+   "code": "ISOLATED_ATOM",
+   "severity": "warn",
+   "message": "N12 (N) has no bonded neighbour anywhere in the unit cell; for O or N this often means missing H.",
+   "evidence": {
+    "element": "N"
+   },
+   "sites": [
+    "N12"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "P23",
+   "cod_id": "7001026",
+   "code": "ISOLATED_ATOM",
+   "severity": "warn",
+   "message": "O5 (O) has no bonded neighbour anywhere in the unit cell; for O or N this often means missing H.",
+   "evidence": {
+    "element": "O"
+   },
+   "sites": [
+    "O5"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "P24",
+   "cod_id": "2001042",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "Cl(2) (Cl) has no bonded neighbour anywhere in the unit cell; it may be a counter-ion or free atom.",
+   "evidence": {
+    "element": "Cl"
+   },
+   "sites": [
+    "Cl(2)"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "P25",
+   "cod_id": "7001002",
+   "code": "ISOLATED_ATOM",
+   "severity": "warn",
+   "message": "Tl1 (Tl) has no bonded neighbour anywhere in the unit cell; for a metal this often means missing coordination.",
+   "evidence": {
+    "element": "Tl"
+   },
+   "sites": [
+    "Tl1"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "P26",
+   "cod_id": "7050070",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "I12 (I) has no bonded neighbour anywhere in the unit cell; it may be a counter-ion or free atom.",
+   "evidence": {
+    "element": "I"
+   },
+   "sites": [
+    "I12"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "P27",
+   "cod_id": "2001092",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "Cl (Cl) has no bonded neighbour anywhere in the unit cell; it may be a counter-ion or free atom.",
+   "evidence": {
+    "element": "Cl"
+   },
+   "sites": [
+    "Cl"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "P28",
+   "cod_id": "7050021",
+   "code": "ISOLATED_ATOM",
+   "severity": "warn",
+   "message": "O17 (O) has no bonded neighbour anywhere in the unit cell; for O or N this often means missing H.",
+   "evidence": {
+    "element": "O"
+   },
+   "sites": [
+    "O17"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "P29",
+   "cod_id": "9001090",
+   "code": "ISOLATED_ATOM",
+   "severity": "warn",
+   "message": "Pb8 (Pb) has no bonded neighbour anywhere in the unit cell; for a metal this often means missing coordination.",
+   "evidence": {
+    "element": "Pb"
+   },
+   "sites": [
+    "Pb8"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "P30",
+   "cod_id": "2001014",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "Cl(2) (Cl) has no bonded neighbour anywhere in the unit cell; it may be a counter-ion or free atom.",
+   "evidence": {
+    "element": "Cl"
+   },
+   "sites": [
+    "Cl(2)"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "P31",
+   "cod_id": "2001007",
+   "code": "SHORT_XH",
+   "severity": "info",
+   "message": "O(25)-H(25) is 0.703 A, 0.117 A shorter than the X-ray target of 0.820 A for O-H.",
+   "evidence": {
+    "distance": 0.7029,
+    "target": 0.82,
+    "probe": "x-ray"
+   },
+   "sites": [
+    "O(25)",
+    "H(25)"
+   ],
+   "checkcif": [
+    "PLAT354"
+   ]
+  },
+  {
+   "id": "P32",
+   "cod_id": "7001049",
+   "code": "SHORT_XH",
+   "severity": "info",
+   "message": "C1A-H1A is 0.843 A, 0.117 A shorter than the X-ray target of 0.960 A for C-H.",
+   "evidence": {
+    "distance": 0.8433,
+    "target": 0.96,
+    "probe": "x-ray"
+   },
+   "sites": [
+    "C1A",
+    "H1A"
+   ],
+   "checkcif": [
+    "PLAT350"
+   ]
+  },
+  {
+   "id": "P33",
+   "cod_id": "2001050",
+   "code": "SHORT_XH",
+   "severity": "info",
+   "message": "C5-H51 is 0.821 A, 0.139 A shorter than the X-ray target of 0.960 A for C-H.",
+   "evidence": {
+    "distance": 0.8206,
+    "target": 0.96,
+    "probe": "x-ray"
+   },
+   "sites": [
+    "C5",
+    "H51"
+   ],
+   "checkcif": [
+    "PLAT350"
+   ]
+  },
+  {
+   "id": "P34",
+   "cod_id": "7050032",
+   "code": "SHORT_XH",
+   "severity": "info",
+   "message": "C9-H9'A is 0.571 A, 0.389 A shorter than the X-ray target of 0.960 A for C-H.",
+   "evidence": {
+    "distance": 0.5715,
+    "target": 0.96,
+    "probe": "x-ray"
+   },
+   "sites": [
+    "C9",
+    "H9'A"
+   ],
+   "checkcif": [
+    "PLAT350"
+   ]
+  },
+  {
+   "id": "P35",
+   "cod_id": "7050077",
+   "code": "ADP_EXTREME_ANISOTROPY",
+   "severity": "warn",
+   "message": "Site C26 has a principal-axis ratio sqrt(U3/U1) = 4.10 (prolate ellipsoid). Above 4.00, which is the 99th percentile over 12,899 non-H anisotropic atoms in 500 deposited COD structures. Large values may indicate unresolved disorder.",
+   "evidence": {
+    "eigenvalues": [
+     0.013394,
+     0.052324,
+     0.225282
+    ],
+    "axis_ratio_sqrt_U3_U1": 4.101,
+    "raw_eigenvalue_ratio": 16.819,
+    "shape": "prolate"
+   },
+   "sites": [
+    "C26"
+   ],
+   "checkcif": [
+    "PLAT213",
+    "PLAT215",
+    "PLAT250"
+   ]
+  },
+  {
+   "id": "P36",
+   "cod_id": "9001050",
+   "code": "ADP_EXTREME_ANISOTROPY",
+   "severity": "warn",
+   "message": "Site O4A has a principal-axis ratio sqrt(U3/U1) = 6.57 (oblate ellipsoid). Above 4.00, which is the 99th percentile over 12,899 non-H anisotropic atoms in 500 deposited COD structures. Large values may indicate unresolved disorder.",
+   "evidence": {
+    "eigenvalues": [
+     0.000489,
+     0.015276,
+     0.021135
+    ],
+    "axis_ratio_sqrt_U3_U1": 6.572,
+    "raw_eigenvalue_ratio": 43.195,
+    "shape": "oblate"
+   },
+   "sites": [
+    "O4A"
+   ],
+   "checkcif": [
+    "PLAT213",
+    "PLAT215",
+    "PLAT250"
+   ]
+  },
+  {
+   "id": "P37",
+   "cod_id": "9001087",
+   "code": "ADP_EXTREME_ANISOTROPY",
+   "severity": "warn",
+   "message": "Site Ca has a principal-axis ratio sqrt(U3/U1) = 4.61 (oblate ellipsoid). Above 4.00, which is the 99th percentile over 12,899 non-H anisotropic atoms in 500 deposited COD structures. Large values may indicate unresolved disorder.",
+   "evidence": {
+    "eigenvalues": [
+     7e-05,
+     0.00135,
+     0.00149
+    ],
+    "axis_ratio_sqrt_U3_U1": 4.614,
+    "raw_eigenvalue_ratio": 21.286,
+    "shape": "oblate"
+   },
+   "sites": [
+    "Ca"
+   ],
+   "checkcif": [
+    "PLAT213",
+    "PLAT215",
+    "PLAT250"
+   ]
+  },
+  {
+   "id": "P38",
+   "cod_id": "7050048",
+   "code": "ADP_EXTREME_ANISOTROPY",
+   "severity": "warn",
+   "message": "Site C68 has a principal-axis ratio sqrt(U3/U1) = 4.30 (prolate ellipsoid). Above 4.00, which is the 99th percentile over 12,899 non-H anisotropic atoms in 500 deposited COD structures. Large values may indicate unresolved disorder.",
+   "evidence": {
+    "eigenvalues": [
+     0.005718,
+     0.023197,
+     0.105885
+    ],
+    "axis_ratio_sqrt_U3_U1": 4.303,
+    "raw_eigenvalue_ratio": 18.518,
+    "shape": "prolate"
+   },
+   "sites": [
+    "C68"
+   ],
+   "checkcif": [
+    "PLAT213",
+    "PLAT215",
+    "PLAT250"
+   ]
+  },
+  {
+   "id": "P39",
+   "cod_id": "2001080",
+   "code": "ATOMS_TOO_CLOSE",
+   "severity": "error",
+   "message": "C(2) and C(2') are 0.609 A apart, below the 0.75 A floor at which no two atoms can both be real.",
+   "evidence": {
+    "distance": 0.6091,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "occupancies": [
+     1.0,
+     1.0
+    ]
+   },
+   "sites": [
+    "C(2)",
+    "C(2')"
+   ],
+   "checkcif": [
+    "PLAT310"
+   ]
+  },
+  {
+   "id": "P40",
+   "cod_id": "2001064",
+   "code": "ATOMS_TOO_CLOSE",
+   "severity": "error",
+   "message": "O(9) and H(9A) are 0.702 A apart, below the 0.75 A floor at which no two atoms can both be real.",
+   "evidence": {
+    "distance": 0.7025,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "occupancies": [
+     1.0,
+     1.0
+    ]
+   },
+   "sites": [
+    "O(9)",
+    "H(9A)"
+   ],
+   "checkcif": [
+    "PLAT310"
+   ]
+  },
+  {
+   "id": "P41",
+   "cod_id": "2001066",
+   "code": "ATOMS_TOO_CLOSE",
+   "severity": "error",
+   "message": "H(23a) and H(25b) are 0.183 A apart, below the 0.75 A floor at which no two atoms can both be real.",
+   "evidence": {
+    "distance": 0.1825,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "occupancies": [
+     1.0,
+     1.0
+    ]
+   },
+   "sites": [
+    "H(23a)",
+    "H(25b)"
+   ],
+   "checkcif": [
+    "PLAT310"
+   ]
+  },
+  {
+   "id": "P42",
+   "cod_id": "7001085",
+   "code": "ATOMS_TOO_CLOSE",
+   "severity": "error",
+   "message": "O3 and H3B are 0.622 A apart, below the 0.75 A floor at which no two atoms can both be real.",
+   "evidence": {
+    "distance": 0.6217,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "occupancies": [
+     1.0,
+     1.0
+    ]
+   },
+   "sites": [
+    "O3",
+    "H3B"
+   ],
+   "checkcif": [
+    "PLAT310"
+   ]
+  },
+  {
+   "id": "P43",
+   "cod_id": "2001082",
+   "code": "SHORT_HH_CONTACT",
+   "severity": "warn",
+   "message": "H5B...H11B is 1.780 A, shorter than the 2.00 A H...H threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.7797,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "H5B",
+    "H11B"
+   ],
+   "checkcif": [
+    "PLAT410",
+    "PLAT411"
+   ]
+  },
+  {
+   "id": "P44",
+   "cod_id": "2001081",
+   "code": "SHORT_HH_CONTACT",
+   "severity": "warn",
+   "message": "H(3')...H(14) is 1.938 A, shorter than the 2.00 A H...H threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.9378,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "H(3')",
+    "H(14)"
+   ],
+   "checkcif": [
+    "PLAT410",
+    "PLAT411"
+   ]
+  },
+  {
+   "id": "P45",
+   "cod_id": "2001008",
+   "code": "SHORT_HH_CONTACT",
+   "severity": "warn",
+   "message": "H(2)...H(13) is 1.803 A, shorter than the 2.00 A H...H threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.8026,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "H(2)",
+    "H(13)"
+   ],
+   "checkcif": [
+    "PLAT410",
+    "PLAT411"
+   ]
+  },
+  {
+   "id": "P46",
+   "cod_id": "7001020",
+   "code": "SHORT_HH_CONTACT",
+   "severity": "warn",
+   "message": "H30D...H30D is 1.448 A, shorter than the 2.00 A H...H threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.4476,
+    "image": [
+     0,
+     0,
+     -1
+    ],
+    "both_full_weight": false,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "H30D",
+    "H30D"
+   ],
+   "checkcif": [
+    "PLAT410",
+    "PLAT411"
+   ]
+  },
+  {
+   "id": "P47",
+   "cod_id": "9001048",
+   "code": "NO_HYDROGENS_WITH_CARBON",
+   "severity": "warn",
+   "message": "No H atoms are present although carbon is. This is unusual for a carbon-containing compound, but may be correct.",
+   "evidence": {},
+   "sites": [],
+   "checkcif": [
+    "PLAT040"
+   ]
+  },
+  {
+   "id": "P48",
+   "cod_id": "7050021",
+   "code": "NO_HYDROGENS_WITH_CARBON",
+   "severity": "warn",
+   "message": "No H atoms are present although carbon is. This is unusual for a carbon-containing compound, but may be correct.",
+   "evidence": {},
+   "sites": [],
+   "checkcif": [
+    "PLAT040"
+   ]
+  },
+  {
+   "id": "P49",
+   "cod_id": "2001056",
+   "code": "NO_HYDROGENS_WITH_CARBON",
+   "severity": "warn",
+   "message": "No H atoms are present although carbon is. This is unusual for a carbon-containing compound, but may be correct.",
+   "evidence": {},
+   "sites": [],
+   "checkcif": [
+    "PLAT040"
+   ]
+  },
+  {
+   "id": "P50",
+   "cod_id": "2001005",
+   "code": "NO_HYDROGENS_WITH_CARBON",
+   "severity": "warn",
+   "message": "No H atoms are present although carbon is. This is unusual for a carbon-containing compound, but may be correct.",
+   "evidence": {},
+   "sites": [],
+   "checkcif": [
+    "PLAT040"
+   ]
+  },
+  {
+   "id": "P51",
+   "cod_id": "7050012",
+   "code": "UEQ_RANGE_WIDE",
+   "severity": "warn",
+   "message": "Ueq across the 8 C atoms spans a factor of 23.4 (C7=0.0401 to C8=0.9400). A wide range within one element can mean a site has been assigned the wrong species.",
+   "evidence": {
+    "element": "C",
+    "n": 8,
+    "min": 0.0401,
+    "max": 0.94,
+    "ratio": 23.441
+   },
+   "sites": [
+    "C7",
+    "C8"
+   ],
+   "checkcif": [
+    "PLAT220",
+    "PLAT221"
+   ]
+  },
+  {
+   "id": "P52",
+   "cod_id": "2001052",
+   "code": "UEQ_RANGE_WIDE",
+   "severity": "warn",
+   "message": "Ueq across the 17 C atoms spans a factor of 14.6 (C4=0.0300 to C42=0.4370). A wide range within one element can mean a site has been assigned the wrong species.",
+   "evidence": {
+    "element": "C",
+    "n": 17,
+    "min": 0.03,
+    "max": 0.437,
+    "ratio": 14.567
+   },
+   "sites": [
+    "C4",
+    "C42"
+   ],
+   "checkcif": [
+    "PLAT220",
+    "PLAT221"
+   ]
+  },
+  {
+   "id": "P53",
+   "cod_id": "7001070",
+   "code": "UEQ_RANGE_WIDE",
+   "severity": "warn",
+   "message": "Ueq across the 50 C atoms spans a factor of 12.2 (C1=0.0410 to C25=0.5000). A wide range within one element can mean a site has been assigned the wrong species.",
+   "evidence": {
+    "element": "C",
+    "n": 50,
+    "min": 0.041,
+    "max": 0.5,
+    "ratio": 12.195
+   },
+   "sites": [
+    "C1",
+    "C25"
+   ],
+   "checkcif": [
+    "PLAT220",
+    "PLAT221"
+   ]
+  },
+  {
+   "id": "P54",
+   "cod_id": "7001095",
+   "code": "UEQ_RANGE_WIDE",
+   "severity": "warn",
+   "message": "Ueq across the 81 C atoms spans a factor of 10.5 (C56=0.0380 to C80=0.4000). A wide range within one element can mean a site has been assigned the wrong species.",
+   "evidence": {
+    "element": "C",
+    "n": 81,
+    "min": 0.038,
+    "max": 0.4,
+    "ratio": 10.526
+   },
+   "sites": [
+    "C56",
+    "C80"
+   ],
+   "checkcif": [
+    "PLAT220",
+    "PLAT221"
+   ]
+  },
+  {
+   "id": "P55",
+   "cod_id": "2001051",
+   "code": "DUPLICATE_LABELS",
+   "severity": "error",
+   "message": "Duplicate atom-site labels: C1, C10, C11, C12, C13, C14, C15, C16, C17, C18. Any per-label association (anisotropic U, bonds, H-bonds) is ambiguous.",
+   "evidence": {
+    "duplicates": {
+     "C1": 2,
+     "C10": 2,
+     "C11": 2,
+     "C12": 2,
+     "C13": 2,
+     "C14": 2,
+     "C15": 2,
+     "C16": 2,
+     "C17": 2,
+     "C18": 2
+    }
+   },
+   "sites": [
+    "C1",
+    "C10",
+    "C11",
+    "C12",
+    "C13",
+    "C14",
+    "C15",
+    "C16",
+    "C17",
+    "C18"
+   ],
+   "checkcif": [
+    "PLAT070"
+   ]
+  },
+  {
+   "id": "P56",
+   "cod_id": "2001082",
+   "code": "DUPLICATE_LABELS",
+   "severity": "error",
+   "message": "Duplicate atom-site labels: C1, C2, C3, C4, C5, C6, C7, C8, C9. Any per-label association (anisotropic U, bonds, H-bonds) is ambiguous.",
+   "evidence": {
+    "duplicates": {
+     "C1": 2,
+     "C2": 2,
+     "C3": 2,
+     "C4": 2,
+     "C5": 2,
+     "C6": 2,
+     "C7": 2,
+     "C8": 2,
+     "C9": 2
+    }
+   },
+   "sites": [
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6",
+    "C7",
+    "C8",
+    "C9"
+   ],
+   "checkcif": [
+    "PLAT070"
+   ]
+  },
+  {
+   "id": "P57",
+   "cod_id": "2001075",
+   "code": "DUPLICATE_LABELS",
+   "severity": "error",
+   "message": "Duplicate atom-site labels: C2, C4, C5, H3, O2, O4. Any per-label association (anisotropic U, bonds, H-bonds) is ambiguous.",
+   "evidence": {
+    "duplicates": {
+     "C2": 2,
+     "C4": 2,
+     "C5": 2,
+     "H3": 2,
+     "O2": 2,
+     "O4": 2
+    }
+   },
+   "sites": [
+    "C2",
+    "C4",
+    "C5",
+    "H3",
+    "O2",
+    "O4"
+   ],
+   "checkcif": [
+    "PLAT070"
+   ]
+  },
+  {
+   "id": "P58",
+   "cod_id": "2001048",
+   "code": "DUPLICATE_LABELS",
+   "severity": "error",
+   "message": "Duplicate atom-site labels: H11. Any per-label association (anisotropic U, bonds, H-bonds) is ambiguous.",
+   "evidence": {
+    "duplicates": {
+     "H11": 2
+    }
+   },
+   "sites": [
+    "H11"
+   ],
+   "checkcif": [
+    "PLAT070"
+   ]
+  },
+  {
+   "id": "P59",
+   "cod_id": "7001001",
+   "code": "H_MULTIPLE_CONNECTIONS",
+   "severity": "info",
+   "message": "H atom H21C has 2 distinct heavy sites within 1.35 A (C211 0.99 A, C411 1.19 A). It is bonded to the nearest. A hydrogen between two electronegative atoms may be better modelled as disorder over two partially occupied sites.",
+   "evidence": {
+    "n_candidates": 2,
+    "n_distinct_sites": 2,
+    "bonded_to": "C211",
+    "distance": 0.9888
+   },
+   "sites": [
+    "H21C",
+    "C211",
+    "C411"
+   ],
+   "checkcif": [
+    "PLAT303"
+   ]
+  },
+  {
+   "id": "P60",
+   "cod_id": "7001035",
+   "code": "H_MULTIPLE_CONNECTIONS",
+   "severity": "info",
+   "message": "H atom H1S2 has 2 distinct heavy sites within 1.35 A (C1S 0.98 A, O8U 1.08 A). It is bonded to the nearest. A hydrogen between two electronegative atoms may be better modelled as disorder over two partially occupied sites.",
+   "evidence": {
+    "n_candidates": 2,
+    "n_distinct_sites": 2,
+    "bonded_to": "C1S",
+    "distance": 0.9803
+   },
+   "sites": [
+    "H1S2",
+    "C1S",
+    "O8U"
+   ],
+   "checkcif": [
+    "PLAT303"
+   ]
+  }
+ ]
+}
