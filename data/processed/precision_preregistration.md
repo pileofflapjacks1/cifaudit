@@ -68,3 +68,22 @@ Reporting:
 
 The limitation this does not remove: a model judging a model-built tool's output
 is weaker evidence than an expert's, whatever its stated confidence.
+
+## Amendment 2 — 2026-10-31, rubric clarification during model adjudication
+
+From the expert adjudicator (J. R. Ramirez), passed to the model adjudicator
+while it was running and applied to every `ISOLATED_ATOM` item, including any
+already judged:
+
+> An unbound single O atom is commonly solvent — typically water whose H atoms
+> were not located — or an O placed to account for electron density that may
+> belong to a different molecule. Crystallographers routinely do this.
+
+So an isolated O that fits modelled solvent (water-style label, partial
+occupancy, a void, O···O/N contacts near 2.6–3.1 Å) is judged a normal modelling
+choice and the flag `false`; an isolated O with no reasonable solvent
+interpretation may still be `real`. Other elements are unaffected.
+
+This is a clarification of how to judge, not a verdict on any item. The check
+itself is **not** changed during the study; a revision is queued for after the
+results are published.
