@@ -48,3 +48,23 @@ inter-rater agreement can be reported.
 Per check: precision = real / (real + false), with a Wilson 95% interval.
 Unsure counts are reported separately and excluded from the ratio. With 4–10
 items per check the intervals will be wide; they will be published as they are.
+
+## Amendment 1 — 2026-10-31, after the draw, before any adjudication
+
+A model adjudicator is added as an **independent second rater**. It is a fresh
+agent with none of the conversation that built cifaudit, so that it carries no
+investment in the checks. It judges each item against the full deposited CIF,
+recomputing geometry or counts itself where useful, and is instructed **not** to
+run cifaudit. Its verdicts are stored separately from the human review page, so
+the human adjudicator is not shown them.
+
+Reporting:
+- Per-check precision is reported separately for each adjudicator, labelled as
+  **human (expert)** or **model**. Model verdicts are never presented as expert
+  adjudication.
+- Where both have judged the same items, Cohen's kappa and raw agreement are
+  reported over those items.
+- If only the model has judged, the README says so in the headline.
+
+The limitation this does not remove: a model judging a model-built tool's output
+is weaker evidence than an expert's, whatever its stated confidence.
