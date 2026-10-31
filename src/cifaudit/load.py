@@ -47,10 +47,17 @@ class CifError(Exception):
 
 
 def sanitise(text: Optional[str], limit: int = MAX_LABEL) -> Optional[str]:
-    """Make a CIF-supplied string safe to put in a report."""
+    """Make a CIF-supplied string safe to put in a report.
+
+    Strips control characters and caps the length. It does NOT strip quote
+    characters: gemmi has already removed CIF quoting by the time a value
+    arrives here, so any remaining apostrophe is part of the value. Stripping
+    it turned C1' and C1'' into C1 and reported distinct atoms as duplicate
+    labels.
+    """
     if text is None:
         return None
-    out = _CTRL.sub("", str(text)).strip().strip("'\"")
+    out = _CTRL.sub("", str(text)).strip()
     if len(out) > limit:
         out = out[:limit] + "..."
     return out

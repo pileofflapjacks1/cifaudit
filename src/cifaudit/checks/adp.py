@@ -7,6 +7,17 @@ lengths. That scaling is a congruence by a positive diagonal matrix, which
 preserves positive-definiteness. Therefore testing the eigenvalues of the U_ij
 matrix exactly as given in the CIF is the correct NPD test for ANY cell, with no
 transformation to Cartesian axes required.
+
+That argument covers the SIGN of the eigenvalues only. A congruence does not
+preserve their magnitudes or ratios, so the anisotropy ratio sqrt(U3/U1) must be
+computed in Cartesian axes:
+
+    U_cart = (A N) U_cif (A N)^T,  A = orthogonalisation matrix,
+                                   N = diag(a*, b*, c*)
+
+An earlier version reused the raw eigenvalues for the ratio, which inflates it
+in every non-orthogonal cell: in the precision study one atom read 4.10 raw and
+2.76 in Cartesian axes. Orthogonal cells are unaffected.
 """
 
 import math
@@ -25,6 +36,19 @@ except ImportError:  # pragma: no cover
 _UIJ = ("U11", "U22", "U33", "U12", "U13", "U23")
 
 
+def _cartesian_matrix(c):
+    """A N, so that U_cart = (A N) U_cif (A N)^T. None when the cell is unusable."""
+    if gemmi is None or not c.complete():
+        return None
+    try:
+        cell = gemmi.UnitCell(c.a, c.b, c.c, c.alpha, c.beta, c.gamma)
+        r = cell.reciprocal()
+        n = gemmi.Mat33([[r.a, 0, 0], [0, r.b, 0], [0, 0, r.c]])
+        return cell.orth.mat.multiply(n)
+    except Exception:
+        return None
+
+
 def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
     f: List[Finding] = []
     nt: List[NotTested] = []
@@ -35,6 +59,12 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
         return (f, nt)
 
     aniso = [s for s in blk.sites if s.uij]
+    to_cart = _cartesian_matrix(blk.cell)
+    if aniso and to_cart is None:
+        nt.append(NotTested(
+            area="ADP anisotropy ratio",
+            reason="needs a complete cell to transform U(i,j) to Cartesian axes",
+            plat=["PLAT213"]))
     declared_aniso = [s for s in blk.sites
                       if (s.adp_type or "").lower() in ("uani", "bani")]
 
@@ -81,26 +111,30 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             # PLAT213: "ordered: U1 < U2 < U3. The value of SQRT(U3/U1) main
             # axis ADP ratio (Angstrom Units) is tested". U is a mean-square
             # displacement, so the square root is the ratio of axis lengths.
-            axis_ratio = math.sqrt(eig[2] / eig[0])
+            if to_cart is None:
+                continue
+            ec = sorted(m.transformed_by(to_cart).calculate_eigenvalues())
+            if ec[0] <= 0.0:
+                continue
+            axis_ratio = math.sqrt(ec[2] / ec[0])
             if axis_ratio > ctx["adp_axis_ratio_max"]:
                 # PLAT213: "Oblate criterium: U3 - U2 < U2 - U1. Prolate
                 # otherwise."
-                shape = ("oblate" if (eig[2] - eig[1]) < (eig[1] - eig[0])
+                shape = ("oblate" if (ec[2] - ec[1]) < (ec[1] - ec[0])
                          else "prolate")
                 f.append(Finding(
                     code="ADP_EXTREME_ANISOTROPY", severity=WARN,
                     message="Site %s has a principal-axis ratio "
-                            "sqrt(U3/U1) = %.2f (%s ellipsoid). Above %.2f, "
-                            "which is the 99th percentile over 12,899 non-H "
+                            "sqrt(U3/U1) = %.2f (%s ellipsoid), in Cartesian axes. "
+                            "Above %.2f, the 99th percentile over 12,899 non-H "
                             "anisotropic atoms in 500 deposited COD structures. "
                             "Large values may indicate unresolved disorder."
                             % (s.label, axis_ratio, shape,
                                ctx["adp_axis_ratio_max"]),
                     plat=["PLAT213", "PLAT215", "PLAT250"],
                     based_on=["_atom_site_aniso_U_11"], sites=[s.label],
-                    evidence={"eigenvalues": [round(e, 6) for e in eig],
+                    evidence={"cartesian_eigenvalues": [round(e, 6) for e in ec],
                               "axis_ratio_sqrt_U3_U1": round(axis_ratio, 3),
-                              "raw_eigenvalue_ratio": round(eig[2] / eig[0], 3),
                               "shape": shape}))
 
     # Ueq spread, PER ELEMENT TYPE. PLAT220's purpose is detecting misassigned

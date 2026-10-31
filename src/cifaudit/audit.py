@@ -18,12 +18,12 @@ DEFAULTS: Dict[str, Any] = {
     "disorder_sum_tol": 0.02,
     # PLATON PLAT213 tests SQRT(U3/U1) of the principal axes, not the raw
     # eigenvalue ratio: U is a mean-square displacement in A^2, so the square
-    # root is the ratio of ellipsoid AXIS LENGTHS in A. Measured over 12,899
-    # non-H anisotropic atoms in 500 deposited COD structures, sqrt(U3/U1) has
-    # median 1.66, p95 2.81 and p99 4.01, so 4.0 flags the top ~1% of atoms.
-    # The old default of 10 was on the RAW ratio, i.e. sqrt = 3.16, which is
-    # only the 97.5th percentile and fired on 24% of files.
-    "adp_axis_ratio_max": 4.0,
+    # root is the ratio of ellipsoid AXIS LENGTHS in A. Computed in Cartesian
+    # axes (see checks/adp.py). Set as the 99th percentile over 12,899 non-H
+    # anisotropic atoms in the 500-file calibration sample: p50 1.49, p95 2.48,
+    # p99 3.55. An earlier value of 4.0 was the p99 of RAW ratios, which run
+    # high in non-orthogonal cells.
+    "adp_axis_ratio_max": 3.55,
     "ueq_ratio_max": 10.0,
     "ueq_min_atoms": 3,
     "symprec": 0.05,            # Angstrom, passed to spglib
@@ -82,6 +82,20 @@ def audit(text: str, datablock: Optional[str] = None,
         res.not_tested.extend(nt)
     for note in ctx.pop("_notes", []):
         res.notes.append(note)
+
+    # Checks that walk the symmetry-expanded cell meet every copy of a site, so
+    # one short N-D bond came back four times. Symmetry-equivalent copies give
+    # byte-identical findings; keep the first of each. This also stops counts
+    # and firing rates being inflated by a structure's multiplicity.
+    seen = set()
+    unique = []
+    for f in res.findings:
+        key = (f.code, f.message, tuple(f.sites))
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(f)
+    res.findings = unique
 
     if not blk.sites and not blk.cell.complete():
         res.status = NOT_ENOUGH_DATA

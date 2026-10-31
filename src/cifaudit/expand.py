@@ -76,9 +76,15 @@ def expand(blk, drop_dummy=True) -> Tuple[List[Expanded], Optional[object]]:
         if dummy and drop_dummy:
             dropped_dummy += 1
             continue
-        fx, fy, fz = s.fract.x, s.fract.y, s.fract.z
-        key = (lab,
-               round(fx % 1.0, 5), round(fy % 1.0, 5), round(fz % 1.0, 5))
+        # Wrap into [0, 1). gemmi's expansion returns symmetry copies with raw
+        # coordinates such as z = -0.75 or 1.25, and the distance search only
+        # tries lattice shifts of -1, 0 and +1. Two copies more than ~1.5 cells
+        # apart before wrapping therefore lost their true nearest image: in the
+        # precision study a Br 2.42 A from Zn was reported as isolated. With
+        # every coordinate in [0, 1) each difference lies in (-1, 1) and the
+        # +/-1 shifts are enough.
+        fx, fy, fz = s.fract.x % 1.0, s.fract.y % 1.0, s.fract.z % 1.0
+        key = (lab, round(fx, 5), round(fy, 5), round(fz, 5))
         if key in seen:
             continue
         seen.add(key)

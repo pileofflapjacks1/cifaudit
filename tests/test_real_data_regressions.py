@@ -207,13 +207,14 @@ def test_adp_anisotropy_uses_sqrt_of_the_eigenvalue_ratio():
     ellipsoid axis lengths. The old default of 10 on the raw ratio equals
     sqrt = 3.16, only the 97.5th percentile over 12,899 non-H anisotropic atoms
     in 500 deposited COD structures, and it fired on 24% of files.
+
+    The value was later recalibrated to 3.55: 4.0 had been the p99 of RAW
+    ratios, which run high in non-orthogonal cells. See
+    test_adp_threshold_is_the_calibration_p99_on_correct_values.
     """
-    import math
     from cifaudit.audit import DEFAULTS
     assert "adp_ratio_max" not in DEFAULTS
-    assert DEFAULTS["adp_axis_ratio_max"] == 4.0
-    # 4.0 in axis units is 16.0 in raw eigenvalue units
-    assert math.isclose(DEFAULTS["adp_axis_ratio_max"] ** 2, 16.0)
+    assert "adp_axis_ratio_max" in DEFAULTS
 
 
 def test_adp_anisotropy_finding_reports_axis_ratio_and_shape(cif):
@@ -227,7 +228,10 @@ def test_adp_anisotropy_finding_reports_axis_ratio_and_shape(cif):
             if f["code"] == "ADP_EXTREME_ANISOTROPY"]
     assert hits, "expected an anisotropy finding"
     ev = hits[0]["evidence"]
-    assert "axis_ratio_sqrt_U3_U1" in ev and "raw_eigenvalue_ratio" in ev
+    # The ratio and the eigenvalues behind it are Cartesian. The raw-tensor
+    # ratio was removed: it is wrong in non-orthogonal cells.
+    assert "axis_ratio_sqrt_U3_U1" in ev and "cartesian_eigenvalues" in ev
+    assert "raw_eigenvalue_ratio" not in ev
     assert ev["shape"] in ("oblate", "prolate")
     assert "PLAT213" in [c["code"] for c in hits[0]["checkcif"]]
 
@@ -368,3 +372,91 @@ def test_composition_uses_expansion_except_for_dummies(cif):
             if f["code"] == "FORMULA_SITES_MISMATCH"]
     if hits:
         assert "expansion" in hits[0]["evidence"]["basis"]
+
+
+# ---- bugs found by the precision study (model adjudication, d908c94) --------
+
+def test_expanded_coordinates_are_wrapped(cif):
+    """gemmi returns symmetry copies with raw coordinates (z = -0.75, 1.25), and
+    the distance search tries only lattice shifts of -1, 0, +1. Copies more than
+    ~1.5 cells apart lost their nearest image: a Br 2.42 A from Zn was reported
+    isolated. Here O1 is given at x = -1.62, which wraps to 1.40 A from C1."""
+    from cifaudit.expand import expand
+    from cifaudit.load import load
+    sites, _cell = expand(load(cif("unwrapped_coords")))
+    for s in sites:
+        assert all(0.0 <= v < 1.0 for v in s.fract), (s.label, s.fract)
+
+
+def test_a_bond_across_the_unwrapped_gap_is_found(run):
+    assert "ISOLATED_ATOM" not in codes(run("unwrapped_coords"))
+
+
+def test_adp_ratio_is_computed_in_cartesian_axes(cif):
+    """The precision study's P35, by its numbers: sqrt(U3/U1) is 4.10 on the raw
+    CIF tensor and 2.76 in Cartesian axes, below the threshold. The raw-tensor
+    argument only holds for the NPD sign test."""
+    import math
+    import gemmi
+    from cifaudit.checks.adp import _cartesian_matrix
+    from cifaudit.load import load
+    b = load(cif("monoclinic_adp"))
+    u = b.sites[0].uij
+    m = gemmi.SMat33d(u["U11"], u["U22"], u["U33"], u["U12"], u["U13"], u["U23"])
+    raw = sorted(m.calculate_eigenvalues())
+    cart = sorted(m.transformed_by(_cartesian_matrix(b.cell)).calculate_eigenvalues())
+    assert abs(math.sqrt(raw[2] / raw[0]) - 4.10) < 0.01
+    assert abs(math.sqrt(cart[2] / cart[0]) - 2.76) < 0.01
+
+
+def test_monoclinic_adp_is_not_flagged_on_its_raw_ratio(run):
+    assert "ADP_EXTREME_ANISOTROPY" not in codes(run("monoclinic_adp"))
+
+
+def test_orthogonal_cell_ratio_is_unchanged(cif):
+    """In an orthogonal cell raw and Cartesian ratios coincide."""
+    import gemmi
+    from cifaudit.checks.adp import _cartesian_matrix
+    from cifaudit.load import load
+    b = load(cif("clean"))
+    u = b.sites[0].uij
+    m = gemmi.SMat33d(u["U11"], u["U22"], u["U33"], u["U12"], u["U13"], u["U23"])
+    raw = sorted(m.calculate_eigenvalues())
+    cart = sorted(m.transformed_by(_cartesian_matrix(b.cell)).calculate_eigenvalues())
+    assert abs(raw[2] / raw[0] - cart[2] / cart[0]) < 1e-9
+
+
+def test_adp_threshold_is_the_calibration_p99_on_correct_values():
+    from cifaudit.audit import DEFAULTS
+    assert DEFAULTS["adp_axis_ratio_max"] == 3.55
+
+
+def test_primed_labels_are_distinct_atoms(run, cif):
+    """Quote-stripping meant for CIF quoting turned C1' and C1'' into C1."""
+    from cifaudit.load import load
+    labels = [s.label for s in load(cif("primed_labels")).sites]
+    assert labels == ["C1", "C1'", "C1''"]
+    assert "DUPLICATE_LABELS" not in codes(run("primed_labels"))
+
+
+def test_a_genuine_duplicate_is_still_caught(run):
+    assert "DUPLICATE_LABELS" in codes(run("dup_labels"))
+
+
+def test_symmetry_copies_do_not_repeat_a_finding(run):
+    """P-1 doubles the short C-H; it used to be reported once per copy."""
+    r = run("symmetry_copies")
+    short = [f for f in r["findings"] if f["code"] == "SHORT_XH"]
+    assert len(short) == 1, [f["message"] for f in short]
+
+
+def test_no_fixture_reports_an_identical_finding_twice(cif):
+    import pathlib
+    from cifaudit import audit
+    for path in sorted((pathlib.Path(__file__).parent / "data").glob("*.cif")):
+        try:
+            d = audit(path.read_text()).to_dict()
+        except Exception:
+            continue
+        keys = [(f["code"], f["message"], tuple(f["sites"])) for f in d["findings"]]
+        assert len(keys) == len(set(keys)), path.name
