@@ -243,11 +243,17 @@ all nineteen thresholds recorded and a commitment to change nothing in response:
 700 CIFs from eight COD directories disjoint from both prior samples, zero ID
 overlap.
 
-| | in-sample (500) | **held-out (700)** |
-|---|---|---|
-| no structural findings | 46% | **47%** |
-| crashed / unparseable | 0 / 0 | **0 / 0** |
-| seconds per file | 0.69 | 0.44 |
+| | in-sample (500) | **held-out (700)** | held-out, after the precision-study fixes |
+|---|---|---|---|
+| no structural findings | 46% | **47%** | **49%** |
+| crashed / unparseable | 0 / 0 | **0 / 0** | 0 / 0 |
+| seconds per file | 0.69 | 0.44 | 0.38 |
+
+The last column re-runs the same 700 after the four bugs below were fixed
+(`d72fecf`); nothing was tuned to them. Structural findings fell by about
+two-thirds, mostly because each finding is now reported once rather than once
+per symmetry copy. `DUPLICATE_LABELS` fell from 22 files to 2: twenty were
+primed labels misread as duplicates.
 
 It held. Per-check rates move by a few points at most. I had predicted
 materially worse and recorded that prediction before running it.
@@ -278,6 +284,9 @@ adjudication, not expert review**; the expert pass has not been done.
 It found three bugs — unwrapped symmetry coordinates breaking the distance
 search, the ADP anisotropy ratio computed without converting to Cartesian axes,
 and primes stripped from atom labels — plus checks that flag normal chemistry.
+Those three, and a fourth (findings repeated per symmetry copy), are fixed in
+`d72fecf`. The 38% describes the code before the fixes; a new precision figure
+needs a fresh sample.
 Results, reasons and limitations:
 [`data/processed/precision_results.md`](data/processed/precision_results.md).
 
@@ -353,19 +362,26 @@ residue(s) are determined and ordered: U1 < U2 < U3. The value of **SQRT(U3/U1)*
 main axis ADP ratio (Angstrom Units) is tested."* U is a mean-square displacement
 in Å², so the square root is the ratio of ellipsoid **axis lengths**.
 
+The ratio is computed in **Cartesian axes**, from
+`U_cart = (A N) U_cif (A N)^T` with `A` the orthogonalisation matrix and
+`N = diag(a*, b*, c*)`. The raw CIF tensor gives the right *sign* for the NPD
+test but not the right *ratio*: in non-orthogonal cells it runs high (one atom
+in the precision study read 4.10 raw and 2.76 in Cartesian axes). An earlier
+version made exactly this mistake.
+
 The threshold is set from the deposited corpus. Over **12,899 non-H anisotropic
 atoms in 500 COD structures**:
 
-| percentile | sqrt(U3/U1) |
+| percentile | sqrt(U3/U1), Cartesian |
 |---|---|
-| p50 | 1.66 |
-| p95 | 2.81 |
-| p99 | **4.01** |
-| p99.9 | 9.56 |
+| p50 | 1.49 |
+| p95 | 2.48 |
+| p99 | **3.55** |
+| p99.9 | 8.49 |
 
-`adp_axis_ratio_max` is **4.0** — the 99th percentile, so it flags the top ~1% of
-atoms. The old default of 10 was on the *raw* ratio, equal to sqrt = 3.16, which
-is only the 97.5th percentile and fired on 24% of files. Findings also report
+`adp_axis_ratio_max` is **3.55**, the 99th percentile, so it flags the top ~1% of
+atoms. It was previously 4.0, the p99 of the raw ratios; before that, 10 on the
+raw eigenvalue ratio. Findings also report
 PLATON's oblate/prolate distinction (*"Oblate criterium: U3 - U2 < U2 - U1.
 Prolate otherwise."*).
 
