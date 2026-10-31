@@ -115,6 +115,7 @@ class Site:
     disorder_group: Optional[str]
     disorder_assembly: Optional[str]
     calc_flag: Optional[str] = None          # d | calc | dum  (dum = dummy atom)
+    attached_h: float = 0.0                  # _atom_site_attached_hydrogens
     uij: Optional[Dict[str, float]] = None   # U11..U23 when anisotropic
 
     @property
@@ -181,6 +182,22 @@ class Block:
     def has(self, *names: str) -> bool:
         return all(n in self.present for n in names)
 
+    @property
+    def solvent_removed(self) -> Optional[str]:
+        """'SQUEEZE' or 'solvent mask' when the CIF records that diffuse
+        solvent was removed from the model, judged from data NAMES only - the
+        free-text fields that describe it are never read."""
+        if any(n.startswith("_platon_squeeze_") for n in self.present):
+            return "SQUEEZE"
+        if any(n.startswith("_smtbx_masks_") for n in self.present):
+            return "solvent mask"
+        return None
+
+    @property
+    def implicit_h(self) -> float:
+        """Total _atom_site_attached_hydrogens over the asymmetric unit."""
+        return sum(s.attached_h for s in self.sites)
+
 
 _CELL_TAGS = (("a", "_cell_length_a"), ("b", "_cell_length_b"), ("c", "_cell_length_c"),
               ("alpha", "_cell_angle_alpha"), ("beta", "_cell_angle_beta"),
@@ -196,6 +213,7 @@ _SITE_LOOP = [
     "?_atom_site_symmetry_multiplicity",
     "?_atom_site_disorder_group", "?_atom_site_disorder_assembly",
     "?_atom_site_calc_flag",
+    "?_atom_site_attached_hydrogens",
 ]
 
 _ANISO_LOOP = ["_atom_site_aniso_label",
@@ -297,11 +315,13 @@ def load(text: str, datablock: Optional[str] = None) -> Block:
         dgroup = sanitise(gemmi.cif.as_string(row[10])) if row.has(10) else None
         dasm = sanitise(gemmi.cif.as_string(row[11])) if row.has(11) else None
         cflag = sanitise(gemmi.cif.as_string(row[12])) if row.has(12) else None
+        ah, _ = parse_number(row[13] if row.has(13) else None)
         sites.append(Site(
             label=label, type_symbol=tsym, element=element_of(tsym, label),
             fract=(fx, fy, fz), occupancy=occ, occupancy_su=occ_su, uiso=uiso,
             adp_type=adp, multiplicity=mult, disorder_group=dgroup,
-            disorder_assembly=dasm, calc_flag=cflag, uij=aniso.get(label)))
+            disorder_assembly=dasm, calc_flag=cflag,
+            attached_h=ah if ah and ah > 0 else 0.0, uij=aniso.get(label)))
 
     symops = []
     for tag in ("_symmetry_equiv_pos_as_xyz", "_space_group_symop_operation_xyz"):

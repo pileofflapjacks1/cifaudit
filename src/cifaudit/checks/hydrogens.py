@@ -23,6 +23,14 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
     h_sites = [s for s in blk.sites if s.is_hydrogen]
     has_c = any((s.element or "") == "C" for s in blk.sites)
 
+    if not h_sites and blk.implicit_h > 0:
+        nt.append(NotTested(
+            area="X-H distances and H connectivity",
+            reason="H atoms are declared only implicitly, through "
+                   "_atom_site_attached_hydrogens, so they have no positions",
+            plat=["PLAT305", "PLAT303", "PLAT350"]))
+        return (f, nt)
+
     if not h_sites:
         if has_c:
             f.append(Finding(
@@ -66,6 +74,7 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
         ctx["shared_site_max"], ctx["occ_tol"],
         ctx["shared_site_bond_fraction"])
 
+    d_unknown_probe = set()
     for idx, s in enumerate(usable):
         if s.element not in ("H", "D"):
             continue
@@ -125,21 +134,35 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
 
         # Neutron data locates nuclei, so X-H is genuinely longer. The PLATON
         # test descriptions give both: "XRAY: 0.96 NEUT 1.08" for C-H.
-        neutron = "neutron" in (blk.radiation_probe or "").lower()
+        probe = (blk.radiation_probe or "").lower()
+        neutron = "neutron" in probe
+        hname = "D" if s.element == "D" else "H"
+        if hname == "D" and not probe:
+            # A deuterated structure is usually a neutron study, but this CIF
+            # does not say which probe was used, so neither target is safe.
+            d_unknown_probe.add(s.label)
+            continue
         table = XH_TARGET_NEUTRON if neutron else XH_TARGET_XRAY
         target = table.get(x.element or "")
         if target is not None and d < target - ctx["xh_short_tol"]:
             f.append(Finding(
                 code="SHORT_XH", severity=INFO,
                 message="%s-%s is %.3f A, %.3f A shorter than the %s target of "
-                        "%.3f A for %s-H." % (x.label, s.label, d, target - d,
-                                              "neutron" if neutron else "X-ray",
-                                              target, x.element),
+                        "%.3f A for %s-%s." % (x.label, s.label, d, target - d,
+                                               "neutron" if neutron else "X-ray",
+                                               target, x.element, hname),
                 plat=["PLAT350" if x.element == "C" else
                       ("PLAT352" if x.element == "N" else "PLAT354")],
                 based_on=["_atom_site_fract_x"], sites=[x.label, s.label],
                 evidence={"distance": round(d, 4), "target": target,
                           "probe": "neutron" if neutron else "x-ray"}))
+
+    if d_unknown_probe:
+        nt.append(NotTested(
+            area="X-D distances for %s" % ", ".join(sorted(d_unknown_probe)[:6]),
+            reason="deuterium positions, but no _diffrn_radiation_probe, so the "
+                   "X-ray and neutron targets cannot be chosen between",
+            plat=["PLAT350", "PLAT352", "PLAT354"]))
 
     if blk.h_treatment in _MISSING:
         nt.append(NotTested(area="hydrogen treatment consistency",

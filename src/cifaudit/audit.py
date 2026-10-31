@@ -33,6 +33,9 @@ DEFAULTS: Dict[str, Any] = {
     "hbond_min": 1.2,           # A; below this an H...acceptor approach is
                                 # too short even for a hydrogen bond
     "bond_tolerance": 0.45,     # A; d <= r_cov_i + r_cov_j + tol => bonded
+    "contact_tolerance": 0.90,  # A; an atom with a non-H neighbour within
+                                # r_i + r_j + this is not "isolated" (secondary
+                                # coordination such as Tl-N 2.74, Pb-S 2.96)
     "shared_site_max": 1.0,     # A; partial-occupancy atoms this close, whose
                                 # occupancies cannot both be full, are treated
                                 # as mutually exclusive alternatives

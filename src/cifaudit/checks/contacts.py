@@ -86,6 +86,13 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                 continue
             hbond_secondary.setdefault(h_idx, set()).update(adj[acc_idx])
 
+    # Old CIFs often have no occupancy column, so disorder alternatives are read
+    # at full weight and cannot be told apart from two real atoms. Say so,
+    # rather than calling the contact impossible.
+    no_occ = "_atom_site_occupancy" not in blk.present
+    occ_note = (" This CIF declares no occupancies, so these may be alternative "
+                "positions of one disordered atom.") if no_occ else ""
+
     reported = set()
     for (i, j), (d, img) in sorted(dists.items(), key=lambda kv: kv[1][0]):
         a, b = sites[i], sites[j]
@@ -121,16 +128,17 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                 continue
             reported.add(("hard", pair))
             f.append(Finding(
-                code="ATOMS_TOO_CLOSE", severity=ERROR,
+                code="ATOMS_TOO_CLOSE", severity=WARN if no_occ else ERROR,
                 message="%s and %s are %.3f A apart, below the %.2f A floor at "
-                        "which no two atoms can both be real."
-                        % (a.label, b.label, d, hard),
+                        "which no two atoms can both be real.%s"
+                        % (a.label, b.label, d, hard, occ_note),
                 plat=["PLAT310"],
                 based_on=["_atom_site_fract_x", "_atom_site_fract_y",
                           "_atom_site_fract_z"],
                 sites=[a.label, b.label],
                 evidence={"distance": round(d, 4), "image": list(img),
-                          "occupancies": [a.occ, b.occ]}))
+                          "occupancies": [a.occ, b.occ],
+                          "occupancy_declared": not no_occ}))
             continue
         if j in near.get(i, ()):
             continue        # within exclude_within_bonds of each other (1,2/1,3/1,4)
@@ -173,10 +181,10 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             severity=WARN,
             message="%s...%s is %.3f A, shorter than the %.2f A %s threshold, "
                     "and is not a bond, a hydrogen bond, or a pair within %d "
-                    "bonds of each other."
+                    "bonds of each other.%s"
                     % (a.label, b.label, d, limit,
                        "H...H" if both_h else "non-bonded",
-                       ctx["exclude_within_bonds"]),
+                       ctx["exclude_within_bonds"], occ_note),
             plat=["PLAT410", "PLAT411"] if both_h else ["PLAT430", "PLAT432"],
             based_on=["_atom_site_fract_x", "_atom_site_fract_y",
                       "_atom_site_fract_z"],

@@ -47,7 +47,7 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                    "be decided",
             plat=["PLAT305"]))
 
-    _dists, adj, _h_cands, _excl = bond_graph(
+    dists, adj, _h_cands, excl = bond_graph(
         sites, cell, radius, ctx["bond_tolerance"], ctx["xh_bond_max"],
         ctx["shared_site_max"], ctx["occ_tol"],
         ctx["shared_site_bond_fraction"])
@@ -69,26 +69,73 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
         comps.append(comp)
 
     singles = [c[0] for c in comps if len(c) == 1]
+
+    def nearest_contact(i):
+        """Closest non-H neighbour within secondary-contact distance, or None.
+
+        "Isolated" means nothing nearby, not merely no covalent bond. Long
+        secondary bonds - Tl-N 2.74 A, Pb-S 2.96 A, axial Cu-Cl 2.90 A in the
+        precision study - fall outside the covalent tolerance but are plainly
+        coordination. Mutually exclusive alternatives do not count.
+        """
+        ri = radius(sites[i].element)
+        best = None
+        for (a, b), (d, _img) in dists.items():
+            if i not in (a, b) or (a, b) in excl:
+                continue
+            j = b if a == i else a
+            if sites[j].element in ("H", "D"):
+                continue
+            rj = radius(sites[j].element)
+            if ri is None or rj is None:
+                continue
+            if d <= ri + rj + ctx["contact_tolerance"] and (best is None or d < best[0]):
+                best = (d, j)
+        return best
+
+    reported = set()
     for idx in singles:
         s = sites[idx]
         if radius(s.element) is None:
             continue
         if s.element in ("H", "D"):
             continue        # reported by the hydrogens check as ISOLATED_H
-        if s.element in METALS:
-            sev, hint = WARN, "for a metal this often means missing coordination"
-        elif s.element in ("O", "N"):
-            sev, hint = WARN, "for O or N this often means missing H"
+        if s.label in reported:
+            continue
+        if nearest_contact(idx) is not None:
+            continue        # a secondary contact: coordinated, not isolated
+        reported.add(s.label)
+        if s.element == "O":
+            # Expert convention (J. R. Ramirez): an unbound single O is routinely
+            # modelled solvent - water whose H were not located - or an O placed
+            # to account for electron density that may belong to another
+            # molecule. Information, never a warning.
+            sev = INFO
+            msg = ("%s (O) has no bonded neighbour. An isolated O is usually "
+                   "modelled solvent: water whose H were not located, or O placed "
+                   "to account for electron density." % s.label)
+        elif s.element in METALS:
+            sev = WARN
+            msg = ("%s (%s) has no neighbour within coordination distance; for a "
+                   "metal this usually means missing coordination."
+                   % (s.label, s.element))
+        elif s.element == "N":
+            sev = WARN
+            msg = ("%s (N) has no neighbour within coordination distance; often a "
+                   "solvent or guest molecule whose H were not modelled."
+                   % s.label)
         else:
-            sev, hint = INFO, "it may be a counter-ion or free atom"
+            sev = INFO
+            msg = ("%s (%s) has no neighbour within coordination distance; it may "
+                   "be a counter-ion or free atom." % (s.label, s.element))
         f.append(Finding(
-            code="ISOLATED_ATOM", severity=sev,
-            message="%s (%s) has no bonded neighbour anywhere in the unit cell; "
-                    "%s." % (s.label, s.element, hint),
+            code="ISOLATED_ATOM", severity=sev, message=msg,
             plat=["PLAT305"],
             based_on=["_atom_site_fract_x", "_atom_site_fract_y",
                       "_atom_site_fract_z"],
-            sites=[s.label], evidence={"element": s.element}))
+            sites=[s.label],
+            evidence={"element": s.element,
+                      "contact_limit": "r_i + r_j + %.2f A" % ctx["contact_tolerance"]}))
 
     # Fragment count is NOT reported as a finding. Measured on 16 deposited COD
     # structures it was >1 for 14 of them (88%): molecular and ionic crystals

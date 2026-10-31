@@ -290,6 +290,31 @@ needs a fresh sample.
 Results, reasons and limitations:
 [`data/processed/precision_results.md`](data/processed/precision_results.md).
 
+### Conventions adopted after the precision study
+
+Each came from the expert adjudicator (J. R. Ramirez) or from a false positive
+the model adjudicator explained, and each has a test in
+`tests/test_conventions.py`:
+
+- **An isolated O is information, described as probably modelled solvent** —
+  water whose H were not located, or O placed to account for electron density.
+- **"Isolated" means nothing within r_i + r_j + 0.90 Å**, a coordination-contact
+  distance kept separate from the 0.45 Å covalent tolerance, so long secondary
+  bonds such as Tl–N 2.74 Å and Pb–S 2.96 Å count.
+- **SQUEEZE turns a formula mismatch into information**, detected from
+  `_platon_squeeze_*` (or `_smtbx_masks_*`) data names, never from free text.
+- **`_atom_site_attached_hydrogens` counts towards composition**, and implicit H
+  is not reported as missing.
+- **Non-integral cell contents are reported only when there is no formula to
+  compare against.** A declared solid solution is not a defect.
+- **No occupancy column** softens a close contact to a warning that says the
+  atoms may be disorder alternatives.
+- **Deuterium** is named D in messages, and an X–D distance is not judged when
+  the CIF declares no radiation probe, since X-ray and neutron targets differ.
+
+These were designed against the precision sample, so that sample can no longer
+measure them. A fresh one is needed.
+
 ### Shared sites
 
 Two elements can occupy one crystallographic position with partial occupancies —
