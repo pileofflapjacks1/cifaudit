@@ -129,6 +129,13 @@ cifaudit-mcp            # stdio
 | `describe_alert` | Look up a PLAT code; returns PLATON's verbatim description. |
 | `coverage` | What is and is not implemented, so a caller can decide whether checkCIF is required. |
 
+The implementations are importable directly, with no SDK and no MCP runtime:
+
+```python
+from cifaudit.tools import audit_cif, coverage, describe_alert, list_datablocks
+list_datablocks(path="mystructure.cif")
+```
+
 ## Design
 
 **Abstention is a first-class result.** `status` is `ok` or `not_enough_data`, and
@@ -346,7 +353,7 @@ asked a different question.
 pip install -e ".[test]" && pytest
 ```
 
-97 tests. Every planted defect has a fixture; the clean reference must produce
+112 tests. Every planted defect has a fixture; the clean reference must produce
 zero findings. Several exist because they caught real bugs:
 
 - `test_geminal_pairs_are_not_short_contacts` — the first implementation flagged a
@@ -369,8 +376,13 @@ zero findings. Several exist because they caught real bugs:
 - Covalent radii are tabulated for a subset of elements
   ([Cordero et al., *Dalton Trans.* 2008, 2832](https://doi.org/10.1039/B801115J)).
   Elements outside that table cause the dependent checks to abstain.
-- `cifaudit.server` is the one module not exercised by the test suite: the `mcp`
-  SDK requires Python ≥ 3.10 and the machine this was written on has 3.8.
+- The real `mcp` SDK has never been imported. Every published release requires
+  Python ≥ 3.10 and this was written on 3.8. The four tool implementations live
+  in `cifaudit.tools` as plain functions and are fully tested; `server.py` is a
+  registration layer whose wiring is tested against a stub SDK. What remains
+  unverified is exactly one thing: whether the real SDK accepts these
+  signatures. Until someone runs `cifaudit-mcp`, treat the MCP interface as
+  untried.
 
 ## Not affiliated
 
