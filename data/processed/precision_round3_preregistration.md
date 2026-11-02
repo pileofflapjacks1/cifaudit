@@ -78,3 +78,28 @@ overlapping intervals will not be described as a change.
 
 Every bug the adjudicator reports is recomputed independently before it is
 published. None is fixed in the version measured here.
+
+## Amendment 1 — 2026-11-01, at adjudicator launch, before any verdict
+
+The fetch and draw went as registered. 800 files were fetched, with 0 overlap
+against the 2,416 earlier IDs. Seed 20261102 drew 60 items.
+
+The verdict rule given to the adjudicator is round 1's, unchanged, and the
+round-2 correction is written in from the start. The *check descriptions* differ
+from round 2, in three ways:
+
+1. **Updated to the version under test.** `ATOMS_TOO_CLOSE` treats an H and its
+   only heavy neighbour as a bond. `SHORT_NONBONDED_CONTACT` covers X…H pairs,
+   as the code always applied it. `OCC_ZERO` and `ISOLATED_H` are described,
+   because they were drawn for the first time.
+2. **A note on intended disorder handling.** One paragraph says how the tool is
+   meant to treat disorder alternatives, including across a symmetry element.
+   The adjudicator is told to judge against the actual structure, not that intent.
+3. **A recomputation note.** gemmi's `get_all_unit_cell_sites()` merges copies
+   within about 0.4–0.5 Å, so the adjudicator should apply the symmetry operators
+   itself near symmetry elements. The round-2 adjudicator found this
+   independently.
+
+Items 2 and 3 tell the adjudicator more about the tool than round 2's brief did.
+That could make it more likely to accept the tool's disorder handling. This is
+recorded so the comparison with round 2 can be read with it in mind.
