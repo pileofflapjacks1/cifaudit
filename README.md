@@ -341,6 +341,25 @@ Counting accurately worded info findings as correct gives 51% (38–63%). Round 
 was not scored that way, so that figure is not comparable.
 [`data/processed/precision_round2_results.md`](data/processed/precision_round2_results.md).
 
+**Round 3, after the round-2 fixes: 26% (95% CI 16–38%).** This used a
+pre-registered fresh sample of 60 findings from 800 new COD structures, again
+judged by model adjudication. The intervals overlap those of rounds 1 and 2, so
+this is no measurable change, and not the improvement the fixes were meant to
+bring.
+
+Pooled across the three rounds (exploratory, 177 judged findings), the pattern
+is stable:
+
+- **Usually right when they fire:** `ADP_EXTREME_ANISOTROPY` (10/12),
+  `UEQ_RANGE_WIDE` (9/11) and `FORMULA_SITES_MISMATCH` (20/30).
+- **Mostly wrong:** the geometric and connectivity checks, at 0–27%. They depend
+  on reconstructing disorder from labels that CIFs use inconsistently, and on
+  fixed distance thresholds that do not hold across the periodic table. A flat
+  1.35 Å X–H cutoff misses P–H and every bridging metal hydride.
+
+Treat the first group as signal and the second as prompts to look.
+[`data/processed/precision_round3_results.md`](data/processed/precision_round3_results.md).
+
 ### Conventions adopted after the precision study
 
 Each came from the expert adjudicator (J. R. Ramirez) or from a false positive

@@ -1,0 +1,1310 @@
+{
+ "seed": 20261102,
+ "files_audited": 800,
+ "firing_files": {
+  "H_MULTIPLE_CONNECTIONS": 18,
+  "SHORT_XH": 39,
+  "ADP_EXTREME_ANISOTROPY": 77,
+  "ATOMS_TOO_CLOSE": 17,
+  "ISOLATED_ATOM": 38,
+  "SHORT_HH_CONTACT": 33,
+  "FORMULA_SITES_MISMATCH": 114,
+  "NO_HYDROGENS_WITH_CARBON": 8,
+  "ISOLATED_H": 13,
+  "SHORT_NONBONDED_CONTACT": 17,
+  "SYMMETRY_DERIVED_LOWER": 1,
+  "SYMMETRY_POSSIBLY_MISSED": 2,
+  "ADP_NPD": 6,
+  "DISORDER_SUM_NOT_ONE": 42,
+  "UEQ_RANGE_WIDE": 22,
+  "DENSITY_BELOW_ONE": 9,
+  "DUPLICATE_LABELS": 2,
+  "UISO_NEGATIVE": 1,
+  "OCC_ZERO": 31,
+  "SHARED_SITE_OCC_GT_ONE": 6,
+  "HBOND_IMPLAUSIBLY_SHORT": 1,
+  "SCATTERING_TYPE_LABEL_MISMATCH": 3
+ },
+ "items": [
+  {
+   "id": "R01",
+   "cod_id": "7013083",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=4, does not match _chemical_formula_sum for: H 50.00 vs 61.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 4.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 50.0,
+      "from_formula": 61.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "solvent_removed": null,
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "R02",
+   "cod_id": "2102011",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=6, does not match _chemical_formula_sum for: F 3.00 vs 1.00, O 3.00 vs 2.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 6.0,
+    "differences": [
+     {
+      "element": "F",
+      "from_sites": 3.0,
+      "from_formula": 1.0
+     },
+     {
+      "element": "O",
+      "from_sites": 3.0,
+      "from_formula": 2.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "solvent_removed": null,
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "R03",
+   "cod_id": "4330080",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=1, does not match _chemical_formula_sum for: H 0.00 vs 20.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 1.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 0.0,
+      "from_formula": 20.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "solvent_removed": null,
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "R04",
+   "cod_id": "7110021",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=2, does not match _chemical_formula_sum for: H 56.00 vs 54.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 2.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 56.0,
+      "from_formula": 54.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "solvent_removed": null,
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "R05",
+   "cod_id": "7110028",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "info",
+   "message": "The atom-site list, divided by Z=4, differs from _chemical_formula_sum for: C 55.00 vs 62.00, Cl 0.00 vs 4.00, H 40.00 vs 64.00, O 0.00 vs 5.00. The CIF records SQUEEZE, so the declared formula probably includes solvent removed from the model.",
+   "evidence": {
+    "z": 4.0,
+    "differences": [
+     {
+      "element": "C",
+      "from_sites": 55.0,
+      "from_formula": 62.0
+     },
+     {
+      "element": "Cl",
+      "from_sites": 0.0,
+      "from_formula": 4.0
+     },
+     {
+      "element": "H",
+      "from_sites": 40.0,
+      "from_formula": 64.0
+     },
+     {
+      "element": "O",
+      "from_sites": 0.0,
+      "from_formula": 5.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "solvent_removed": "SQUEEZE",
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "R06",
+   "cod_id": "2102080",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=2, does not match _chemical_formula_sum for: H 23.72 vs 24.00, O 3.72 vs 4.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 2.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 23.721,
+      "from_formula": 24.0
+     },
+     {
+      "element": "O",
+      "from_sites": 3.721,
+      "from_formula": 4.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "solvent_removed": null,
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "R07",
+   "cod_id": "2102054",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=2, does not match _chemical_formula_sum for: D 24.94 vs 27.00, H 3.72 vs 4.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 2.0,
+    "differences": [
+     {
+      "element": "D",
+      "from_sites": 24.938,
+      "from_formula": 27.0
+     },
+     {
+      "element": "H",
+      "from_sites": 3.72,
+      "from_formula": 4.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "solvent_removed": null,
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "R08",
+   "cod_id": "7013013",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=2, does not match _chemical_formula_sum for: H 115.00 vs 114.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 2.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 115.0,
+      "from_formula": 114.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "solvent_removed": null,
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "R09",
+   "cod_id": "2102008",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=6, does not match _chemical_formula_sum for: F 3.00 vs 1.00, O 3.00 vs 2.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 6.0,
+    "differences": [
+     {
+      "element": "F",
+      "from_sites": 3.0,
+      "from_formula": 1.0
+     },
+     {
+      "element": "O",
+      "from_sites": 3.0,
+      "from_formula": 2.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "solvent_removed": null,
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "R10",
+   "cod_id": "7110074",
+   "code": "FORMULA_SITES_MISMATCH",
+   "severity": "warn",
+   "message": "The atom-site list, divided by Z=1, does not match _chemical_formula_sum for: H 6.00 vs 22.00. (Counts from the symmetry expansion of the atom-site list.)",
+   "evidence": {
+    "z": 1.0,
+    "differences": [
+     {
+      "element": "H",
+      "from_sites": 6.0,
+      "from_formula": 22.0
+     }
+    ],
+    "basis": "symmetry expansion of the atom-site list",
+    "solvent_removed": null,
+    "caveat": "rounding of occupancies in the CIF can produce small non-integral differences"
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT041",
+    "PLAT043"
+   ]
+  },
+  {
+   "id": "R11",
+   "cod_id": "4330010",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "O1W (O) has no bonded neighbour. An isolated O is usually modelled solvent: water whose H were not located, or O placed to account for electron density.",
+   "evidence": {
+    "element": "O",
+    "contact_limit": "r_i + r_j + 0.90 A"
+   },
+   "sites": [
+    "O1W"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R12",
+   "cod_id": "7013080",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "O1S (O) has no bonded neighbour. An isolated O is usually modelled solvent: water whose H were not located, or O placed to account for electron density.",
+   "evidence": {
+    "element": "O",
+    "contact_limit": "r_i + r_j + 0.90 A"
+   },
+   "sites": [
+    "O1S"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R13",
+   "cod_id": "7110050",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "O7 (O) has no bonded neighbour. An isolated O is usually modelled solvent: water whose H were not located, or O placed to account for electron density.",
+   "evidence": {
+    "element": "O",
+    "contact_limit": "r_i + r_j + 0.90 A"
+   },
+   "sites": [
+    "O7"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R14",
+   "cod_id": "7110009",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "O10 (O) has no bonded neighbour. An isolated O is usually modelled solvent: water whose H were not located, or O placed to account for electron density.",
+   "evidence": {
+    "element": "O",
+    "contact_limit": "r_i + r_j + 0.90 A"
+   },
+   "sites": [
+    "O10"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R15",
+   "cod_id": "8105092",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "Br1 (Br) has no neighbour within coordination distance; it may be a counter-ion or free atom.",
+   "evidence": {
+    "element": "Br",
+    "contact_limit": "r_i + r_j + 0.90 A"
+   },
+   "sites": [
+    "Br1"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R16",
+   "cod_id": "4330007",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "O2W (O) has no bonded neighbour. An isolated O is usually modelled solvent: water whose H were not located, or O placed to account for electron density.",
+   "evidence": {
+    "element": "O",
+    "contact_limit": "r_i + r_j + 0.90 A"
+   },
+   "sites": [
+    "O2W"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R17",
+   "cod_id": "7013096",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "O20W (O) has no bonded neighbour. An isolated O is usually modelled solvent: water whose H were not located, or O placed to account for electron density.",
+   "evidence": {
+    "element": "O",
+    "contact_limit": "r_i + r_j + 0.90 A"
+   },
+   "sites": [
+    "O20W"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R18",
+   "cod_id": "7013060",
+   "code": "ISOLATED_ATOM",
+   "severity": "warn",
+   "message": "N1 (N) has no neighbour within coordination distance; often a solvent or guest molecule whose H were not modelled.",
+   "evidence": {
+    "element": "N",
+    "contact_limit": "r_i + r_j + 0.90 A"
+   },
+   "sites": [
+    "N1"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R19",
+   "cod_id": "8105084",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "Cl3 (Cl) has no neighbour within coordination distance; it may be a counter-ion or free atom.",
+   "evidence": {
+    "element": "Cl",
+    "contact_limit": "r_i + r_j + 0.90 A"
+   },
+   "sites": [
+    "Cl3"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R20",
+   "cod_id": "7013045",
+   "code": "ISOLATED_ATOM",
+   "severity": "info",
+   "message": "O16 (O) has no bonded neighbour. An isolated O is usually modelled solvent: water whose H were not located, or O placed to account for electron density.",
+   "evidence": {
+    "element": "O",
+    "contact_limit": "r_i + r_j + 0.90 A"
+   },
+   "sites": [
+    "O16"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R21",
+   "cod_id": "7110098",
+   "code": "ADP_EXTREME_ANISOTROPY",
+   "severity": "warn",
+   "message": "Site C70 has a principal-axis ratio sqrt(U3/U1) = 3.73 (prolate ellipsoid), in Cartesian axes. Above 3.55, the 99th percentile over 12,899 non-H anisotropic atoms in 500 deposited COD structures. Large values may indicate unresolved disorder.",
+   "evidence": {
+    "cartesian_eigenvalues": [
+     0.030764,
+     0.041024,
+     0.427554
+    ],
+    "axis_ratio_sqrt_U3_U1": 3.728,
+    "shape": "prolate"
+   },
+   "sites": [
+    "C70"
+   ],
+   "checkcif": [
+    "PLAT213",
+    "PLAT215",
+    "PLAT250"
+   ]
+  },
+  {
+   "id": "R22",
+   "cod_id": "7013029",
+   "code": "ADP_EXTREME_ANISOTROPY",
+   "severity": "warn",
+   "message": "Site C52 has a principal-axis ratio sqrt(U3/U1) = 5.35 (prolate ellipsoid), in Cartesian axes. Above 3.55, the 99th percentile over 12,899 non-H anisotropic atoms in 500 deposited COD structures. Large values may indicate unresolved disorder.",
+   "evidence": {
+    "cartesian_eigenvalues": [
+     0.007365,
+     0.095223,
+     0.210762
+    ],
+    "axis_ratio_sqrt_U3_U1": 5.349,
+    "shape": "prolate"
+   },
+   "sites": [
+    "C52"
+   ],
+   "checkcif": [
+    "PLAT213",
+    "PLAT215",
+    "PLAT250"
+   ]
+  },
+  {
+   "id": "R23",
+   "cod_id": "4330043",
+   "code": "ADP_EXTREME_ANISOTROPY",
+   "severity": "warn",
+   "message": "Site C15 has a principal-axis ratio sqrt(U3/U1) = 9.88 (prolate ellipsoid), in Cartesian axes. Above 3.55, the 99th percentile over 12,899 non-H anisotropic atoms in 500 deposited COD structures. Large values may indicate unresolved disorder.",
+   "evidence": {
+    "cartesian_eigenvalues": [
+     0.000526,
+     0.025137,
+     0.051338
+    ],
+    "axis_ratio_sqrt_U3_U1": 9.88,
+    "shape": "prolate"
+   },
+   "sites": [
+    "C15"
+   ],
+   "checkcif": [
+    "PLAT213",
+    "PLAT215",
+    "PLAT250"
+   ]
+  },
+  {
+   "id": "R24",
+   "cod_id": "7110044",
+   "code": "ADP_EXTREME_ANISOTROPY",
+   "severity": "warn",
+   "message": "Site C6 has a principal-axis ratio sqrt(U3/U1) = 3.72 (oblate ellipsoid), in Cartesian axes. Above 3.55, the 99th percentile over 12,899 non-H anisotropic atoms in 500 deposited COD structures. Large values may indicate unresolved disorder.",
+   "evidence": {
+    "cartesian_eigenvalues": [
+     0.001524,
+     0.014308,
+     0.021038
+    ],
+    "axis_ratio_sqrt_U3_U1": 3.715,
+    "shape": "oblate"
+   },
+   "sites": [
+    "C6"
+   ],
+   "checkcif": [
+    "PLAT213",
+    "PLAT215",
+    "PLAT250"
+   ]
+  },
+  {
+   "id": "R25",
+   "cod_id": "7110006",
+   "code": "DISORDER_SUM_NOT_ONE",
+   "severity": "warn",
+   "message": "Disorder assembly 'A': the group occupancies sum to 0.500 rather than 1.0.",
+   "evidence": {
+    "assembly": "A",
+    "sum": 0.5
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "R26",
+   "cod_id": "2102043",
+   "code": "DISORDER_SUM_NOT_ONE",
+   "severity": "warn",
+   "message": "Disorder assembly 'A': the group occupancies sum to 0.790 rather than 1.0.",
+   "evidence": {
+    "assembly": "A",
+    "sum": 0.79
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "R27",
+   "cod_id": "8105003",
+   "code": "DISORDER_SUM_NOT_ONE",
+   "severity": "warn",
+   "message": "Disorder assembly 'A': the group occupancies sum to 0.500 rather than 1.0.",
+   "evidence": {
+    "assembly": "A",
+    "sum": 0.5
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "R28",
+   "cod_id": "4123051",
+   "code": "DISORDER_SUM_NOT_ONE",
+   "severity": "warn",
+   "message": "Disorder assembly 'B': the group occupancies sum to 1.250 rather than 1.0.",
+   "evidence": {
+    "assembly": "B",
+    "sum": 1.25
+   },
+   "sites": [],
+   "checkcif": [
+    "PLAT077"
+   ]
+  },
+  {
+   "id": "R29",
+   "cod_id": "2102035",
+   "code": "SHORT_XH",
+   "severity": "info",
+   "message": "O1-H11 is 0.694 A, 0.126 A shorter than the X-ray target of 0.820 A for O-H.",
+   "evidence": {
+    "distance": 0.694,
+    "target": 0.82,
+    "probe": "x-ray"
+   },
+   "sites": [
+    "O1",
+    "H11"
+   ],
+   "checkcif": [
+    "PLAT354"
+   ]
+  },
+  {
+   "id": "R30",
+   "cod_id": "2102025",
+   "code": "SHORT_XH",
+   "severity": "info",
+   "message": "C31-H31 is 0.859 A, 0.101 A shorter than the X-ray target of 0.960 A for C-H.",
+   "evidence": {
+    "distance": 0.8592,
+    "target": 0.96,
+    "probe": "x-ray"
+   },
+   "sites": [
+    "C31",
+    "H31"
+   ],
+   "checkcif": [
+    "PLAT350"
+   ]
+  },
+  {
+   "id": "R31",
+   "cod_id": "7013097",
+   "code": "SHORT_XH",
+   "severity": "info",
+   "message": "O11-H11C is 0.696 A, 0.124 A shorter than the X-ray target of 0.820 A for O-H.",
+   "evidence": {
+    "distance": 0.696,
+    "target": 0.82,
+    "probe": "x-ray"
+   },
+   "sites": [
+    "O11",
+    "H11C"
+   ],
+   "checkcif": [
+    "PLAT354"
+   ]
+  },
+  {
+   "id": "R32",
+   "cod_id": "7110032",
+   "code": "SHORT_XH",
+   "severity": "info",
+   "message": "C25'-H25A is 0.573 A, 0.387 A shorter than the X-ray target of 0.960 A for C-H.",
+   "evidence": {
+    "distance": 0.5728,
+    "target": 0.96,
+    "probe": "x-ray"
+   },
+   "sites": [
+    "C25'",
+    "H25A"
+   ],
+   "checkcif": [
+    "PLAT350"
+   ]
+  },
+  {
+   "id": "R33",
+   "cod_id": "2014040",
+   "code": "SHORT_HH_CONTACT",
+   "severity": "warn",
+   "message": "H1A...H8B is 1.985 A, shorter than the 2.00 A H...H threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.985,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "H1A",
+    "H8B"
+   ],
+   "checkcif": [
+    "PLAT410",
+    "PLAT411"
+   ]
+  },
+  {
+   "id": "R34",
+   "cod_id": "2014097",
+   "code": "SHORT_HH_CONTACT",
+   "severity": "warn",
+   "message": "H...H is 1.944 A, shorter than the 2.00 A H...H threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.9437,
+    "image": [
+     0,
+     1,
+     0
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "H",
+    "H"
+   ],
+   "checkcif": [
+    "PLAT410",
+    "PLAT411"
+   ]
+  },
+  {
+   "id": "R35",
+   "cod_id": "7110053",
+   "code": "SHORT_HH_CONTACT",
+   "severity": "warn",
+   "message": "H(53)...H(65) is 1.919 A, shorter than the 2.00 A H...H threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.9187,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "H(53)",
+    "H(65)"
+   ],
+   "checkcif": [
+    "PLAT410",
+    "PLAT411"
+   ]
+  },
+  {
+   "id": "R36",
+   "cod_id": "7013045",
+   "code": "SHORT_HH_CONTACT",
+   "severity": "warn",
+   "message": "H1...H11 is 1.995 A, shorter than the 2.00 A H...H threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.9947,
+    "image": [
+     0,
+     0,
+     -1
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "H1",
+    "H11"
+   ],
+   "checkcif": [
+    "PLAT410",
+    "PLAT411"
+   ]
+  },
+  {
+   "id": "R37",
+   "cod_id": "9007098",
+   "code": "OCC_ZERO",
+   "severity": "warn",
+   "message": "Site FeM has occupancy 0.0 and contributes nothing to the model (a dummy atom?).",
+   "evidence": {},
+   "sites": [
+    "FeM"
+   ],
+   "checkcif": [
+    "PLAT074"
+   ]
+  },
+  {
+   "id": "R38",
+   "cod_id": "9007087",
+   "code": "OCC_ZERO",
+   "severity": "warn",
+   "message": "Site FeM has occupancy 0.0 and contributes nothing to the model (a dummy atom?).",
+   "evidence": {},
+   "sites": [
+    "FeM"
+   ],
+   "checkcif": [
+    "PLAT074"
+   ]
+  },
+  {
+   "id": "R39",
+   "cod_id": "9007086",
+   "code": "OCC_ZERO",
+   "severity": "warn",
+   "message": "Site FeM has occupancy 0.0 and contributes nothing to the model (a dummy atom?).",
+   "evidence": {},
+   "sites": [
+    "FeM"
+   ],
+   "checkcif": [
+    "PLAT074"
+   ]
+  },
+  {
+   "id": "R40",
+   "cod_id": "4330027",
+   "code": "OCC_ZERO",
+   "severity": "warn",
+   "message": "Site La2 has occupancy 0.0 and contributes nothing to the model (a dummy atom?).",
+   "evidence": {},
+   "sites": [
+    "La2"
+   ],
+   "checkcif": [
+    "PLAT074"
+   ]
+  },
+  {
+   "id": "R41",
+   "cod_id": "4330078",
+   "code": "UEQ_RANGE_WIDE",
+   "severity": "warn",
+   "message": "Ueq across the 45 C atoms spans a factor of 15.7 (C25=0.0184 to C44=0.2890). A wide range within one element can mean a site has been assigned the wrong species.",
+   "evidence": {
+    "element": "C",
+    "n": 45,
+    "min": 0.0184,
+    "max": 0.289,
+    "ratio": 15.707
+   },
+   "sites": [
+    "C25",
+    "C44"
+   ],
+   "checkcif": [
+    "PLAT220",
+    "PLAT221"
+   ]
+  },
+  {
+   "id": "R42",
+   "cod_id": "7110095",
+   "code": "UEQ_RANGE_WIDE",
+   "severity": "warn",
+   "message": "Ueq across the 36 C atoms spans a factor of 29.6 (C24=0.0372 to C33=1.1000). A wide range within one element can mean a site has been assigned the wrong species.",
+   "evidence": {
+    "element": "C",
+    "n": 36,
+    "min": 0.0372,
+    "max": 1.1,
+    "ratio": 29.57
+   },
+   "sites": [
+    "C24",
+    "C33"
+   ],
+   "checkcif": [
+    "PLAT220",
+    "PLAT221"
+   ]
+  },
+  {
+   "id": "R43",
+   "cod_id": "7110087",
+   "code": "UEQ_RANGE_WIDE",
+   "severity": "warn",
+   "message": "Ueq across the 85 C atoms spans a factor of 18.1 (C1=0.0152 to C8A=0.2750). A wide range within one element can mean a site has been assigned the wrong species.",
+   "evidence": {
+    "element": "C",
+    "n": 85,
+    "min": 0.0152,
+    "max": 0.275,
+    "ratio": 18.092
+   },
+   "sites": [
+    "C1",
+    "C8A"
+   ],
+   "checkcif": [
+    "PLAT220",
+    "PLAT221"
+   ]
+  },
+  {
+   "id": "R44",
+   "cod_id": "2102086",
+   "code": "UEQ_RANGE_WIDE",
+   "severity": "warn",
+   "message": "Ueq across the 106 Al atoms spans a factor of 40.0 (Al2=0.0010 to Al32=0.0400). A wide range within one element can mean a site has been assigned the wrong species.",
+   "evidence": {
+    "element": "Al",
+    "n": 106,
+    "min": 0.001,
+    "max": 0.04,
+    "ratio": 40.0
+   },
+   "sites": [
+    "Al2",
+    "Al32"
+   ],
+   "checkcif": [
+    "PLAT220",
+    "PLAT221"
+   ]
+  },
+  {
+   "id": "R45",
+   "cod_id": "2102099",
+   "code": "H_MULTIPLE_CONNECTIONS",
+   "severity": "info",
+   "message": "H atom H(II2) has 2 distinct heavy sites within 1.35 A (N(II) 0.90 A, Na(II') 1.17 A). It is bonded to the nearest. A hydrogen between two electronegative atoms may be better modelled as disorder over two partially occupied sites.",
+   "evidence": {
+    "n_candidates": 2,
+    "n_distinct_sites": 2,
+    "bonded_to": "N(II)",
+    "distance": 0.9007
+   },
+   "sites": [
+    "H(II2)",
+    "N(II)",
+    "Na(II')"
+   ],
+   "checkcif": [
+    "PLAT303"
+   ]
+  },
+  {
+   "id": "R46",
+   "cod_id": "7110087",
+   "code": "H_MULTIPLE_CONNECTIONS",
+   "severity": "info",
+   "message": "H atom H8A1 has 2 distinct heavy sites within 1.35 A (C8A 0.98 A, C12A 0.98 A, C10A 1.06 A). It is bonded to the nearest. A hydrogen between two electronegative atoms may be better modelled as disorder over two partially occupied sites.",
+   "evidence": {
+    "n_candidates": 3,
+    "n_distinct_sites": 2,
+    "bonded_to": "C8A",
+    "distance": 0.979
+   },
+   "sites": [
+    "H8A1",
+    "C8A",
+    "C12A",
+    "C10A"
+   ],
+   "checkcif": [
+    "PLAT303"
+   ]
+  },
+  {
+   "id": "R47",
+   "cod_id": "2102042",
+   "code": "H_MULTIPLE_CONNECTIONS",
+   "severity": "info",
+   "message": "H atom H231B has 2 distinct heavy sites within 1.35 A (O23Aa 0.82 A, O23Ab 1.04 A). It is bonded to the nearest. A hydrogen between two electronegative atoms may be better modelled as disorder over two partially occupied sites.",
+   "evidence": {
+    "n_candidates": 2,
+    "n_distinct_sites": 2,
+    "bonded_to": "O23Aa",
+    "distance": 0.817
+   },
+   "sites": [
+    "H231B",
+    "O23Aa",
+    "O23Ab"
+   ],
+   "checkcif": [
+    "PLAT303"
+   ]
+  },
+  {
+   "id": "R48",
+   "cod_id": "2102043",
+   "code": "H_MULTIPLE_CONNECTIONS",
+   "severity": "info",
+   "message": "H atom H21a has 2 distinct heavy sites within 1.35 A (C2b 0.95 A, C2a 0.97 A). It is bonded to the nearest. A hydrogen between two electronegative atoms may be better modelled as disorder over two partially occupied sites.",
+   "evidence": {
+    "n_candidates": 2,
+    "n_distinct_sites": 2,
+    "bonded_to": "C2b",
+    "distance": 0.9508
+   },
+   "sites": [
+    "H21a",
+    "C2b",
+    "C2a"
+   ],
+   "checkcif": [
+    "PLAT303"
+   ]
+  },
+  {
+   "id": "R49",
+   "cod_id": "7110083",
+   "code": "ATOMS_TOO_CLOSE",
+   "severity": "error",
+   "message": "H65B and H65C are 0.507 A apart, below the 0.75 A floor at which no two atoms can both be real.",
+   "evidence": {
+    "distance": 0.5071,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "occupancies": [
+     0.5,
+     0.5
+    ],
+    "occupancy_declared": true
+   },
+   "sites": [
+    "H65B",
+    "H65C"
+   ],
+   "checkcif": [
+    "PLAT310"
+   ]
+  },
+  {
+   "id": "R50",
+   "cod_id": "4330019",
+   "code": "ATOMS_TOO_CLOSE",
+   "severity": "error",
+   "message": "H7B and C8A are 0.441 A apart, below the 0.75 A floor at which no two atoms can both be real.",
+   "evidence": {
+    "distance": 0.4414,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "occupancies": [
+     1.0,
+     0.5
+    ],
+    "occupancy_declared": true
+   },
+   "sites": [
+    "H7B",
+    "C8A"
+   ],
+   "checkcif": [
+    "PLAT310"
+   ]
+  },
+  {
+   "id": "R51",
+   "cod_id": "4123067",
+   "code": "ATOMS_TOO_CLOSE",
+   "severity": "error",
+   "message": "H58A and H58C are 0.379 A apart, below the 0.75 A floor at which no two atoms can both be real.",
+   "evidence": {
+    "distance": 0.3787,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "occupancies": [
+     0.5,
+     0.5
+    ],
+    "occupancy_declared": true
+   },
+   "sites": [
+    "H58A",
+    "H58C"
+   ],
+   "checkcif": [
+    "PLAT310"
+   ]
+  },
+  {
+   "id": "R52",
+   "cod_id": "2014043",
+   "code": "ATOMS_TOO_CLOSE",
+   "severity": "error",
+   "message": "H1A and H1B are 0.319 A apart, below the 0.75 A floor at which no two atoms can both be real.",
+   "evidence": {
+    "distance": 0.3193,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "occupancies": [
+     0.5,
+     0.5
+    ],
+    "occupancy_declared": true
+   },
+   "sites": [
+    "H1A",
+    "H1B"
+   ],
+   "checkcif": [
+    "PLAT310"
+   ]
+  },
+  {
+   "id": "R53",
+   "cod_id": "4123099",
+   "code": "SHORT_NONBONDED_CONTACT",
+   "severity": "warn",
+   "message": "Lu1...H2 is 1.971 A, shorter than the 2.20 A non-bonded threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.9707,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "Lu1",
+    "H2"
+   ],
+   "checkcif": [
+    "PLAT430",
+    "PLAT432"
+   ]
+  },
+  {
+   "id": "R54",
+   "cod_id": "4123016",
+   "code": "SHORT_NONBONDED_CONTACT",
+   "severity": "warn",
+   "message": "H1...Pd2 is 1.686 A, shorter than the 2.20 A non-bonded threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.6858,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "H1",
+    "Pd2"
+   ],
+   "checkcif": [
+    "PLAT430",
+    "PLAT432"
+   ]
+  },
+  {
+   "id": "R55",
+   "cod_id": "7013082",
+   "code": "SHORT_NONBONDED_CONTACT",
+   "severity": "warn",
+   "message": "P1...H1 is 1.369 A, shorter than the 2.20 A non-bonded threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 1.3692,
+    "image": [
+     0,
+     0,
+     0
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "P1",
+    "H1"
+   ],
+   "checkcif": [
+    "PLAT430",
+    "PLAT432"
+   ]
+  },
+  {
+   "id": "R56",
+   "cod_id": "7013004",
+   "code": "SHORT_NONBONDED_CONTACT",
+   "severity": "warn",
+   "message": "Ag2...H27 is 2.126 A, shorter than the 2.20 A non-bonded threshold, and is not a bond, a hydrogen bond, or a pair within 3 bonds of each other.",
+   "evidence": {
+    "distance": 2.1262,
+    "image": [
+     1,
+     0,
+     0
+    ],
+    "both_full_weight": true,
+    "note": "pairs within 3 bonds, and hydrogen bonds, are excluded from this test"
+   },
+   "sites": [
+    "Ag2",
+    "H27"
+   ],
+   "checkcif": [
+    "PLAT430",
+    "PLAT432"
+   ]
+  },
+  {
+   "id": "R57",
+   "cod_id": "4123016",
+   "code": "ISOLATED_H",
+   "severity": "warn",
+   "message": "H atom H1 has no heavy-atom neighbour within 1.35 A.",
+   "evidence": {},
+   "sites": [
+    "H1"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R58",
+   "cod_id": "4123080",
+   "code": "ISOLATED_H",
+   "severity": "warn",
+   "message": "H atom H1P has no heavy-atom neighbour within 1.35 A.",
+   "evidence": {},
+   "sites": [
+    "H1P"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R59",
+   "cod_id": "2014098",
+   "code": "ISOLATED_H",
+   "severity": "warn",
+   "message": "H atom H1 has no heavy-atom neighbour within 1.35 A.",
+   "evidence": {},
+   "sites": [
+    "H1"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  },
+  {
+   "id": "R60",
+   "cod_id": "4123093",
+   "code": "ISOLATED_H",
+   "severity": "warn",
+   "message": "H atom H1 has no heavy-atom neighbour within 1.35 A.",
+   "evidence": {},
+   "sites": [
+    "H1"
+   ],
+   "checkcif": [
+    "PLAT305"
+   ]
+  }
+ ]
+}

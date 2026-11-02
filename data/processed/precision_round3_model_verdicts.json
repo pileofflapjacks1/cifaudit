@@ -1,0 +1,422 @@
+[
+ {
+  "id": "R01",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Recomputed H = 50.0 per formula unit (Pnma; half-occupied methyl H at 0.2 A from mirror images counted correctly) vs H61 declared. The 11 missing H all belong to the disordered cyclohexyl group C5-C10, which has no H atoms modelled, so the model is incomplete relative to the formula."
+ },
+ {
+  "id": "R02",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "The O and F share one site at (.3674,0,1/4) and the CIF has no occupancy column, so each defaults to 1. That gives F3 O3 per Nb, vs F1 O2 declared. The mixed O/F site itself is legitimate, but the omitted 2/3 and 1/3 occupancies make the deposited CIF internally inconsistent."
+ },
+ {
+  "id": "R03",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "There are no H sites (_atom_sites_solution_hydrogens none, hydrogen_treatment none), so H 0 vs 20. The missing H are the H of 10 coordinated waters, Ln(H2O)5, which were not located in this heavy-atom cyano-bridged polymer. This is a normal, documented modelling choice and the formula correctly includes them."
+ },
+ {
+  "id": "R04",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Sites give exactly H56 per formula unit, and _chemical_formula_moiety also says C26 H56 N3 P3 Ru, but _chemical_formula_sum says H54. This is a genuine internal inconsistency in the CIF."
+ },
+ {
+  "id": "R05",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "SQUEEZE is recorded. The sites give C55 H40 Fe N6 S2. The shortfall, C7 H24 Cl4 O5, is exactly 2 CH2Cl2 + 5 MeOH of squeezed solvent included in the declared formula, so the mismatch is expected. It is correctly reported as info."
+ },
+ {
+  "id": "R06",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "O6/H6 hydroxyl has occupancy 0.721, which gives O3.721 and H23.721. The moiety declares 0.72/0.28 components both C18H24O4, but the minor component's O is not modelled. This is a genuine incompleteness of the model relative to the declared composition."
+ },
+ {
+  "id": "R07",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Recomputed D 24.94 and H 3.72 vs D27 H4 (neutron data). Most of the shortfall is the two O-H...O oxime bridging protons of the bis(dimethylglyoximato)Co unit: no H/D sites exist near O1-O4. Minor components C19B/C20B also lack H. A neutron model missing the bridging protons is worth flagging."
+ },
+ {
+  "id": "R08",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "In I2/m with PART -1 chain disorder, C22/C23 (occ 0.5, 0.039 A from their mirror images) and H27A (occ 0.5, 0.068 A from its image) are effectively on the mirror. Treating all three that way gives exactly C72 H114, matching the formula. The tool merged C22/C23 but counted H27A twice (115), so the mismatch is an artifact of its merge tolerance."
+ },
+ {
+  "id": "R09",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "Same as 2102011, another pressure point of NbO2F. O and F sit on one site with no occupancy column, so each defaults to 1, giving F3 O3 vs FO2 declared. The site sharing is legitimate, but the CIF omits the 2/3 and 1/3 occupancies and is internally inconsistent."
+ },
+ {
+  "id": "R10",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "Sites give H 6 (only the Al-OH H1) and C 4.02 vs H22. All 16 H of the organic template (C atoms at 0.67 occupancy, N on a 2-fold axis with Ueq 0.38) are unmodelled, although riding H could have been placed on the C atoms. The template model is very poor."
+ },
+ {
+  "id": "R11",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O1W (occ 0.5, Uiso 0.17) has no non-H neighbour within bonding range. Its nearest contact is O3 at 2.78 A, a hydrogen bond. The moiety lists H2O, so this is ordinary modelled water whose H were not located."
+ },
+ {
+  "id": "R12",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O1S (occ 0.5) has nearest O at 3.08 A. The formula (O2.25, H24.25) accounts for fractional solvent water, so this is ordinary modelled solvent O."
+ },
+ {
+  "id": "R13",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O7 has contacts O8 2.85 A and O4 2.93 A, both hydrogen bonds. The moiety lists 4 H2O, so this is lattice water without H."
+ },
+ {
+  "id": "R14",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O10 has O...O contacts of 2.75-2.83 A (hydrogen bonds) and no covalent partner. The formula H34 O12 includes water, so this is lattice water without located H."
+ },
+ {
+  "id": "R15",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Br1 has no partner closer than 2.79 A (only C-H...Br contacts). The moiety is 'Br, C24 H24 N', so this is the bromide counter-ion of an organic cation, which is normal."
+ },
+ {
+  "id": "R16",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O2W has contacts H3D 1.92 A and O3W 2.73 A (hydrogen bonds). The moiety lists 2 H2O, so this is ordinary lattice water."
+ },
+ {
+  "id": "R17",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "O20W in a Na/Mn polyoxotungstate hydrate (H120 in the formula) has only O...O contacts of 2.38-2.62 A, to partly occupied waters and O15. It lies just beyond the 2.22 A O-O bonding limit, so this is water of crystallisation without H."
+ },
+ {
+  "id": "R18",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "N1 sits on a special position (self-image 0.001 A) with only O contacts at 2.72-3.19 A. With formula C8 H28 Mo2 N O26 Yb, this is an NH4+ counter-cation whose H were not modelled, which is normal."
+ },
+ {
+  "id": "R19",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Cl3 has only H contacts at 2.29-2.36 A (hydrogen bonds). The moiety lists a separate Cl, so this is the chloride counter-ion."
+ },
+ {
+  "id": "R20",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "O16 (Ueq 0.27) has nearest O13 at 2.67 A. O13 is a water with H130/H131, and O16 is evidently a second lattice water whose H were not found. That is normal modelled solvent, even though poorly defined."
+ },
+ {
+  "id": "R21",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "Recomputed Cartesian eigenvalues 0.0308/0.0410/0.4276, ratio 3.73, matching the tool. C70 is full-occupancy but bonded to disordered C65/C65B/C65C. Its U22 = 0.39(19) suggests unresolved disorder, though the esds are very large in this poor-quality structure."
+ },
+ {
+  "id": "R22",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Recomputed eigenvalues 0.0074/0.0952/0.2108, ratio 5.35. C52 has a short C51-C52 bond of 1.29 A, a strong sign of unresolved disorder that is worth flagging."
+ },
+ {
+  "id": "R23",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Recomputed eigenvalues 0.00053/0.0251/0.0513, ratio 9.88. The smallest eigenvalue is near zero, so C15 is nearly non-positive-definite: a clear ADP problem."
+ },
+ {
+  "id": "R24",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Recomputed eigenvalues 0.00152/0.0143/0.0210, ratio 3.72, oblate, matching the tool. The smallest U of 0.0015 A^2 for a ring C is unusually small and points to an ADP artifact worth checking."
+ },
+ {
+  "id": "R25",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "The only assembly-A atoms are H5A/B/C (occ 0.5, PART -1) of methyl C5, which lies on a mirror. The symmetry image supplies the other 0.5, so this is normal methyl disorder across a symmetry element. The tool did not apply its negative-PART rule here."
+ },
+ {
+  "id": "R26",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "Assembly A contains a single atom, O21A, a partially occupied (0.79) water among 22.18 H2O. A lone partial water site whose alternative is a vacancy is normal, and nothing implies the sum must be 1."
+ },
+ {
+  "id": "R27",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "The assembly-A atoms are methyl H7A/B/C at occ 0.5 with PART -1, on a C7 that lies on the mirror (Aeam). Disorder across the mirror makes the effective sum 1, so this is normal. The tool ignored the negative PART."
+ },
+ {
+  "id": "R28",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "The real disorder is C73 (0.75, grp 1) with C11I (0.25, grp 2), plus their H, which sums to 1.0. The 1.25 arises because H74A/H74B on ordered C74 are tagged assembly B group 1 at full occupancy, a labelling slip rather than an occupancy error."
+ },
+ {
+  "id": "R29",
+  "verdict": "unsure",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "Freely refined water H11 on O1 gives 0.69(2) A (the CIF bond table agrees), with the other H at 0.89 A in room-temperature X-ray alum. It is short, but within the scatter commonly seen for freely refined X-ray O-H, so it is unclear whether this merits a flag."
+ },
+ {
+  "id": "R30",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "C31/N31 is a mixed C/N site (0.5/0.5) in a disordered heteroaromatic guest, and H31 rides at 0.86 A, an aromatic-type geometry. Against the aromatic C-H target of 0.93 at room temperature this is only 0.07 A short. The tool's 0.96 sp3 target makes it a borderline artifact."
+ },
+ {
+  "id": "R31",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "O11-H11C is 0.695 A (CIF bond table 0.6948, riding 'R' flag), and H11C points at Cu4 at 1.97 A. The hydroxyl H is evidently misplaced, which is worth flagging."
+ },
+ {
+  "id": "R32",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H25A (asm A grp 1, occ 0.849) is bonded to C25 at 0.979 A. C25' (grp 2, 0.151; its assembly label is missing) is the alternative position of C25, 0.57 A away. The tool paired the H with the mutually exclusive alternative."
+ },
+ {
+  "id": "R33",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "H1A...H8B is 1.985 A between riding methylene H, 5 bonds apart within one molecule. This is 0.015 A under the threshold, an ordinary intramolecular contact for calculated H positions."
+ },
+ {
+  "id": "R34",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "Lithium hypophosphite H2PO2-. H is bonded to P at 1.351 A (CIF 1.35(4)), and the 1.944 A contact is to the second H on the same P (H-P-H 92 deg), a geminal pair. The tool's 1.35 A H-bond cutoff missed the P-H bond."
+ },
+ {
+  "id": "R35",
+  "verdict": "false",
+  "confidence": "low",
+  "accurately_framed": false,
+  "reason": "H(53)...H(65) is 1.92 A between two calculated methyl H on ethyl groups of the same phosphine (C...C 4 bonds apart). This reflects idealised riding-methyl placement and is not a structural problem."
+ },
+ {
+  "id": "R36",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "H1...H11 is 1.995 A between aromatic riding H, 5 bonds apart, a bay-type intramolecular contact. It is 0.005 A under the threshold, which is normal."
+ },
+ {
+  "id": "R37",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "FeM occupancy is 0.00100 in the CIF, not 0.0. It is a minor microprobe-fixed Fe fraction (Fe0.002 in the formula) on the octahedral spinel site. The tool misread or rounded the occupancy."
+ },
+ {
+  "id": "R38",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "FeM occupancy is 0.00100, not 0.0, matching Fe0.002 in the formula. The tool misread or rounded the value."
+ },
+ {
+  "id": "R39",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "FeM occupancy is 0.00100, not 0.0, matching Fe0.002 in the formula. The tool misread or rounded the value."
+ },
+ {
+  "id": "R40",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "La2 does have occupancy 0 on the Ca1 site, so the statement is accurate. It records the refined result of a Ca/La/Ce site-mixing model (Ca1 0.972 + Ce1 0.029 + La2 0), not a dummy atom or error."
+ },
+ {
+  "id": "R41",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "Ratio 15.7 confirmed. The high-U atoms C43-C45 (Uiso 0.18-0.29) are a disordered hexane solvent about an inversion centre, not a wrongly assigned species. A high-U solvent is common, and checkCIF's equivalent test excludes solvent."
+ },
+ {
+  "id": "R42",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "Ratio 29.6 confirmed. C33 (Uiso 1.1(6)) and C34 (0.9(4)), at occ 0.5, belong to a disordered iodobenzene guest. C33 lies 0.16 A from I2. U values near 1 A^2 are physically meaningless and the guest model warrants scrutiny. The cause is a bad guest model, not a wrong element."
+ },
+ {
+  "id": "R43",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": false,
+  "reason": "Ratio 18.1 confirmed. C8A (occ 0.5, Uiso 0.275 at 100 K) sits at exactly the coordinates of C12A, which belongs to another assembly and has Uiso 0.050. The overlapping solvent model gives two U values a factor of 5 apart at one site, an inconsistency worth checking, though not a wrong element."
+ },
+ {
+  "id": "R44",
+  "verdict": "unsure",
+  "confidence": "low",
+  "accurately_framed": false,
+  "reason": "Ratio 40 confirmed: Al Uiso 0.001(4) to 0.040(6) in a 2000 giant Al-Cr-Fe quasicrystal approximant with 44% data completeness. Cr/Fe Uiso go as low as 0.003. The extremes have esds as large as their values, so whether any site is really mis-assigned (Al vs TM mixing) cannot be judged from the CIF."
+ },
+ {
+  "id": "R45",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H(II2) belongs to NH4+ N(II) (occ 0.69) at 0.90 A. Na(II') (occ 0.13) is 1.19 A from N(II): an alternative cation occupying the same extra-framework site in this zeolite, so the two are mutually exclusive, not a second connection."
+ },
+ {
+  "id": "R46",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "H8A1 rides on C8A (asm D grp 1). C12A sits at identical coordinates (asm E grp 2) and C10A is also in asm E grp 2. These are alternative orientations of one disordered solvent split across two assembly labels, so the extra connections are between exclusive alternatives."
+ },
+ {
+  "id": "R47",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H231B (occ 0.45, grp 2) belongs to O23Ab (occ 0.45, grp 2) at 1.04 A. O23Aa (0.55, grp 1) is the alternative position of the same hydroxyl O. Each atom carries its own assembly letter, which hid the pairing, so this is legitimate disorder."
+ },
+ {
+  "id": "R48",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "C2a (asm V grp 1) and C2b (asm W grp 2) are the two 0.5/0.5 orientations of the disordered dodecanedioic acid guest. H21a lies near both only because they are alternatives, so this is normal disorder labelled with two assembly codes."
+ },
+ {
+  "id": "R49",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H65B (grp 1, on O65) and H65C (grp 2, on O65B) are water H of the two 0.5/0.5 orientations of one disordered water. The O65/O65B pair is split across assemblies F and I, but the atoms are mutually exclusive."
+ },
+ {
+  "id": "R50",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "H7B (occ 1.0) on ordered C7 was placed for the C8 orientation and is 0.44 A from C8A, the 0.5 alternative (C8A-C7-H7B 6.8 deg). The CH2 H should have been split with the C8/C8A disorder, so this is a genuine modelling error."
+ },
+ {
+  "id": "R51",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H58A rides on C58 (grp 1, 0.5) and H58C on C58' (grp 2, 0.5), alternative positions of one disordered CH2 split across assemblies A and B. They are mutually exclusive."
+ },
+ {
+  "id": "R52",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H1A and H1B (each 0.5) are two alternative positions of the single N1-H, which follow the C1A/C1B ring disorder. They lie 0.32 A apart on the same N, sum to 1, and are normal disorder, although no group labels are given."
+ },
+ {
+  "id": "R53",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H2 bridges Lu1 (1.97 A) and Lu2 (2.13 A), a mu-hydride, and the hydride is counted in the formula. That is a genuine bond, but the tool's rule that H bonds only to a heavy atom within 1.35 A excludes metal hydrides."
+ },
+ {
+  "id": "R54",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H1 is a Pd-H-Pd bridging hydride (Pd2 1.69 A, Pd1 1.72 A), included in the formula H81. This is a bond, not a nonbonded contact."
+ },
+ {
+  "id": "R55",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "P1-H1 is 1.369 A, a normal P-H bond of a coordinated secondary phosphine. The tool's 1.35 A cutoff for H bonding misses P-H bonds, which are about 1.35-1.42 A."
+ },
+ {
+  "id": "R56",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "H27 is bonded to carborane B27 at 1.12 A. Ag2...H27 at 2.13 A is the well-known B-H...Ag agostic-type interaction of silver carborane salts, which is expected."
+ },
+ {
+  "id": "R57",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H1 is the Pd-H-Pd bridging hydride (1.69/1.72 A). Having no partner within 1.35 A is expected for a metal hydride."
+ },
+ {
+  "id": "R58",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H1P is bonded to P1 at 1.366 A, a normal P-H of an H-P(N)3 phosphorane, so it is not isolated. The 1.35 A cutoff is too short for P-H."
+ },
+ {
+  "id": "R59",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "Beryllium hypophosphite. H1 is bonded to P at 1.378 A, a normal P-H, so it is not isolated."
+ },
+ {
+  "id": "R60",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H1 bridges Sc1 (2.05 A) and Sc2 (2.04 A), a mu-hydride counted in formula H96. This is a metal hydride, not a stray H."
+ }
+]
