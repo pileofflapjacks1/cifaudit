@@ -1,0 +1,422 @@
+[
+ {
+  "id": "T01",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Recomputed sites/Z: H 4, Na 11.4, O 191 vs formula H190 Na24 O241. _platon_squeeze_details says the Na ions and water found by elemental/thermal analysis sit in the SQUEEZEd voids and are in the formula, so the mismatch is expected."
+ },
+ {
+  "id": "T02",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "The model has 65 H per formula; formula_sum says H66 and the formula weight (1874.0) matches H66. The moiety sums to H65 because the disordered CH2Cl2 (C67/C67A, Cl4, Cl5) has no H, so formula_sum, moiety and model disagree. Minor, but a genuine inconsistency."
+ },
+ {
+  "id": "T03",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Model gives C84 H92 O16 and no N, vs C89 H120 N2 O21. SQUEEZE was applied. The C5 H28 N2 O5 surplus fits squeezed cations/solvent (for example 2 Me2NH2+ + MeOH + 4 H2O), so the formula including removed species is expected."
+ },
+ {
+  "id": "T04",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "AMCSD entry (Li4P4O12.5H2O): 5 water O carry _atom_site_attached_hydrogens=2 (10 H/Z), but formula_sum 'Li4 O17 P4' omits H while _amcsd_formula_title has H10. The count is correct, but this is the database's convention of leaving H out of formula_sum, not a structural error."
+ },
+ {
+  "id": "T05",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "26 fully occupied H sites (Z=4, general positions) give H26, but formula_sum and formula weight 1056.08 correspond to H24. SQUEEZE cannot explain a formula with FEWER H than the model, so this is a genuine inconsistency; the tool wrongly frames it as SQUEEZE-explained info."
+ },
+ {
+  "id": "T06",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "AMCSD BeSO4.4H2O: one water site with attached_hydrogens=2 gives H8/Z, while formula_sum 'Be O8 S' omits H (amcsd title Be H8 O8 S). This is the database's H-omission convention, not a model error."
+ },
+ {
+  "id": "T07",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Model H83 vs formula H88.5. Several modelled CHCl3/CH2Cl2 solvent carbons (C78-C83, partial) carry no H, so the model is missing about 5.5 solvent H that the formula includes. The model is incomplete in its solvent H."
+ },
+ {
+  "id": "T08",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Model H103 vs formula H115. Disordered isopropyl/alkyl carbons (for example C33/C33', C34, C35/C35') have no H atoms, so 12 H are missing from the model. A genuine model/formula inconsistency."
+ },
+ {
+  "id": "T09",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "AMCSD NaSH: the S site has attached_hydrogens=1, but formula_sum 'Na S' omits H (structural formula NaSH). This is the database convention, not a structure problem."
+ },
+ {
+  "id": "T10",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "P1 and P2 sit on 3-fold axes (6c, mult 6 each), giving 0.667 PF6 per Rh vs 1 in the formula. The embedded .fab file shows SQUEEZE voids on the 3-fold axes (53-73 e each), consistent with the missing third of the PF6 being squeezed, so the mismatch is expected. The tool reported it as warn without noting the SQUEEZE."
+ },
+ {
+  "id": "T11",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "I1 has no non-H atom within 2.6 A; nearest are H4A/H1 at 2.83 A (N-H...I). An ordinary hydrogen-bonded iodide counter-ion."
+ },
+ {
+  "id": "T12",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "N7 at (1/2,0,0) is an ammonium ion in (NH4)6P6O18.NH4Cl.H2O, with attached_hydrogens=4 declared; nearest O at 2.92 A (N-H...O). Normal; the warn message about 'H not modelled' misdescribes it."
+ },
+ {
+  "id": "T13",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Wat4 is a water O in an AMCSD mineral, with O...O 2.73-2.82 A and H...O 1.76/1.84 A hydrogen bonds. Ordinary water."
+ },
+ {
+  "id": "T14",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Wat8 is lattice water: O...O 2.75-2.86 A to other waters and O51. Ordinary modelled solvent."
+ },
+ {
+  "id": "T15",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Cl1 is a chloride counter-ion H-bonded to H3D/H3E at 2.24/2.26 A. Normal."
+ },
+ {
+  "id": "T16",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O5 (occ 0.41, Uiso 0.21) lies on the 6-fold-related axis in the P6/mmm MOF pore, nearest heavy atom at 3.42 A. The author lists it as guest '1.56(O)' in the moiety, so it is modelled solvent."
+ },
+ {
+  "id": "T17",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O6 (occ 0.37, Uiso 0.21) is a pore guest O, nearest heavy atom 3.43 A. The moiety explicitly lists '1.48(O)' guest O. Modelled solvent."
+ },
+ {
+  "id": "T18",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Cl2 is a chloride counter-ion H-bonded to H1 (2.21 A) and H2 (2.32 A). Normal."
+ },
+ {
+  "id": "T19",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O5 (occ 0.84, Uiso 0.41) is a pore guest, nearest heavy atom 3.75 A; the moiety lists '3.36(O)'. Modelled solvent (poorly defined, but intentional)."
+ },
+ {
+  "id": "T20",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O41 is one of the 8 lattice waters in the moiety (H5Mo10O40PV2.8H2O); O...O 2.55-3.1 A hydrogen-bond contacts. Ordinary water."
+ },
+ {
+  "id": "T21",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Recomputed Cartesian eigenvalues 0.00435/0.0346/0.0560, giving sqrt ratio 3.59 (U ratio about 13). O6B is a 0.507 disorder component with restrained U, so this is an extreme oblate ellipsoid worth checking."
+ },
+ {
+  "id": "T22",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Eigenvalues 0.0221/0.0874/0.3460, sqrt ratio 3.95. F2 of a fully occupied PF6 with Umax 0.35 A^2 points to unresolved rotational disorder."
+ },
+ {
+  "id": "T23",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Eigenvalues 0.0365/0.0663/0.4883, sqrt ratio 3.66. C22 (Ueq 0.196) of a fully occupied tBu-type group, with neighbour C24 isotropic, points to unresolved disorder."
+ },
+ {
+  "id": "T24",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Eigenvalues 0.00576/0.0342/0.0733, sqrt ratio 3.57. F12 is in a 0.63 disordered CF3 with DU restraints; still a strongly prolate ellipsoid (U ratio 12.7) worth checking."
+ },
+ {
+  "id": "T25",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Density 0.937 recomputed from FW 2741.58, Z=3, V=14569. SQUEEZE removed 569 e from a 5314 A^3 void and the solvent is not in the formula, so the low density is expected for this porous cage structure."
+ },
+ {
+  "id": "T26",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "0.599 confirmed (FW 1162.27, Z=4, V=12887). A highly porous Zn MOF with 3895 e SQUEEZEd from a 9385 A^3 void; low framework density is expected."
+ },
+ {
+  "id": "T27",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "0.949 confirmed (FW 703.24, Z=3, V=3692.5). Three SQUEEZE voids of about 370 A^3 (54 e each) are excluded from the formula, so the low density reflects the removed solvent, not a wrong model."
+ },
+ {
+  "id": "T28",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "0.335 confirmed (FW 3084.56, Z=1, V=15306). An evacuated-framework model of a mesoporous P6/mmm MOF; very low density is inherent to the material, not an error."
+ },
+ {
+  "id": "T29",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "Toluene TB atoms (assembly A, group 1, 0.5) overlap the TE atoms (assembly B, group 2, 0.5) within 0.15-0.8 A: one toluene in two orientations with inconsistent assembly letters. The real occupancies sum to 1."
+ },
+ {
+  "id": "T30",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "Assembly A covers two independent disorders: the ring (0.60/0.40) and C11/O1 (0.42/0.58). Each sums to 1.00; the tool's 1.349 comes from merging them under one letter."
+ },
+ {
+  "id": "T31",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "Ni1 and Fe1 lie on a 2-fold axis. The C1/O1 mixed site and the butyl chain (C2-C6, assembly A, 0.5) are disordered across the 2-fold with their symmetry image (CO vs butyl on each side), so 0.5 is the expected per-site occupancy."
+ },
+ {
+  "id": "T32",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "C15 lies on a 2-fold axis and carries F5 (0.5, assembly D) or H16 (0.5, assembly B); the F/H pair is disordered across the 2-fold, with complementary components under different letters. 0.5 is correct."
+ },
+ {
+  "id": "T33",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H15C is an inversion image (-x,-y,-z). C15 (0.5, methanol) is 1.456 A from its own inversion image, so the methanol is disordered across the inversion centre and H15B and H15C' are mutually exclusive."
+ },
+ {
+  "id": "T34",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "H8...H11C recomputed 1.906 A, same asymmetric unit, both full occupancy, shortest bond path 5 bonds. A genuine, mildly short intramolecular H...H (the kind of contact checkCIF PLAT410 flags); it may be a riding-H artefact."
+ },
+ {
+  "id": "T35",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "H16B (on C16) and H14C (methyl on C14) are both group 1 (0.5) of a disordered NEt4+, 1.934 A apart, bond path H-C16-N3-C13-C14-H 5 bonds. A mildly short contact within one disorder component."
+ },
+ {
+  "id": "T36",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "H16...H18A 1.998 A, at the 2.00 threshold. H16 is the formyl H and H18A a methyl H of the same disordered DMF (path H16-C16-N1-C18-H18A, 4 bonds); this contact is normal for DMF."
+ },
+ {
+  "id": "T37",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "Ueq O range confirmed: O5 0.0234 to O11 0.62 (ratio 26.5). O11 (with O10 0.37) is a fully occupied solvent O ('2(O)') with Ueq 0.62 A^2, a poorly modelled site worth flagging. The cause is solvent disorder, not a wrong element."
+ },
+ {
+  "id": "T38",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "C39 0.0534 to C55 0.84 (ratio 15.7). C55, on a 2-fold axis with full occupancy and Ueq 0.84 A^2 (next to O9 at 0.53), is an essentially unsupported solvent atom. Worth flagging, but not a wrong-species problem."
+ },
+ {
+  "id": "T39",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "C22 0.0249 to C37 0.428 (ratio 17.2). C37/C38/N1 (Ueq 0.35-0.43, restrained) form a smeared guest molecule. A real model-quality issue; the 'wrong species' framing does not fit."
+ },
+ {
+  "id": "T40",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": false,
+  "reason": "C4 0.0333 to C51 0.341 (ratio 10.24, just over threshold). C50/C51/N1 (Ueq about 0.34) form a poorly defined guest/cation in a SQUEEZEd MOF. A model-quality issue rather than a wrong element."
+ },
+ {
+  "id": "T41",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "No H sites, and the formula 'C24 Br6 Cu5.27 N8' has no H although the C/N organic component (dabco-type C6N2 units) must carry H. Both the model and the formula omit H."
+ },
+ {
+  "id": "T42",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Same series as T41: C24 Br6 Cu5.39 N8 with organic C (C1 0.5) and N but no H in either the model or the formula."
+ },
+ {
+  "id": "T43",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "Tychite Na6Mg2(SO4)(CO3)4: the carbon is carbonate, so no H is expected."
+ },
+ {
+  "id": "T44",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Same series: C1/C2 disordered organic carbons in Im-3m with no H sites, and the formula C24 Br6 Cu6.78 N8 also omits H."
+ },
+ {
+  "id": "T45",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "C3-H3 refined freely (refall): 0.80(6) A from the CIF bond table, about 2.7 esd from 0.96. A normal, imprecise X-ray H position."
+ },
+ {
+  "id": "T46",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "C17-H17B 0.82(5) A, a refined H in an X-ray structure; within normal scatter for X-ray C-H."
+ },
+ {
+  "id": "T47",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "C8-H8 0.85(5) A, a freely refined X-ray H (flag d); X-ray C-H distances are routinely short."
+ },
+ {
+  "id": "T48",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "C1B-H1B2 0.81(7) A, a freely refined X-ray H with a large esd; normal."
+ },
+ {
+  "id": "T49",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "(NH4)2SiF6 (1934): with N at z=0.25, N...F = 1.983 A (recomputed), which is impossible for NH4+...F. Putting N at z=0.75 gives a sensible 2.91 A, so the deposited N coordinate is most likely wrong."
+ },
+ {
+  "id": "T50",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "C1 (0.56) in Im-3m sits next to symmetry images of itself at 2.11 and 2.19 A: orientational disorder of the organic cation about the 3-fold/mirror sites. The images are alternatives, not coexisting atoms."
+ },
+ {
+  "id": "T51",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "O7W and O15W are both 0.25-occupancy water sites with no disorder group, 2.065 A apart (sum 0.5). They are mutually exclusive partial water positions, normal in this polyoxotungstate hydrate."
+ },
+ {
+  "id": "T52",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "Fully occupied water O24 (U 0.136) is 2.065 A from minor water component O25A (0.23). If O24 is always present, O25A cannot be, so the water occupancy model is genuinely inconsistent, though minor."
+ },
+ {
+  "id": "T53",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Refined H1 is 1.32(3) A from N1 and 1.33(3) A from N2 (N...N about 2.65 A). A symmetric N-H-N proton is unusual and worth checking (possibly disordered over two sites)."
+ },
+ {
+  "id": "T54",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "CT1 is a dummy Cp-ring centroid (type 'H', occupancy 0, OMIT/BIND in the .res file), not a hydrogen. Its 'connections' to ring carbons are by construction."
+ },
+ {
+  "id": "T55",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "O2A is an inversion image of a group-2 carboxylate O. H24F (group 2 methyl H) is 1.265 A from it, so neighbouring molecules cannot both adopt component 2 (correlated disorder). Not an H shared between two atoms, and not O-H...O."
+ },
+ {
+  "id": "T56",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": false,
+  "reason": "In P42/mnm a full-occupancy C16 is 0.88 A from its own mirror image and 0.85 A from C18 (0.5), and H18A is 0.97 A from C16 and 0.49 A from C17. The disorder model is self-inconsistent, worth flagging, but not as a bridging-H issue."
+ },
+ {
+  "id": "T57",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "spglib on Cd, N, Br gives Cmmm at symprec 0.01-0.1. The 1936 Cd(NH3)2Br2 coordinates (all on special positions) have Cmmm symmetry; the C222 choice is not supported by the model."
+ },
+ {
+  "id": "T58",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Tetradymite Bi2Te2S: Bi and Te on (x,x,x) and S at the origin give R-3m at every symprec; the accepted space group of tetradymite is R-3m, so R-3 misses the mirror symmetry."
+ },
+ {
+  "id": "T59",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Same Cd(NH3)2Br2 coordinates as T57, declared Cmm2; spglib finds Cmmm at symprec 0.01-0.1. The model has the higher symmetry."
+ },
+ {
+  "id": "T60",
+  "verdict": "false",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "spglib gives P6_3/mmc for the idealised Li, I, O coordinates (z = 1/4, 0, 1/2), but the polar P6_3mc of LiI.3H2O depends on the water H orientations, which are not in the model. Expected pseudo-symmetry of the heavy-atom model."
+ }
+]

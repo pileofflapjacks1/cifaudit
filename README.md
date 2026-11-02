@@ -383,6 +383,28 @@ findings no longer fire and all 15 real ones still do. On the round-2 sample it
 is 16 of 38, with all 21 real kept. Both samples were used to design the
 fixes, so neither gives a precision figure.
 
+**Round 4, after the round-3 fixes: 40% (95% CI 29–53%).** This used a
+pre-registered fresh sample of 60 findings from 800 new COD structures, judged by
+model adjudication. The four rounds give 38%, 36%, 26% and 40%, and every pair
+of intervals overlaps: **no round has measurably changed overall precision.**
+Because the check mix shifts from round to round, the overall figure moves with
+which checks get drawn.
+
+Pooled over all four rounds (exploratory, 237 judged findings):
+
+| usually right when they fire | | mostly wrong | |
+|---|---|---|---|
+| `ADP_EXTREME_ANISOTROPY` | 14/16 | `SHORT_HH_CONTACT` | 5/16 |
+| `UEQ_RANGE_WIDE` | 13/15 | `SHORT_XH` | 3/15 |
+| `NO_HYDROGENS_WITH_CARBON` | 6/8 | `SHORT_NONBONDED_CONTACT` | 2/11 |
+| `SYMMETRY_POSSIBLY_MISSED` | 3/4 | `ATOMS_TOO_CLOSE` | 2/12 |
+| `FORMULA_SITES_MISMATCH` | 24/40 | `H_MULTIPLE_CONNECTIONS` | 2/14 |
+| | | `ISOLATED_ATOM` | 4/40 |
+| | | `DISORDER_SUM_NOT_ONE` | 0/12 |
+
+Reliable or not, it is the same checks every time.
+[`data/processed/precision_round4_results.md`](data/processed/precision_round4_results.md).
+
 ### Conventions adopted after the precision study
 
 Each came from the expert adjudicator (J. R. Ramirez) or from a false positive
