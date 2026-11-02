@@ -341,7 +341,29 @@ def _symmetry_disorder_pairs(sites, dists, already, occ_tol, radius_fn,
             dy = pdist(y_idx, k)
             if dy <= bond_reach(y_idx, k) and dy < pdist(y_idx, x_idx):
                 return True
+            # Two bonds out: Y and X' share a partially occupied neighbour Z
+            # that is not also bonded to X (an atom bonded to both alternatives
+            # is shared, not part of either). In a methanol disordered across
+            # an inversion centre (COD 4342081) H15B clashes with H15C', which
+            # is bonded to C15' - the image of C15 - and the two methyl H are
+            # geminal, so neither is X' or bonded to it. The same shape occurs
+            # for a CH2Cl2 about a 2-fold axis (COD 4102011).
+            for z in partial_nb.get(k, ()):
+                if (z != y_idx and z != x_idx and z in partial_nb.get(y_idx, ())
+                        and z not in partial_nb.get(x_idx, ())):
+                    return True
         return False
+
+    # Bonded neighbours among partially occupied sites, for alternative_via's
+    # two-bond test. Built once; only partial sites can be part of a moiety
+    # that alternates with its image.
+    partial_nb = {}
+    for (i, j), (d, _img) in dists.items():
+        if d > 3.5 or sites[i].occ >= full or sites[j].occ >= full:
+            continue
+        if d <= bond_reach(i, j):
+            partial_nb.setdefault(i, set()).add(j)
+            partial_nb.setdefault(j, set()).add(i)
 
     out = set()
     for (i, j), (d, _img) in dists.items():

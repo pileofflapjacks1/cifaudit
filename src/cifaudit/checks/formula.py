@@ -107,7 +107,13 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             listed = ", ".join("%s %.2f vs %.2f" % (d["element"], d["from_sites"],
                                                      d["from_formula"])
                                for d in diffs[:8])
-            if removed:
+            # Removed solvent can only make the formula LARGER than the model.
+            # An element the model has more of than the formula is not
+            # explained by SQUEEZE: COD 4342091 has H 26 in the model and 24 in
+            # the formula, and was reported as "probably solvent removed".
+            explained = removed and all(d["from_formula"] > d["from_sites"]
+                                        for d in diffs)
+            if explained:
                 # Expert convention: authors record SQUEEZE, and the declared
                 # formula then normally includes the solvent removed from the
                 # model. A mismatch is expected, not a defect.
@@ -116,6 +122,15 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                        "_chemical_formula_sum for: %s. The CIF records %s, so the "
                        "declared formula probably includes solvent removed from "
                        "the model." % (blk.z, listed, removed))
+            elif removed:
+                sev = WARN
+                more = [d["element"] for d in diffs
+                        if d["from_sites"] > d["from_formula"]]
+                msg = ("The atom-site list, divided by Z=%g, does not match "
+                       "_chemical_formula_sum for: %s. The CIF records %s, but "
+                       "the model has MORE %s than the formula, which removed "
+                       "solvent cannot explain. (Counts from the %s.)"
+                       % (blk.z, listed, removed, ", ".join(more), basis))
             else:
                 sev = WARN
                 msg = ("The atom-site list, divided by Z=%g, does not match "

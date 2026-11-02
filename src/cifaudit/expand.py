@@ -100,6 +100,13 @@ def expand(blk, drop_dummy=True) -> Tuple[List[Expanded], Optional[object]]:
             continue
         element = element_of(s.type_symbol, s.label)
         occ = float(s.occ) if s.occ is not None else 1.0
+        if occ == 0.0:
+            # Zero occupancy contributes nothing to composition and is not an
+            # atom for geometry. COD 7035035 carries a Cp-ring centroid CT1,
+            # typed H with occupancy 0 and no 'dum' flag, which was read as a
+            # hydrogen bonded to five ring carbons. OCC_ZERO still reports the
+            # site from the atom list.
+            continue
         merge_max = (COINCIDENT_COPY_MAX_NEGATIVE_PART
                      if (dgroup or "").strip().startswith("-")
                      else COINCIDENT_COPY_MAX)

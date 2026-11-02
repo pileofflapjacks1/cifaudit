@@ -433,6 +433,27 @@ the 700 held-out files, 466 (67%) have no structural finding at all, and 528
 (75%) have none outside the prompt tier.
 [`data/processed/precision_round4_results.md`](data/processed/precision_round4_results.md).
 
+After round 4 was published, the four defects it confirmed were fixed:
+
+- **Zero occupancy.** A site with occupancy 0 is left out of the expansion, so a
+  ring-centroid placeholder typed H is not treated as a hydrogen. `OCC_ZERO`
+  still reports it.
+- **SQUEEZE direction.** The SQUEEZE convention excuses a formula mismatch only
+  when the formula has more atoms than the model. When the model has more,
+  removed solvent cannot explain it, and the finding stays a warning that says
+  so.
+- **SQUEEZE in a .fab file.** An embedded `_shelx_fab_file` counts as evidence
+  of solvent removal. The data name alone is used; its text is never read.
+- **Two bonds from the image.** An atom bonded, through a partially occupied
+  atom, to the image that clashes with its partner is now an alternative. This
+  covers a methanol across an inversion centre (COD 4342081) and a CH2Cl2 about
+  a 2-fold axis (COD 4102011).
+
+On the 700 held-out files, a per-file comparison shows no finding added and six
+removed. All six are disorder across a symmetry element, checked one by one.
+The file-level figures are unchanged. Every real finding in the round-2, 3 and
+4 samples still fires.
+
 ### Conventions adopted after the precision study
 
 Each came from the expert adjudicator (J. R. Ramirez) or from a false positive

@@ -191,6 +191,12 @@ class Block:
             return "SQUEEZE"
         if any(n.startswith("_smtbx_masks_") for n in self.present):
             return "solvent mask"
+        # A .fab file is the solvent contribution SQUEEZE (or a mask) hands to
+        # SHELXL. COD 7035070 records its SQUEEZE results only INSIDE the
+        # embedded _shelx_fab_file text, with no top-level _platon_squeeze_*
+        # names. The data name alone is the evidence; its content is not read.
+        if "_shelx_fab_file" in self.present:
+            return "a solvent mask (.fab file)"
         return None
 
     @property
