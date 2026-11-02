@@ -25,6 +25,25 @@ SELF_IMAGE_MAX = 2.6
 # looks further (the widest is the isolated-atom contact, at most
 # 2 x 2.60 + 0.90 = 6.1 A for the largest tabulated radius).
 EXCLUSIVITY_RANGE = 6.5
+# Cordero covalent radius of H, and the margin added to r_X + r_H when that
+# exceeds the flat X-H maximum (see xh_reach).
+H_RADIUS = 0.31
+XH_EXTRA = 0.15
+
+
+def xh_reach(r_x, xh_max):
+    """Longest X-H distance at which an H may be bonded to an atom of radius r_x.
+
+    The flat `xh_max` (1.35 A) suits C, N and O, but not heavier atoms: P-H runs
+    1.35-1.44 A and a bridging metal hydride 1.7-2.1 A. With a flat cutoff the
+    third precision round read P-H at 1.351 A (COD 2014097) and Lu-H at 1.97 A
+    (COD 4123099) as unbonded H, producing false isolated-H and short-contact
+    findings. For heavier atoms the reach is r_X + r_H + 0.15 A - Lu 2.33, Pd
+    1.85, P 1.53 - and never less than `xh_max`.
+    """
+    if r_x is None:
+        return xh_max
+    return max(xh_max, r_x + H_RADIUS + XH_EXTRA)
 
 
 def min_distance(cell, f1, f2) -> Tuple[float, Tuple[int, int, int]]:
@@ -150,6 +169,21 @@ def exclusive_pairs(sites, dists, max_sep, occ_tol, radius_fn=None,
             if aa == ab:
                 excl.add((i, j))
                 continue
+            if (_positive_group(ga) and _positive_group(gb)
+                    and a.occ + b.occ <= 1.0 + occ_tol
+                    and d <= self_image_max):
+                # Different groups under DIFFERENT assembly letters (or one
+                # letter missing). Many CIFs file the two halves of one
+                # disorder that way, so the letters cannot be trusted alone:
+                # COD 7110032 has H25A (A, group 1) 0.57 A from C25' (no
+                # letter, group 2), the alternative position of its own C25.
+                # A first version kept pairs at a bond length bonded, and in
+                # COD 4502089 an H of ring orientation A then bonded to a C of
+                # orientation B at 0.94 A. Atoms of two INDEPENDENT disorders,
+                # both partial, in different groups and bonded to each other
+                # are rare; mislettered halves of one disorder are common.
+                excl.add((i, j))
+                continue
         if d > max_sep or (a.occ + b.occ) > 1.0 + occ_tol:
             continue
         if radius_fn is not None:
@@ -161,6 +195,11 @@ def exclusive_pairs(sites, dists, max_sep, occ_tol, radius_fn=None,
         excl |= _symmetry_disorder_pairs(sites, dists, excl, occ_tol, radius_fn,
                                          bond_tolerance, self_image_max, xh_max)
     return excl
+
+
+def _positive_group(g):
+    g = (g or "").strip()
+    return bool(g) and not g.startswith("-") and g not in ("0", ".", "?")
 
 
 def _negative_part(site):
@@ -265,7 +304,7 @@ def _symmetry_disorder_pairs(sites, dists, already, occ_tol, radius_fn,
         if hp and hq:
             return 0.0
         if hp or hq:
-            return xh_max
+            return xh_reach(radius_fn(sites[q if hp else p].element), xh_max)
         rp, rq = radius_fn(sites[p].element), radius_fn(sites[q].element)
         if rp is None or rq is None:
             return 0.0
@@ -339,7 +378,8 @@ def bond_graph(sites, cell, radius_fn, tolerance, xh_max,
     previously used a MULTIPLICATIVE 1.2x, which is not a convention anyone else
     follows.
 
-    Hydrogen is handled separately and deliberately. The COD-derived radii set
+    Hydrogen is handled separately and deliberately (the reach grows with the
+    heavy atom's radius beyond C/N/O; see xh_reach). The COD-derived radii set
     above has no hydrogen value at all and discards every contact involving
     hydrogen, because radius-based bonding does not work for H: the standard
     epsilon would make H-O bonding MORE generous (1.42 A) than the old 1.2x rule
@@ -375,7 +415,7 @@ def bond_graph(sites, cell, radius_fn, tolerance, xh_max,
             continue
         if is_h[i] or is_h[j]:
             h_idx, x_idx = (i, j) if is_h[i] else (j, i)
-            if radii[x_idx] is not None and d <= xh_max:
+            if radii[x_idx] is not None and d <= xh_reach(radii[x_idx], xh_max):
                 h_candidates.setdefault(h_idx, []).append((x_idx, d))
             continue
         ri, rj = radii[i], radii[j]

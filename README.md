@@ -243,11 +243,11 @@ all nineteen thresholds recorded and a commitment to change nothing in response:
 700 CIFs from eight COD directories disjoint from both prior samples, zero ID
 overlap.
 
-| | in-sample (500) | **held-out (700)** | + bug fixes | + conventions | + round-2 fixes |
-|---|---|---|---|---|---|
-| no structural findings | 46% | **47%** | 49% | 62% | **65%** |
-| crashed / unparseable | 0 / 0 | **0 / 0** | 0 / 0 | 0 / 0 | 0 / 0 |
-| seconds per file | 0.69 | 0.44 | 0.38 | 0.25 | 0.20 |
+| | in-sample (500) | **held-out (700)** | + bug fixes | + conventions | + round-2 fixes | + round-3 fixes |
+|---|---|---|---|---|---|---|
+| no structural findings | 46% | **47%** | 49% | 62% | 65% | **67%** |
+| crashed / unparseable | 0 / 0 | **0 / 0** | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 |
+| seconds per file | 0.69 | 0.44 | 0.38 | 0.25 | 0.20 | 0.20 |
 
 The last column re-runs the same 700 after the four bugs below were fixed
 (`d72fecf`); nothing was tuned to them. Structural findings fell by about
@@ -359,6 +359,29 @@ is stable:
 
 Treat the first group as signal and the second as prompts to look.
 [`data/processed/precision_round3_results.md`](data/processed/precision_round3_results.md).
+
+After the round-3 figure was published, the six defects it confirmed were fixed:
+
+- **X–H reach.** It scales with the heavy atom: r_X + r_H + 0.15 A, never below
+  1.35 A. That covers P–H 1.53 A and Lu–H 2.33 A. Only the flat 1.35 A counts
+  towards a "multiple connection".
+- **Zero occupancy.** `OCC_ZERO` fires only at exactly zero.
+- **Disorder closure.** Negative-PART groups are not summed. A group's occupancy
+  comes from its partial members.
+- **Copy merging.** A negative-PART atom merges with its own image within 0.10 A.
+  Every other atom keeps the 0.05 A limit, because genuine copies 0.05–0.15 A
+  apart exist.
+- **Assembly letters.** Atoms in different positive disorder groups are treated
+  as alternatives even when their assembly letters disagree, if their occupancies
+  sum to at most 1 and they lie within 2.6 A.
+
+On the 700 held-out files, structures with no structural finding went from 452
+to 466. Every changed file was compared before and after: no finding was added,
+and each removal was checked (refined occupancies of 0.0001–0.001, Hf hydrides,
+an H–Cl bond, mislettered disorder). On the round-3 sample, 21 of 43 false
+findings no longer fire and all 15 real ones still do. On the round-2 sample it
+is 16 of 38, with all 21 real kept. Both samples were used to design the
+fixes, so neither gives a precision figure.
 
 ### Conventions adopted after the precision study
 

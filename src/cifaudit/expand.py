@@ -13,9 +13,18 @@ except ImportError:  # pragma: no cover
 MAX_EXPANDED = 4000
 # Two symmetry copies of one atom closer than this are ONE site (an atom on a
 # special position, with coordinates rounded in the CIF). Rounding to 4-5
-# decimals moves a copy by well under 0.01 A; 0.05 A leaves a margin while
-# staying far below any modelled split position.
+# decimals moves a copy by well under 0.01 A; 0.05 A leaves a margin. Raising it
+# to 0.15 A for all atoms re-merged genuine copies 0.05-0.15 A apart in COD
+# 9005049 and 7203095 and broke their formula counts again.
 COINCIDENT_COPY_MAX = 0.05
+# A SHELX negative-PART atom refined a few hundredths of an Angstrom off the
+# symmetry element it is disordered across is still one site: COD 7013013 has
+# PART -1 atoms 0.039 and 0.068 A from their mirror images, and its formula
+# matches only when all of them are merged. A PART -33 water in COD 7203096
+# has copies 0.15 A apart that ARE distinct (its formula needs both), so the
+# limit sits between the two, at the 0.10 A used for coincident sites
+# elsewhere.
+COINCIDENT_COPY_MAX_NEGATIVE_PART = 0.10
 
 
 @dataclass
@@ -77,7 +86,7 @@ def expand(blk, drop_dummy=True) -> Tuple[List[Expanded], Optional[object]]:
     # 7041079 three half-occupied H (SHELX PART -1) lie 0.29-0.38 A from their
     # own mirror images, gemmi kept one copy of each, and the H count came out
     # 25 per formula instead of the declared 28. Only copies that coincide
-    # within COINCIDENT_COPY_MAX are merged here.
+    # within COINCIDENT_COPY_MAX are merged here (wider for negative PART).
     #
     # Every coordinate is wrapped into [0, 1). The distance search only tries
     # lattice shifts of -1, 0 and +1, so unwrapped copies more than ~1.5 cells
@@ -91,6 +100,9 @@ def expand(blk, drop_dummy=True) -> Tuple[List[Expanded], Optional[object]]:
             continue
         element = element_of(s.type_symbol, s.label)
         occ = float(s.occ) if s.occ is not None else 1.0
+        merge_max = (COINCIDENT_COPY_MAX_NEGATIVE_PART
+                     if (dgroup or "").strip().startswith("-")
+                     else COINCIDENT_COPY_MAX)
         copies = []      # [fract, [op indices]]
         xyz = [s.fract.x, s.fract.y, s.fract.z]
         if any(v != v for v in xyz):
@@ -99,7 +111,7 @@ def expand(blk, drop_dummy=True) -> Tuple[List[Expanded], Optional[object]]:
             f = [v % 1.0 for v in op.apply_to_xyz(xyz)]
             f = [0.0 if v >= 1.0 - 1e-12 else v for v in f]
             for c in copies:
-                if _sep(st.cell, c[0], f) <= COINCIDENT_COPY_MAX:
+                if _sep(st.cell, c[0], f) <= merge_max:
                     c[1].append(k)
                     break
             else:

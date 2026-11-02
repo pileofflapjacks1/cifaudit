@@ -82,8 +82,9 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
         if not cands:
             f.append(Finding(
                 code="ISOLATED_H", severity=WARN,
-                message="H atom %s has no heavy-atom neighbour within %.2f A."
-                        % (s.label, ctx["xh_bond_max"]),
+                message="H atom %s has no heavy-atom neighbour within bonding "
+                        "reach (%.2f A for C, N and O; r_X + 0.46 A for heavier "
+                        "atoms)." % (s.label, ctx["xh_bond_max"]),
                 plat=["PLAT305"],
                 based_on=["_atom_site_fract_x", "_atom_site_fract_y",
                           "_atom_site_fract_z"],
@@ -98,8 +99,14 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
         def _alt(p, q):
             return (min(p, q), max(p, q)) in excl
 
+        # Count connections within the flat X-H maximum, plus the bonded atom.
+        # The longer reach for heavy atoms decides what an H with no light
+        # neighbour is bonded to (a hydride); it must not turn every C-H near
+        # a metal into a "multiple connection".
+        counted = [(k, dd) for k, dd in cands
+                   if dd <= ctx["xh_bond_max"] or k == x_idx]
         groups = []
-        for k, dd in sorted(cands, key=lambda t: t[1]):
+        for k, dd in sorted(counted, key=lambda t: t[1]):
             for grp in groups:
                 if all(_alt(k, m) for m, _ in grp):
                     grp.append((k, dd))
@@ -114,7 +121,7 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             # disorder model with two partially occupied sites."
             # So this is an invitation to look, not an error. The H is still
             # bonded to its nearest neighbour only.
-            others = sorted(cands, key=lambda t: t[1])
+            others = sorted(counted, key=lambda t: t[1])
             f.append(Finding(
                 code="H_MULTIPLE_CONNECTIONS", severity=INFO,
                 message="H atom %s has %d distinct heavy sites within %.2f A "
@@ -127,7 +134,7 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                 plat=["PLAT303"],
                 based_on=["_atom_site_fract_x"],
                 sites=[s.label] + [usable[k].label for k, _ in others[:4]],
-                evidence={"n_candidates": len(cands),
+                evidence={"n_candidates": len(counted),
                           "n_distinct_sites": len(groups),
                           "bonded_to": x.label,
                           "distance": round(d, 4)}))

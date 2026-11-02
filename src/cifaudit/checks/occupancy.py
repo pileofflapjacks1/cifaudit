@@ -47,7 +47,10 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                                      % (s.label, s.occupancy),
                              plat=["PLAT074"], based_on=["_atom_site_occupancy"],
                              sites=[s.label], evidence={"occupancy": s.occupancy}))
-        elif abs(s.occupancy) <= tol:
+        elif s.occupancy == 0.0:
+            # Exactly zero only. A refined 0.001 (COD 9007098: FeM 0.00100,
+            # formula Fe0.002) is a real, tiny occupancy; the old test,
+            # |occ| <= occ_tol, caught it and then reported "occupancy 0.0".
             f.append(Finding(code="OCC_ZERO", severity=WARN,
                              message="Site %s has occupancy 0.0 and contributes "
                                      "nothing to the model (a dummy atom?)." % s.label,
@@ -83,10 +86,36 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             if g in (None, "", ".", "?") or s.occupancy is None:
                 continue
             by[(s.disorder_assembly or "-", g)].append(s)
+        full = 1.0 - ctx["occ_tol"]
         sums = defaultdict(float)
+        negative = set()
         for (asm, g), members in by.items():
-            sums[asm] += max(m.occupancy for m in members)
+            if str(g).strip().startswith("-"):
+                # SHELX negative PART: the group is disordered across a
+                # symmetry element and its other half is its own image, which
+                # is not in the atom list. A methyl on a mirror at PART -1 and
+                # occupancy 0.5 is complete (COD 7110006), so the assembly
+                # cannot be summed from the listed groups.
+                negative.add(asm)
+                continue
+            # A group's occupancy comes from its PARTIAL members. Full-weight
+            # atoms carrying a group tag are bookkeeping: COD 4123051 tags two
+            # occupancy-1 H with group 1, and taking the largest member gave
+            # 1 + 0.25 instead of the real 0.75 + 0.25.
+            partial = [m.occupancy for m in members if m.occupancy < full]
+            sums[asm] += max(partial) if partial else max(
+                m.occupancy for m in members)
+        if negative:
+            nt.append(NotTested(
+                area="occupancy closure for assembl%s %s"
+                     % ("y" if len(negative) == 1 else "ies",
+                        ", ".join(sorted(negative))[:120]),
+                reason="a negative-PART group's other half is its own symmetry "
+                       "image, which is not in the atom list",
+                plat=["PLAT077"]))
         for asm, total in sums.items():
+            if asm in negative:
+                continue
             if abs(total - 1.0) > ctx["disorder_sum_tol"]:
                 f.append(Finding(
                     code="DISORDER_SUM_NOT_ONE", severity=WARN,
