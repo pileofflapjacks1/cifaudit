@@ -55,6 +55,7 @@ def main(argv=None):
     sev = collections.Counter()
     rsev = collections.Counter()
     struct_clean = 0
+    struct_clean_no_prompts = 0
     per_file = []
     clean = crashed = unparseable = 0
     t0 = time.time()
@@ -83,6 +84,10 @@ def main(argv=None):
         if not [f for f in d["findings"]
                 if f.get("kind", "structural") == "structural"]:
             struct_clean += 1
+        if not [f for f in d["findings"]
+                if f.get("kind", "structural") == "structural"
+                and f.get("tier") != "prompt"]:
+            struct_clean_no_prompts += 1
         for code in found:
             tally[code] += 1
         for f in d["findings"]:
@@ -106,6 +111,10 @@ def main(argv=None):
           (clean, audited, 100.0 * clean / audited if audited else 0))
     print("- files with no STRUCTURAL findings: **%d/%d (%.0f%%)**" %
           (struct_clean, audited, 100.0 * struct_clean / audited if audited else 0))
+    print("- files with no structural findings outside the 'prompt' tier: "
+          "**%d/%d (%.0f%%)**" % (struct_clean_no_prompts, audited,
+                                  100.0 * struct_clean_no_prompts / audited
+                                  if audited else 0))
     print("- structural findings by severity: %s" % (dict(sev) or "none"))
     print("- reporting findings by severity: %s" % (dict(rsev) or "none"))
     print("- %.1fs total, %.2fs per file" % (elapsed, elapsed / n))
@@ -125,6 +134,8 @@ def main(argv=None):
                        "clean": clean, "crashed": crashed,
                        "unparseable": unparseable, "seconds": elapsed,
                        "structural_clean": struct_clean,
+                       "structural_clean_excluding_prompts":
+                           struct_clean_no_prompts,
                        "rates": dict(tally), "kinds": kinds,
                        "severity": dict(sev), "reporting_severity": dict(rsev),
                        "files": per_file}, fh, indent=2)

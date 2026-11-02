@@ -62,11 +62,24 @@ class Finding:
     def kind(self) -> str:
         return kind_of(self.code)
 
+    @property
+    def tier(self) -> Optional[str]:
+        """reliable / prompt / unmeasured for structural findings; see tiers.py.
+        Reporting findings are about the deposition, not the structure, and
+        were never sampled, so they carry no tier."""
+        if self.kind != STRUCTURAL:
+            return None
+        from .tiers import tier_of
+        return tier_of(self.code)
+
     def to_dict(self) -> Dict[str, Any]:
         from .alerts import describe
+        from .tiers import track_record
         return {
             "code": self.code,
             "kind": self.kind,
+            "tier": self.tier,
+            "track_record": track_record(self.code) if self.tier else None,
             "severity": self.severity,
             "message": self.message,
             "checkcif": [describe(p) for p in self.plat],
@@ -104,7 +117,10 @@ class AuditResult:
         "cifaudit is not checkCIF. It implements a small subset of the "
         "checkCIF/PLATON tests offline and asserts no alert level. Run checkCIF "
         "(https://checkcif.iucr.org/) before publishing. A clean cifaudit report "
-        "does not mean the structure is correct."
+        "does not mean the structure is correct. Each structural finding "
+        "carries a tier: 'reliable' checks were right in at least half of "
+        "sampled cases, 'prompt' checks in fewer than half (a prompt to look, "
+        "not a verdict), 'unmeasured' checks were not sampled enough to say."
     )
 
     def counts(self) -> Dict[str, int]:
@@ -120,6 +136,16 @@ class AuditResult:
                 out[f.severity] = out.get(f.severity, 0) + 1
         return out
 
+    def tier_counts(self) -> Dict[str, int]:
+        """STRUCTURAL findings by tier: how many come from checks that have
+        usually been right (reliable), usually wrong (prompt), or not measured."""
+        from .tiers import PROMPT, RELIABLE, UNMEASURED
+        out = {RELIABLE: 0, PROMPT: 0, UNMEASURED: 0}
+        for f in self.findings:
+            if f.kind == STRUCTURAL:
+                out[f.tier] += 1
+        return out
+
     def reporting_counts(self) -> Dict[str, int]:
         out = {ERROR: 0, WARN: 0, INFO: 0}
         for f in self.findings:
@@ -133,6 +159,7 @@ class AuditResult:
             "status": self.status,
             "datablock": self.datablock,
             "counts": self.counts(),
+            "tier_counts": self.tier_counts(),
             "reporting_counts": self.reporting_counts(),
             "findings": [f.to_dict() for f in self.findings],
             "checked": sorted(self.checked),

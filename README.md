@@ -45,6 +45,28 @@ Nine checks, each mapped to the checkCIF/PLATON tests it corresponds to:
 | `fragments` | isolated atoms (metals and O/N weighted more seriously), disconnected fragments in the cell |
 | `formula` | `_chemical_formula_sum` against the symmetry-expanded atom-site list divided by Z, non-integral cell contents, density below 1.0 |
 
+### How far to trust each check
+
+Every structural finding carries a **tier**: how often that check has been right
+when its findings were sampled. Severity says how bad a finding would be if it
+were true; the tier says how often it has been true. Four pre-registered
+precision rounds supply the counts: 237 findings from 2,800 COD structures,
+each judged against the full CIF by an independent model adjudicator. That is
+model adjudication, not expert review.
+
+| tier | rule | checks (right / judged) |
+|---|---|---|
+| **reliable** | judged ≥ 8 times, right in at least half | `ADP_EXTREME_ANISOTROPY` 14/16, `UEQ_RANGE_WIDE` 13/15, `NO_HYDROGENS_WITH_CARBON` 6/8, `FORMULA_SITES_MISMATCH` 24/40 |
+| **prompt** | judged ≥ 8 times, right in fewer than half | `SHORT_HH_CONTACT` 5/16, `DENSITY_BELOW_ONE` 2/8, `SHORT_XH` 3/15, `SHORT_NONBONDED_CONTACT` 2/11, `ATOMS_TOO_CLOSE` 2/12, `H_MULTIPLE_CONNECTIONS` 2/14, `ISOLATED_ATOM` 4/40, `DISORDER_SUM_NOT_ONE` 0/12 |
+| **unmeasured** | judged fewer than 8 times, never drawn, or redefined since | everything else, including `ADP_NPD`, `SYMMETRY_POSSIBLY_MISSED` (3/4) and `NON_INTEGRAL_CELL_CONTENT` (0/10, before it was redefined) |
+
+A prompt is something to look at, not a verdict. The text report lists prompts
+in their own section, and they do not affect the exit code unless you pass
+`--fail-on-prompts`. Each finding's `track_record` gives the counts behind its
+tier, and `tests/test_tiers.py` recomputes every count from the published
+verdict files. The MCP response adds a `tier_note`, so an assistant reading it
+knows not to report a prompt as an error.
+
 ### The NPD criterion
 
 The anisotropic Debye–Waller factor is
@@ -108,7 +130,9 @@ cifaudit *.cif --fail-on warn                 # for CI
 ```
 
 Exit codes: `0` clean, `1` a finding at or above `--fail-on` (default `error`)
-in **any** file, `2` any file could not be read or parsed. A batch fails if one
+in **any** file, `2` any file could not be read or parsed. Prompt-tier findings
+(see [How far to trust each check](#how-far-to-trust-each-check)) are shown but
+count towards exit 1 only with `--fail-on-prompts`. A batch fails if one
 file fails; an unreadable file does not stop the rest being audited; and
 `--fail-on never` suppresses exit 1 but not exit 2, since an unreadable file
 means the tool could not do its job.
@@ -402,7 +426,11 @@ Pooled over all four rounds (exploratory, 237 judged findings):
 | | | `ISOLATED_ATOM` | 4/40 |
 | | | `DISORDER_SUM_NOT_ONE` | 0/12 |
 
-Reliable or not, it is the same checks every time.
+Reliable or not, it is the same checks every time. Rather than a fifth
+fix-and-measure round, each structural finding now carries this track record as
+a tier (see [How far to trust each check](#how-far-to-trust-each-check)). On
+the 700 held-out files, 466 (67%) have no structural finding at all, and 528
+(75%) have none outside the prompt tier.
 [`data/processed/precision_round4_results.md`](data/processed/precision_round4_results.md).
 
 ### Conventions adopted after the precision study

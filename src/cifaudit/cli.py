@@ -15,22 +15,38 @@ def _text_report(d):
     out.append("datablock: %s   status: %s" % (d["datablock"], d["status"]))
     c = d["counts"]
     rc = d.get("reporting_counts", {"error": 0, "warn": 0, "info": 0})
-    out.append("structural: %d error, %d warn, %d info"
-               % (c["error"], c["warn"], c["info"]))
+    tc = d.get("tier_counts", {})
+    out.append("structural: %d error, %d warn, %d info   "
+               "(by track record: %d reliable, %d prompt, %d unmeasured)"
+               % (c["error"], c["warn"], c["info"], tc.get("reliable", 0),
+                  tc.get("prompt", 0), tc.get("unmeasured", 0)))
     out.append("reporting:  %d error, %d warn, %d info   "
                "(the CIF does not say something, or says it inconsistently)"
                % (rc["error"], rc["warn"], rc["info"]))
     out.append("")
     if not d["findings"]:
         out.append("  no findings from the checks that ran")
-    for group, title in (("structural", "STRUCTURAL"), ("reporting", "REPORTING")):
-        rows = [f for f in d["findings"] if f.get("kind", "structural") == group]
+    sections = (
+        ("STRUCTURAL", lambda f: f.get("kind", "structural") == "structural"
+         and f.get("tier") != "prompt"),
+        ("PROMPTS TO LOOK (checks that were right in fewer than half of "
+         "sampled cases)",
+         lambda f: f.get("kind", "structural") == "structural"
+         and f.get("tier") == "prompt"),
+        ("REPORTING", lambda f: f.get("kind") == "reporting"),
+    )
+    for title, keep in sections:
+        rows = [f for f in d["findings"] if keep(f)]
         if not rows:
             continue
         out.append("%s:" % title)
         for f in rows:
             cc = ", ".join(x["code"] for x in f["checkcif"])
-            out.append("  [%-5s] %s" % (f["severity"], f["code"]))
+            tr = f.get("track_record")
+            rec = ("   [%s: right %d/%d when sampled]"
+                   % (f["tier"], tr["real"], tr["judged"])) if tr else (
+                   "   [%s]" % f["tier"] if f.get("tier") else "")
+            out.append("  [%-5s] %s%s" % (f["severity"], f["code"], rec))
             out.append("          %s" % f["message"])
             if cc:
                 out.append("          checkCIF: %s" % cc)
@@ -70,6 +86,10 @@ def main(argv=None):
                         "--fail-on-reporting is given.")
     p.add_argument("--fail-on-reporting", action="store_true",
                    help="also count reporting findings towards the exit code")
+    p.add_argument("--fail-on-prompts", action="store_true",
+                   help="also count 'prompt'-tier findings (checks right in "
+                        "fewer than half of sampled cases) towards the exit "
+                        "code; by default they are shown but do not fail")
     p.add_argument("--version", action="version", version=__version__)
     a = p.parse_args(argv)
 
@@ -133,10 +153,18 @@ def main(argv=None):
                 print(path)
                 print("=" * 72)
             print(_text_report(d))
-        c = dict(d["counts"])
-        if a.fail_on_reporting:
-            for k, v in d.get("reporting_counts", {}).items():
-                c[k] = c.get(k, 0) + v
+        # A prompt-tier check has been wrong more often than right when
+        # sampled (ATOMS_TOO_CLOSE 2/12, DISORDER_SUM_NOT_ONE 0/12), so by
+        # default it does not fail a CI run on its own.
+        c = {ERROR: 0, WARN: 0}
+        for f in d["findings"]:
+            kind = f.get("kind", "structural")
+            if kind == "reporting" and not a.fail_on_reporting:
+                continue
+            if f.get("tier") == "prompt" and not a.fail_on_prompts:
+                continue
+            if f["severity"] in c:
+                c[f["severity"]] += 1
         if c[ERROR] or (a.fail_on == "warn" and c[WARN]):
             any_fail = True
 
