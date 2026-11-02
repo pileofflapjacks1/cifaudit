@@ -292,10 +292,26 @@ It found three bugs — unwrapped symmetry coordinates breaking the distance
 search, the ADP anisotropy ratio computed without converting to Cartesian axes,
 and primes stripped from atom labels — plus checks that flag normal chemistry.
 Those three, and a fourth (findings repeated per symmetry copy), are fixed in
-`d72fecf`. The 38% describes the code before the fixes; a new precision figure
-needs a fresh sample.
+`d72fecf`. The 38% describes the code before the fixes.
 Results, reasons and limitations:
 [`data/processed/precision_results.md`](data/processed/precision_results.md).
+
+**Round 2, after the fixes and conventions: 36% (95% CI 25–48%).** This used a
+pre-registered fresh sample of 60 findings from 800 new COD structures, again
+judged by model adjudication. That is no measurable change from round 1. The
+fixes removed a failure (`NON_INTEGRAL_CELL_CONTENT` no longer fires), but the
+sample now draws on geometric checks that fail on one shared cause: an atom
+disordered across a symmetry element is treated as clashing with its own image.
+Three more bugs were confirmed by independent recomputation and are not yet fixed:
+
+- tantalum, hafnium and most lanthanides have no covalent radius, yet an atom next
+  to them can still be reported isolated
+- gemmi's expansion merges near-coincident disordered H with their own images
+- the non-bonded limit is applied to X…H pairs, contrary to its documentation
+
+Counting accurately worded info findings as correct gives 51% (38–63%). Round 1
+was not scored that way, so that figure is not comparable.
+[`data/processed/precision_round2_results.md`](data/processed/precision_round2_results.md).
 
 ### Conventions adopted after the precision study
 

@@ -1,0 +1,422 @@
+[
+ {
+  "id": "Q01",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Recomputed Ga 2.346/Al 1.654 per formula from refined occupancies (Ga2 0.673). _chemical_formula_sum gives the nominal x=0.6 composition while _chemical_formula_analytical records the refined Bi2Ga2.346Al1.654O9, so the 0.05-atom gap is a documented nominal-vs-refined convention, not an error. The numbers are right but warn severity overstates it."
+ },
+ {
+  "id": "Q02",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Model has only 3 aromatic H (H3,H6,H7) against H4 in the formula. The waters O9W-O11W and the OH H are not modelled. Recomputed H 3.00 vs 4.00: a genuine formula/model inconsistency, and the formula itself omits the water H."
+ },
+ {
+  "id": "Q03",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Same Cu sulfoisophthalate model as Q02: 3 H sites vs H4 in the formula, no water/OH H. Recomputed 3.00 vs 4.00. Genuine inconsistency."
+ },
+ {
+  "id": "Q04",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Recomputed per Z=1 (P-1): H 32, O 64 vs formula H66, O59. The 5-O excess (10 lattice waters O28-O32 x2) cannot be explained by unlocated H alone, so formula and model genuinely disagree."
+ },
+ {
+  "id": "Q05",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "30 H sites (all aromatic C-H) vs H31. The likely N(2)-H of the P-NH group is missing from the model. Recomputed 30 vs 31."
+ },
+ {
+  "id": "Q06",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "No H in the model at all, vs H15.72 in the formula (ammonium and water H on mixed K/N sites never located). Recomputed H 0 vs 15.72, with K/N/Mo/O/P matching. A real formula/model inconsistency, though its cause is the routine non-location of H."
+ },
+ {
+  "id": "Q07",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Recomputed H 132 vs 186 per Z=2 (Im-3). The water and protonated-water-cluster H are absent from the model but counted in the formula. A genuine inconsistency (checkCIF PLAT041 class)."
+ },
+ {
+  "id": "Q08",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "Recomputed C 4.80 (6 template C at fixed occupancy 0.2 x mult 4) vs 4.92. The formula reflects analytical template content (F0.82, N1.64 vs 0.8, 1.6 likewise). A 0.12-atom gap from fixed occupancies on a disordered SDA is normal, so warn is overstated."
+ },
+ {
+  "id": "Q09",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "TOOL BUG: my symmetry expansion gives H 28.0 per formula, exactly matching C18H28O2Zr. The tool's 25 comes from treating H7B, H7C and H9A (0.29-0.38 A from their own mirror images, PART -1 disorder across the mirror) as special-position atoms and halving their multiplicity."
+ },
+ {
+  "id": "Q10",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "In situ dehydration: O11W occupancy 0.372 and O10W 0.94 give O 10.31, and H is 3, vs the formula's fully hydrated O11 H4. Recomputed 10.312/3.0. The formula does not reflect the refined partial hydration."
+ },
+ {
+  "id": "Q11",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O10W nearest non-H neighbour is O9W at 2.78 A (beyond the 2.22 A limit), so it is isolated by the rule, but it is an ordinary H-bonded lattice water without H. Normal modelled solvent, false under the round-1 rule. The info message describes it correctly."
+ },
+ {
+  "id": "Q12",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O10W...O9W 2.72 A, an ordinary H-bonded lattice water with H not located. Normal solvent, correctly framed as info."
+ },
+ {
+  "id": "Q13",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O10W...O9W 2.76 A, O6 2.96, O8 2.98: an ordinary lattice water. Normal, correctly framed."
+ },
+ {
+  "id": "Q14",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O10W...O9W 2.75 A: an ordinary lattice water without H. Normal, correctly framed."
+ },
+ {
+  "id": "Q15",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O10W...O9W 2.69 A: an ordinary lattice water without H. Normal, correctly framed."
+ },
+ {
+  "id": "Q16",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "TOOL BUG: S1 (mu4-S on the 4-fold axis, I4mm) is 2.461 A from four Ta1 atoms (x4 symmetry images), well inside the 1.05+1.70+0.90 = 3.65 A limit. It is a capping sulfide of the Ta4 cluster, not isolated."
+ },
+ {
+  "id": "Q17",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Bi at 2c of P63/mmc: nearest Bi is 4.546 A (> 3.86 A limit). This is the hexagonal cell of rhombohedral Bi entered with the wrong symmetry and one site. Calculated density 3.27 vs reported 7.488 confirms the model is wrong. Worth flagging."
+ },
+ {
+  "id": "Q18",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Be-Be nearest 3.045 A (> 2.82 A limit) in a cell with a = 4.38 A (real Be a ~ 2.2 A at this pressure), density 0.531 vs ~2 expected. An erroneous COD entry (a about doubled), correctly caught."
+ },
+ {
+  "id": "Q19",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Be-Be nearest 3.057 A, a = 4.40 A, density 0.525: the same erroneous Be high-pressure series as Q18."
+ },
+ {
+  "id": "Q20",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "Fe(1)-Fe nearest ~3.9-4.0 A. But this block is GSAS 'magnetic phase 1' of a YBa2Fe3O8 Rietveld refinement, an Fe-only phase that models magnetic scattering by design. An isolated Fe is expected, so 'missing coordination' is wrong."
+ },
+ {
+  "id": "Q21",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Recomputed Cartesian eigenvalues 0.00043/0.0258/0.0346, ratio 8.96 (U ratio ~80) for an ordered Ni with U22 = 0.0035, close to non-positive-definite. A genuine ADP problem worth checking."
+ },
+ {
+  "id": "Q22",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Recomputed eigenvalues 0.0294/0.0536/0.406, ratio 3.72 (U ratio 13.8) for Cl7 of a disordered CHCl3, Ueq 0.163. Unusual elongation in a disordered solvent suggests unresolved disorder. checkCIF-type alert, worth flagging."
+ },
+ {
+  "id": "Q23",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Recomputed eigenvalues 0.0041/0.0171/0.0883, ratio 4.67 for Si4 in a modulated layer silicate (Si7, Si8 and O26-O28 also extreme, O6 non-positive-definite). Genuinely unusual ADPs, likely reflecting modulation or averaging."
+ },
+ {
+  "id": "Q24",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "Recomputed eigenvalues 0.0019/0.0133/0.0254, ratio 3.66 (U ratio 13.4) for an ordered tBu quaternary C1 at 100 K. Unusual for an ordered light atom, worth checking."
+ },
+ {
+  "id": "Q25",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "Assembly A holds two independent disorders: C10/C12 at 0.51/0.49 and C14 at 0.43/0.57. Each pair sums to 1. The tool's 1.08 = 0.51 + 0.57 comes from adding maxima of different sites sharing one assembly label."
+ },
+ {
+  "id": "Q26",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "N-H tautomer disorder: H1 on N1 (assembly A, part 1, 0.5) and H1B on N2 (assembly B, part 2, 0.5) sum to 1. The author just used two assembly letters for one disorder. The occupancy model is correct."
+ },
+ {
+  "id": "Q27",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "Assembly B: the tBu disorder is 0.70/0.30 = 1.0 and N4 0.85/0.15. The tool's 1.7 arises because full-occupancy H15A carries part 2 with assembly B (a labelling artefact). The disorder occupancies themselves are fine."
+ },
+ {
+  "id": "Q28",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "Three-way disorder of the solvent: assembly A part 1 at 0.50, B part 2 at 0.25, C part 3 at 0.25, summing to 1.0. Each component simply has its own assembly letter."
+ },
+ {
+  "id": "Q29",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O105-H105 is 0.69(10) A, freely refined, partial occupancy 0.30 at 100 K, within ~1.3 su of 0.82. Short freely refined X-ray O-H is normal. Info framing is accurate."
+ },
+ {
+  "id": "Q30",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "C12-H12B is 0.85(5) A, freely refined X-ray H (about 2 su short). Normal X-ray shortening. Info framing accurate."
+ },
+ {
+  "id": "Q31",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H24A rides on C24 (assembly C, part -1, 0.5). C23' belongs to the alternative component (assembly D, part -5, 0.5) of the same chain, so the 0.657 A C23'-H24A is between mutually exclusive alternatives, not an X-H bond. Different assembly letters misled the tool."
+ },
+ {
+  "id": "Q32",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "C14-H14A is 0.82(2) A from a refall X-ray refinement. Shorter than typical but within the range of freely refined X-ray C-H, and info-level. Not a real problem."
+ },
+ {
+  "id": "Q33",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H32B (0.25) on a CH2Cl2 disordered about the 2-fold axis in C2/c. The second 'C32' at 1.06 A and Cl4 at 1.33 A are symmetry images of the same 0.25-occupancy molecule, which are mutually exclusive. Normal solvent disorder."
+ },
+ {
+  "id": "Q34",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H29 (occupancy 1) is shared by C19 (0.6) and C19A (0.4), alternative positions of one disordered carbon (the CIF has no assembly columns). 0.98/1.15 A to the two alternatives is expected."
+ },
+ {
+  "id": "Q35",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "C54 (0.5) is a methyl disordered across the mirror in C2/m. 'C54 1.01 A, C54 1.02 A' is C54 and its own mirror image (alternatives). H673 sits on the mirror (0.023 A from its image). Its occupancy of 1.0 is a separate sloppiness, but the multiple-connection claim is false."
+ },
+ {
+  "id": "Q36",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H1S2 (assembly A, part 1, 0.5) is 1.33 A from C2E (assembly C, part 3, 0.5). C1S and C1E are 0.45 A apart, so these are alternative models of one disordered solvent with different assembly letters. Not a real H environment."
+ },
+ {
+  "id": "Q37",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H18A at 0.385 A is the 2-fold image of H18A in a PART -1 group (C2/c, occupancy 0.5) disordered across the symmetry element. Mutually exclusive images, not a clash."
+ },
+ {
+  "id": "Q38",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H4 at 0.686 A is a mirror image (op 6) of H4 in the PART -1 Cp ring (occupancy 0.5) disordered across the mirror in P-421m. Mutually exclusive alternatives."
+ },
+ {
+  "id": "Q39",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H13C is the freely refined H bonded to O13A (same assembly A part 2, occupancy 0.277). 0.741 A is a short O-H bond, not two atoms that cannot coexist, so the error severity is wrong."
+ },
+ {
+  "id": "Q40",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "H21 is the freely refined H bonded to C21 (0.719 A). It is a short C-H bond, not a clash. At most a SHORT_XH-type note, so the 'cannot both be real' error framing is wrong."
+ },
+ {
+  "id": "Q41",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "H3A...H3A at 0.797 A is H3A and its own symmetry image (op 4). C3 (0.5) is disordered across the symmetry element (C3-C3' 1.15 A), so these are mutually exclusive alternatives."
+ },
+ {
+  "id": "Q42",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "H17D (occupancy 0.25, minor disorder component on C17') ... H28B is 1.989 A, 0.01 A under the threshold with riding H. Negligible and within the uncertainty of calculated H positions."
+ },
+ {
+  "id": "Q43",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "Recomputed H61B...H66E 1.757 A, both in the 0.391 part 2 component (same molecule, more than 3 bonds apart via C61B-C62B-C65B-C66B). A genuinely short intramolecular contact suggesting imperfect minor-component geometry. Low stakes."
+ },
+ {
+  "id": "Q44",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "H1...H3 1.981 A (symmetry image), between riding aromatic H at 293 K. Only 0.02 A under the 2.0 A threshold, within the uncertainty of calculated H positions. Not a meaningful contact."
+ },
+ {
+  "id": "Q45",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "C62 Ueq 0.539 vs C11 0.0201 (ratio 26.8 confirmed). C61/C62 also carry occupancy 1.50, a badly modelled disordered solvent. A genuine model problem worth flagging, though not a wrong element."
+ },
+ {
+  "id": "Q46",
+  "verdict": "real",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "Ratio confirmed: O11 Uiso 0.0001 vs Wat14 0.0222. O11 (and U3 0.0001) displacement parameters are non-physical in this 1983 mineral structure. Worth noting, though the cause is poorly determined ADPs, not a wrong element."
+ },
+ {
+  "id": "Q47",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "O1 0.004 vs Wat1 0.086 (ratio 21.5 confirmed). Wat1 is a partially occupied (0.24) tunnel water in woodruffite. Large ADPs for tunnel water are expected, with no sign of a wrong element."
+ },
+ {
+  "id": "Q48",
+  "verdict": "real",
+  "confidence": "medium",
+  "accurately_framed": true,
+  "reason": "C56 (SiMe3 methyl) Ueq 0.584 vs C1 0.023 (ratio 25.4 confirmed). A Ueq of 0.58 is non-physical and points to unresolved disorder. Worth flagging."
+ },
+ {
+  "id": "Q49",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "'Wat1' is a conventional water label with type O. The tool parsed 'Wa' as the element. A labelling convention, not an error."
+ },
+ {
+  "id": "Q50",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "O25 has type symbol F, occupancy 0.476, alternative to methyl C59. Treating it as F gives F 32.95 vs F32 in the formula, so it is a genuine label/type inconsistency and almost certainly a mis-typed site."
+ },
+ {
+  "id": "Q51",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "'Wat2' is a water label with type O. The tool misread 'Wa' as an element."
+ },
+ {
+  "id": "Q52",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "'Wat14' is a water label with type O. The tool misread 'Wa' as an element."
+ },
+ {
+  "id": "Q53",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Be with a = 4.389 A, density 0.531 (recomputed 2 x 9.012/(0.6022 x 56.33) = 0.531). Be metal should be about 1.85 or more, so the cell is wrong (a about doubled). A genuine error."
+ },
+ {
+  "id": "Q54",
+  "verdict": "real",
+  "confidence": "high",
+  "accurately_framed": true,
+  "reason": "Be, density 0.507 from a = 4.428 A: the same erroneous Be series. Genuine error."
+ },
+ {
+  "id": "Q55",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "SQUEEZE'd Dy MOF. Recomputed density 4 x 1333.79/(0.6022 x 9302) = 0.952 matches. A low density is expected for a porous framework with solvent removed, so 'incomplete model or wrong symmetry' is wrong framing."
+ },
+ {
+  "id": "Q56",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "SQUEEZE'd In framework. Recomputed 0.80 matches the reported 0.802. A low density is expected for a porous solvent-squeezed framework."
+ },
+ {
+  "id": "Q57",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "C8 (PART -1, 0.5) ... H8A image (op 3) 2.12 A in P-421m. The tBu group is disordered across the symmetry element, and C8 is also 1.83 A from the C9 image, so these are mutually exclusive images. It is also a C...H pair, though the check is defined for non-H pairs."
+ },
+ {
+  "id": "Q58",
+  "verdict": "false",
+  "confidence": "medium",
+  "accurately_framed": false,
+  "reason": "C55A (toluene, 0.33, 3-way disorder near an inversion centre) ... H55I of its own inversion image, 1.90 A. C55A...C55A' is 2.38 A, so the two copies of this minor component are necessarily mutually exclusive. Normal disorder. C...H despite the non-H definition."
+ },
+ {
+  "id": "Q59",
+  "verdict": "unsure",
+  "confidence": "low",
+  "accurately_framed": true,
+  "reason": "F3 (CF3 major component, 0.544) ... F2s (disordered fluorobenzene F, 0.5) 2.141 A confirmed. No disorder labels are present. The occupancies sum to 1.04, which is consistent with undeclared correlated disorder (normal) but cannot be confirmed from the CIF."
+ },
+ {
+  "id": "Q60",
+  "verdict": "false",
+  "confidence": "high",
+  "accurately_framed": false,
+  "reason": "C3 (0.5) is disordered across the mirror in P21/m (C3-C3' 0.75 A, C4' 0.71 A). The 1.305 A partner is the mirror image H3A of the alternative orientation, so they are mutually exclusive. C...H despite the non-H definition."
+ }
+]
