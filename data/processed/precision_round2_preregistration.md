@@ -54,3 +54,19 @@ Per check and overall: precision = real / (real + false), Wilson 95% interval;
 unsure reported and excluded. Round 1 and round 2 are shown side by side. With
 2–10 items per check the intervals will be wide and overlapping intervals will
 not be described as a change.
+
+## Amendment 1 — 2026-11-01, during adjudication, before any verdict was returned
+
+The adjudicator's first instructions contained a sentence not in the round-1
+rubric: that an information-level finding accurately describing something normal
+counts as correct. Round 1 had no such rule and judged those findings false (a
+chloride counter-ion reported as "may be a counter-ion" was marked false). Left
+in, it would have inflated round 2 relative to round 1 and broken this
+pre-registration's "same rubric" commitment.
+
+It was retracted by message while the adjudicator was running and before it had
+returned anything. The round-1 rule applies to every item: "real" means the
+condition is present and worth a crystallographer's attention, whatever the
+severity. The adjudicator also records `accurately_framed` per item, so a second,
+more lenient view (correctly worded and correctly graded) can be reported
+alongside — clearly labelled, and never in place of the comparable figure.
