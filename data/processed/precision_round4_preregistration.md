@@ -80,3 +80,16 @@ updated and labelled exploratory, as before.
 
 Every bug the adjudicator reports is recomputed independently before it is
 published. None is fixed in the version measured here.
+
+## Amendment 1 — 2026-11-01, at adjudicator launch, before any verdict
+
+The fetch and draw went as registered. 800 files were fetched, with 0 overlap
+against the 3,216 earlier IDs. Seed 20261103 drew 60 items. Auditing the 800
+files took longer than in earlier rounds, but nothing failed.
+
+Three checks were drawn whose descriptions round 3's brief did not contain:
+`DENSITY_BELOW_ONE`, `NO_HYDROGENS_WITH_CARBON` and `SYMMETRY_POSSIBLY_MISSED`.
+Each was described in one line taken from what the code does. The adjudicator
+was also told spglib is available, so it can recompute the derived space group.
+Nothing else in the brief differs from round 3's beyond the updates registered
+above.
