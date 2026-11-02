@@ -3,7 +3,7 @@
 from collections import Counter
 from typing import List, Tuple
 
-from ..elements import COVALENT
+from ..elements import COVALENT, SYMBOLS
 from ..load import element_of
 from ..model import ERROR, Finding, NotTested, WARN
 
@@ -47,8 +47,12 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             # misread produced a false positive on COD 2013000.
             lab = (s.label or "").upper()
             consistent = bool(from_type) and lab.startswith(from_type.upper())
-            from_label = element_of(None, s.label)
-            if from_type and not consistent:
+            from_label = label_element(s.label)
+            # A label that does not begin with an element symbol is a naming
+            # convention, not a claim about the element: "Wat1" is water, and
+            # reading it as "Wa" gave three false positives in the second
+            # precision round.
+            if from_type and not consistent and from_label:
                 f.append(Finding(
                     code="SCATTERING_TYPE_LABEL_MISMATCH", severity=WARN,
                     message="Site %s has _atom_site_type_symbol %r, which does not "
@@ -73,3 +77,21 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                    "bonded/non-bonded cannot be decided for them",
             plat=["PLAT310", "PLAT432"]))
     return (f, nt)
+
+
+def label_element(label):
+    """The element a label names, or None when it names none.
+
+    The prefix must be an element symbol followed by something that is not a
+    letter (a digit, prime, underscore or the end), trying two letters before
+    one: "Cl1" is Cl, "C1A" is C, "OW1" names nothing, nor does "Wat1".
+    """
+    lab = (label or "").strip()
+    for n in (2, 1):
+        head, rest = lab[:n], lab[n:]
+        if len(head) < n or not head.isalpha():
+            continue
+        sym = head[0].upper() + head[1:].lower()
+        if sym in SYMBOLS and not (rest[:1].isalpha()):
+            return sym
+    return None

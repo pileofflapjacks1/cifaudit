@@ -49,7 +49,7 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
         return (f, nt)
 
     hard = ctx["hard_floor"]
-    dists, adj, _h_cands, excl = bond_graph(
+    dists, adj, h_cands, excl = bond_graph(
         sites, cell, radius, ctx["bond_tolerance"], ctx["xh_bond_max"],
         ctx["shared_site_max"], ctx["occ_tol"],
         ctx["shared_site_bond_fraction"])
@@ -124,6 +124,16 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
                 continue
 
         if d < hard:
+            def sole_bond(h, x):
+                return (sites[h].element in ("H", "D") and x in adj[h]
+                        and len(h_cands.get(h, ())) == 1)
+            if sole_bond(i, j) or sole_bond(j, i):
+                # An H and the ONLY heavy atom near it are one X-H bond, however
+                # short. A freely refined X-ray O-H of 0.741 A (COD 2023044) is
+                # a short bond for SHORT_XH to report, not two atoms that cannot
+                # coexist. An H with a second heavy atom crowding it is still
+                # tested: that is a clash, not a bond.
+                continue
             if ("hard", pair) in reported:
                 continue
             reported.add(("hard", pair))

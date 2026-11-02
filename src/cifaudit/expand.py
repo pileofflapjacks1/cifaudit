@@ -11,6 +11,11 @@ except ImportError:  # pragma: no cover
     gemmi = None
 
 MAX_EXPANDED = 4000
+# Two symmetry copies of one atom closer than this are ONE site (an atom on a
+# special position, with coordinates rounded in the CIF). Rounding to 4-5
+# decimals moves a copy by well under 0.01 A; 0.05 A leaves a margin while
+# staying far below any modelled split position.
+COINCIDENT_COPY_MAX = 0.05
 
 
 @dataclass
@@ -21,6 +26,11 @@ class Expanded:
     occ: float
     disorder_group: Optional[str] = None
     disorder_assembly: Optional[str] = None
+    # Indices into the symmetry-operator list of every operator that maps the
+    # asymmetric-unit atom onto this site: one for a general position, several
+    # for a special position. Two sites with no operator in common belong to
+    # different symmetry copies of the asymmetric unit.
+    ops: Tuple[int, ...] = ()
 
 
 class ExpandError(Exception):
@@ -51,47 +61,79 @@ def expand(blk, drop_dummy=True) -> Tuple[List[Expanded], Optional[object]]:
                           % sanitise(str(exc), 160))
     if st.spacegroup is None and not blk.symops:
         raise ExpandError("no usable symmetry; only the asymmetric unit is known")
-    try:
-        sites = st.get_all_unit_cell_sites()
-    except Exception as exc:
-        raise ExpandError("symmetry expansion failed: %s" % sanitise(str(exc), 160))
-    if len(sites) > MAX_EXPANDED:
-        raise ExpandError("unit cell expands to %d sites, above the %d cap"
-                          % (len(sites), MAX_EXPANDED))
-    # Atoms on special positions can come back as coincident copies, which then
-    # look like two atoms 0.000 A apart. Deduplicate on label plus rounded
-    # fractional coordinates, wrapped into [0, 1).
+    ops = _operators(st, blk)
+    if not ops:
+        raise ExpandError("no usable symmetry operators")
     # Per-label disorder labels and dummy flags come from the CIF loop, since
     # gemmi's small-structure sites do not carry the assembly or the calc flag.
     meta = {}
     for s0 in blk.sites:
         meta[s0.label] = (s0.disorder_group, s0.disorder_assembly, s0.is_dummy)
 
+    # The expansion is done here rather than with gemmi's
+    # get_all_unit_cell_sites(), which merges any copy within a fixed tolerance
+    # of about 0.4 A of another copy of the same atom. That is right for atoms
+    # ON a special position but wrong for atoms disordered ACROSS one: in COD
+    # 7041079 three half-occupied H (SHELX PART -1) lie 0.29-0.38 A from their
+    # own mirror images, gemmi kept one copy of each, and the H count came out
+    # 25 per formula instead of the declared 28. Only copies that coincide
+    # within COINCIDENT_COPY_MAX are merged here.
+    #
+    # Every coordinate is wrapped into [0, 1). The distance search only tries
+    # lattice shifts of -1, 0 and +1, so unwrapped copies more than ~1.5 cells
+    # apart lost their true nearest image: in the precision study a Br 2.42 A
+    # from Zn was reported as isolated.
     out = []
-    seen = set()
-    dropped_dummy = 0
-    for s in sites:
+    for s in st.sites:
         lab = sanitise(s.label) or "?"
         dgroup, dasm, dummy = meta.get(lab, (None, None, False))
         if dummy and drop_dummy:
-            dropped_dummy += 1
             continue
-        # Wrap into [0, 1). gemmi's expansion returns symmetry copies with raw
-        # coordinates such as z = -0.75 or 1.25, and the distance search only
-        # tries lattice shifts of -1, 0 and +1. Two copies more than ~1.5 cells
-        # apart before wrapping therefore lost their true nearest image: in the
-        # precision study a Br 2.42 A from Zn was reported as isolated. With
-        # every coordinate in [0, 1) each difference lies in (-1, 1) and the
-        # +/-1 shifts are enough.
-        fx, fy, fz = s.fract.x % 1.0, s.fract.y % 1.0, s.fract.z % 1.0
-        key = (lab, round(fx, 5), round(fy, 5), round(fz, 5))
-        if key in seen:
-            continue
-        seen.add(key)
-        out.append(Expanded(
-            label=lab,
-            element=element_of(s.type_symbol, s.label),
-            fract=(fx, fy, fz),
-            occ=float(s.occ) if s.occ is not None else 1.0,
-            disorder_group=dgroup, disorder_assembly=dasm))
+        element = element_of(s.type_symbol, s.label)
+        occ = float(s.occ) if s.occ is not None else 1.0
+        copies = []      # [fract, [op indices]]
+        xyz = [s.fract.x, s.fract.y, s.fract.z]
+        if any(v != v for v in xyz):
+            continue        # no position (NaN): nothing to expand
+        for k, op in enumerate(ops):
+            f = [v % 1.0 for v in op.apply_to_xyz(xyz)]
+            f = [0.0 if v >= 1.0 - 1e-12 else v for v in f]
+            for c in copies:
+                if _sep(st.cell, c[0], f) <= COINCIDENT_COPY_MAX:
+                    c[1].append(k)
+                    break
+            else:
+                copies.append([f, [k]])
+        for f, ks in copies:
+            out.append(Expanded(
+                label=lab, element=element, fract=(f[0], f[1], f[2]), occ=occ,
+                disorder_group=dgroup, disorder_assembly=dasm, ops=tuple(ks)))
+        if len(out) > MAX_EXPANDED:
+            raise ExpandError("unit cell expands to more than %d sites"
+                              % MAX_EXPANDED)
     return (out, st.cell)
+
+
+def _operators(st, blk):
+    """All symmetry operators, centring included, as gemmi Ops.
+
+    The CIF's own operator list is used when it parses completely, since it is
+    what the authors refined with; otherwise the space group's operators.
+    """
+    raw = list(getattr(st, "symops", None) or [])
+    if raw:
+        try:
+            return [gemmi.parse_triplet(t) for t in raw]
+        except Exception:
+            pass
+    if st.spacegroup is not None:
+        return list(st.spacegroup.operations())
+    return []
+
+
+def _sep(cell, f1, f2):
+    """Distance between two nearby fractional points, nearest lattice image."""
+    d = [a - b for a, b in zip(f1, f2)]
+    d = [v - round(v) for v in d]
+    p = cell.orthogonalize(gemmi.Fractional(d[0], d[1], d[2]))
+    return (p.x * p.x + p.y * p.y + p.z * p.z) ** 0.5

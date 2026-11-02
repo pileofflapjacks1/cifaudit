@@ -2,12 +2,14 @@
 
 from typing import Dict, List, Set, Tuple
 
-from ..elements import METALS, radius
+from ..elements import COVALENT, METALS, radius
 from ..expand import ExpandError, expand
 from ..geom import bond_graph
 from ..model import Finding, INFO, NotTested, WARN
 
 NAME = "fragments"
+MAX_RADIUS = max(COVALENT.values())
+UNDECIDED = object()
 MAX_SITES = 400
 
 
@@ -87,13 +89,21 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             if sites[j].element in ("H", "D"):
                 continue
             rj = radius(sites[j].element)
-            if ri is None or rj is None:
+            if ri is None:
+                continue
+            if rj is None:
+                # A neighbour whose radius is unknown could be bonded to this
+                # atom, so "isolated" cannot be decided: abstain. Any element
+                # within reach of the LARGEST tabulated radius counts.
+                if d <= ri + MAX_RADIUS + ctx["contact_tolerance"]:
+                    return UNDECIDED
                 continue
             if d <= ri + rj + ctx["contact_tolerance"] and (best is None or d < best[0]):
                 best = (d, j)
         return best
 
     reported = set()
+    undecided: List[str] = []
     for idx in singles:
         s = sites[idx]
         if radius(s.element) is None:
@@ -102,7 +112,11 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             continue        # reported by the hydrogens check as ISOLATED_H
         if s.label in reported:
             continue
-        if nearest_contact(idx) is not None:
+        near = nearest_contact(idx)
+        if near is UNDECIDED:
+            undecided.append(s.label)
+            continue
+        if near is not None:
             continue        # a secondary contact: coordinated, not isolated
         reported.add(s.label)
         if s.element == "O":
@@ -136,6 +150,14 @@ def run(blk, ctx) -> Tuple[List[Finding], List[NotTested]]:
             sites=[s.label],
             evidence={"element": s.element,
                       "contact_limit": "r_i + r_j + %.2f A" % ctx["contact_tolerance"]}))
+
+    if undecided:
+        labs = sorted(set(undecided))
+        nt.append(NotTested(
+            area="isolated-atom test for %s" % ", ".join(labs[:10]),
+            reason="a neighbour within reach has no tabulated covalent radius, so "
+                   "whether these atoms are bonded cannot be decided",
+            plat=["PLAT305"]))
 
     # Fragment count is NOT reported as a finding. Measured on 16 deposited COD
     # structures it was >1 for 14 of them (88%): molecular and ionic crystals

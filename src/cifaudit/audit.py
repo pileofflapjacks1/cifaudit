@@ -28,7 +28,7 @@ DEFAULTS: Dict[str, Any] = {
     "ueq_min_atoms": 3,
     "symprec": 0.05,            # Angstrom, passed to spglib
     "hard_floor": 0.75,         # A; below this two atoms cannot both be real
-    "nonbonded_min": 2.2,       # A; shortest acceptable non-bonded heavy contact
+    "nonbonded_min": 2.2,       # A; shortest acceptable non-bonded contact with at least one non-H atom (X...Y and X...H; H...H uses hh_min)
     "hh_min": 2.0,              # A; shortest acceptable H...H contact
     "hbond_min": 1.2,           # A; below this an H...acceptor approach is
                                 # too short even for a hydrogen bond

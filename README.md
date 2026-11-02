@@ -243,11 +243,11 @@ all nineteen thresholds recorded and a commitment to change nothing in response:
 700 CIFs from eight COD directories disjoint from both prior samples, zero ID
 overlap.
 
-| | in-sample (500) | **held-out (700)** | + bug fixes | + conventions |
-|---|---|---|---|---|
-| no structural findings | 46% | **47%** | 49% | **62%** |
-| crashed / unparseable | 0 / 0 | **0 / 0** | 0 / 0 | 0 / 0 |
-| seconds per file | 0.69 | 0.44 | 0.38 | 0.25 |
+| | in-sample (500) | **held-out (700)** | + bug fixes | + conventions | + round-2 fixes |
+|---|---|---|---|---|---|
+| no structural findings | 46% | **47%** | 49% | 62% | **65%** |
+| crashed / unparseable | 0 / 0 | **0 / 0** | 0 / 0 | 0 / 0 | 0 / 0 |
+| seconds per file | 0.69 | 0.44 | 0.38 | 0.25 | 0.20 |
 
 The last column re-runs the same 700 after the four bugs below were fixed
 (`d72fecf`); nothing was tuned to them. Structural findings fell by about
@@ -261,6 +261,20 @@ formula to compare against, and that check was judged wrong on 10 of 10 sampled
 findings. `FORMULA_SITES_MISMATCH` fell from 124 to 92 and `ISOLATED_ATOM` from
 71 to 49. This is noise removed, not structures becoming more correct, and none
 of these rates is a precision.
+
+The round-2 fixes column re-runs the same 700 once more, after the defects found
+by the second precision round were fixed (see below): 432 to 452 structurally
+clean. All 16 `SCATTERING_TYPE_LABEL_MISMATCH` files were "Wat" water labels.
+`ATOMS_TOO_CLOSE` fell from 40 to 16, nearly all of the difference being
+disorder across a symmetry element, and `SYMMETRY_DERIVED_LOWER` fell from 14 to 2,
+because gemmi's merging of near-coincident copies had broken the symmetry.
+Findings that were new on this run were checked one by one. They are:
+
+- formula counts that now match the declared formula
+- partial waters that had been joined by a fake 1.1-1.7 A O-O "bond" and are now
+  reported as solvent
+- one heavily disordered structure with no occupancy column, whose overlapping
+  copies are now visible
 
 It held. Per-check rates move by a few points at most. I had predicted
 materially worse and recorded that prediction before running it.
@@ -302,12 +316,26 @@ judged by model adjudication. That is no measurable change from round 1. The
 fixes removed a failure (`NON_INTEGRAL_CELL_CONTENT` no longer fires), but the
 sample now draws on geometric checks that fail on one shared cause: an atom
 disordered across a symmetry element is treated as clashing with its own image.
-Three more bugs were confirmed by independent recomputation and are not yet fixed:
+Three more bugs were confirmed by independent recomputation. They were fixed
+after the round-2 figure was published, together with the shared cause:
 
-- tantalum, hafnium and most lanthanides have no covalent radius, yet an atom next
-  to them can still be reported isolated
-- gemmi's expansion merges near-coincident disordered H with their own images
-- the non-bonded limit is applied to X…H pairs, contrary to its documentation
+- **Radii.** The covalent-radius table now covers Cordero's full set. The
+  isolated-atom test abstains when a neighbour has no radius.
+- **Expansion.** cifaudit now does its own symmetry expansion. It merges only
+  copies within 0.05 A, so atoms disordered across a symmetry element keep both
+  copies. gemmi had merged any copy within about 0.4 A.
+- **Disorder across a symmetry element.** A partially occupied atom close to its
+  own image is an alternative to that image and to whatever is bonded to the
+  image. A negative PART group is tested as a whole.
+- **Smaller fixes.** A bonded X-H is no longer an "impossible" clash. "Wat1" is
+  not read as an element. `nonbonded_min` is documented as it is applied
+  (X...Y and X...H).
+
+On the round-2 sample, 14 of the 38 false findings no longer fire and all 21
+real ones still do. Those items were used to design the fixes, so this is not a
+precision figure; that needs a third, fresh sample. A known gap remains: an H
+two bonds from its own image (a CH2Cl2 about a 2-fold axis, COD 4102011) is
+still reported.
 
 Counting accurately worded info findings as correct gives 51% (38–63%). Round 1
 was not scored that way, so that figure is not comparable.
