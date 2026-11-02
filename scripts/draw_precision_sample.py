@@ -5,7 +5,9 @@ See data/processed/precision_preregistration.md. Structural findings only, one
 per (file, check), 10 each for the three suspicious checks, then up to 4 each for
 every other firing check in descending firing rate until 60, seed 20261031.
 
-    python scripts/draw_precision_sample.py <dir-of-cifs> <out.json>
+    python scripts/draw_precision_sample.py <dir-of-cifs> <out.json> [--seed N]
+
+Round 1 used the default seed 20261031; round 2 used --seed 20261101.
 """
 
 import json
@@ -63,7 +65,7 @@ def context(text, sites, full_loop):
             "atom_site_rows_omitted": more}
 
 
-def main(src, out):
+def main(src, out, seed=SEED):
     files = sorted(os.path.join(r, n) for r, _d, ns in os.walk(src)
                    for n in ns if n.endswith(".cif"))
     pool = defaultdict(list)          # code -> [item]
@@ -82,7 +84,7 @@ def main(src, out):
             fired[f["code"]] += 1
             pool[f["code"]].append({"path": path, "finding": f, "text": text})
 
-    rng = random.Random(SEED)
+    rng = random.Random(seed)
     chosen = []
     for code in PRIORITY:
         items = sorted(pool.get(code, []), key=lambda x: x["path"])
@@ -107,7 +109,7 @@ def main(src, out):
             "checkcif": [c["code"] for c in f["checkcif"]],
             "context": context(x["text"], set(f["sites"]), full),
         })
-    json.dump({"seed": SEED, "files_audited": len(files),
+    json.dump({"seed": seed, "files_audited": len(files),
                "firing_files": dict(fired), "items": out_items},
               open(out, "w"), indent=1)
     print("files: %d | items drawn: %d" % (len(files), len(out_items)))
@@ -116,4 +118,10 @@ def main(src, out):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("src")
+    ap.add_argument("out")
+    ap.add_argument("--seed", type=int, default=SEED)
+    a = ap.parse_args()
+    main(a.src, a.out, a.seed)
