@@ -1,0 +1,222 @@
+[
+ {
+  "id": "r1-P02",
+  "cod_id": "9001012",
+  "code": "NON_INTEGRAL_CELL_CONTENT",
+  "tier_now": "unmeasured",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "false"
+ },
+ {
+  "id": "r1-P06",
+  "cod_id": "7001035",
+  "code": "NON_INTEGRAL_CELL_CONTENT",
+  "tier_now": "unmeasured",
+  "expert_pass1": "real",
+  "expert_pass2": "real",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "false"
+ },
+ {
+  "id": "r1-P19",
+  "cod_id": "2001096",
+  "code": "FORMULA_SITES_MISMATCH",
+  "tier_now": "reliable",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": true,
+  "pass2_note": "False positive (under the criterion you just stated).The arithmetic is correct: the symmetry-expanded atom list gives H 31 while _chemical_formula_sum is H 32. The COD itself already reports the calculated formula as C18 H31 N2 O4 Sn.This is a 1992 structure (Acta Cryst. C). In that era it was routine for one (or a few) hydrogen atoms not to be located or included in the model, especially on methyl groups. A single missing H produces no meaningful discrepancy in density, molecular weight, or any chemically important parameter. Crystallographers do not act on or re-investigate a one-hydrogen difference of this kind in a deposited structure of that vintage.The tool\u2019s statement is true, but the situation is normal and expected; no action is warranted.",
+  "model": "real"
+ },
+ {
+  "id": "r1-P54",
+  "cod_id": "7001095",
+  "code": "UEQ_RANGE_WIDE",
+  "tier_now": "reliable",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": true,
+  "pass2_note": "False positive (normal and expected).The numbers are correct: C56 = 0.038 and C80 = 0.40 give a factor of 10.5.However, C80 is explicitly flagged as disordered (D). An isotropic displacement parameter of 0.40 on a disordered carbon is ordinary; disordered alkyl chains, solvent molecules and terminal groups routinely refine to Uiso values in the 0.2\u20130.5 range.PLAT220/221 exist because an extreme U range can signal a wrong atom type, but that interpretation does not apply once the high-U site is already marked as disordered. A crystallographer would not act on this finding; the elevated U is the expected consequence of the disorder model already present in the CIF.",
+  "model": "real"
+ },
+ {
+  "id": "r1-P59",
+  "cod_id": "7001001",
+  "code": "H_MULTIPLE_CONNECTIONS",
+  "tier_now": "prompt",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "false"
+ },
+ {
+  "id": "r2-Q23",
+  "cod_id": "9003065",
+  "code": "ADP_EXTREME_ANISOTROPY",
+  "tier_now": "reliable",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "real"
+ },
+ {
+  "id": "r2-Q35",
+  "cod_id": "4310038",
+  "code": "H_MULTIPLE_CONNECTIONS",
+  "tier_now": "prompt",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "false"
+ },
+ {
+  "id": "r2-Q40",
+  "cod_id": "4310039",
+  "code": "ATOMS_TOO_CLOSE",
+  "tier_now": "prompt",
+  "expert_pass1": "real",
+  "expert_pass2": "real",
+  "ai_assisted_pass2": true,
+  "pass2_note": "",
+  "model": "false"
+ },
+ {
+  "id": "r2-Q58",
+  "cod_id": "7041050",
+  "code": "SHORT_NONBONDED_CONTACT",
+  "tier_now": "prompt",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "false"
+ },
+ {
+  "id": "r3-R08",
+  "cod_id": "7013013",
+  "code": "FORMULA_SITES_MISMATCH",
+  "tier_now": "reliable",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": true,
+  "pass2_note": "False positive (normal and expected).The difference is only one hydrogen (115 from the symmetry-expanded sites versus 114 in the formula).The atom list contains disordered carbons with fractional occupancies (0.25 and 0.50) and their associated hydrogens. The COD itself records the structure as disordered and already computes a slightly different formula from the sites.A one-hydrogen discrepancy of this kind is a routine consequence of occupancy rounding and hydrogen placement on disordered fragments. The tool\u2019s own caveat notes exactly this. A crystallographer would not act on or re-investigate a single extra hydrogen under these conditions.",
+  "model": "false"
+ },
+ {
+  "id": "r3-R19",
+  "cod_id": "8105084",
+  "code": "ISOLATED_ATOM",
+  "tier_now": "prompt",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": true,
+  "pass2_note": "False positive (normal and expected).Cl3 has no neighbour within coordination distance, but the formula is C27 H33 Cl3 Cr N7 O3. With three chlorines and one chromium, an uncoordinated chloride is the expected signature of a free Cl\u207b counter-ion.The tool\u2019s own wording already notes that an isolated atom \u201cmay be a counter-ion.\u201d This is an ordinary counter-ion situation; a crystallographer would not act on it or treat it as an error.",
+  "model": "false"
+ },
+ {
+  "id": "r3-R31",
+  "cod_id": "7013097",
+  "code": "SHORT_XH",
+  "tier_now": "prompt",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": true,
+  "pass2_note": "False positive (normal and expected).O11\u2013H11C is 0.696 \u00c5 (0.12 \u00c5 short of the conventional X-ray O\u2013H target of 0.82 \u00c5). The hydrogen is refined freely (d).X-ray O\u2013H distances are systematically short because the hydrogen electron density is not centered on the nucleus. Freely refined O\u2013H bonds of ~0.70 \u00c5 are common and routinely left uncorrected in published structures, especially in large multi-metal compounds that contain many water or hydroxyl groups.PLAT354 exists to draw attention to the short distance, but a crystallographer would not treat a 0.12 \u00c5 shortfall on a refined O\u2013H as an error that requires action. The observation is a normal consequence of X-ray data and free refinement.",
+  "model": "real"
+ },
+ {
+  "id": "r3-R32",
+  "cod_id": "7110032",
+  "code": "SHORT_XH",
+  "tier_now": "prompt",
+  "expert_pass1": "false",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": true,
+  "pass2_note": "False positive (normal and expected).H25A (occupancy ~0.85, disorder part A/1) and C25' (occupancy ~0.15, disorder part 2) belong to alternative, mutually exclusive disorder components. They are never simultaneously present in the crystal.The 0.57 \u00c5 distance is therefore a non-physical contact between atoms that do not co-exist. It is an expected artefact of measuring geometry across disorder parts, not a real short C\u2013H bond that a crystallographer needs to correct.",
+  "model": "false"
+ },
+ {
+  "id": "r3-R39",
+  "cod_id": "9007086",
+  "code": "OCC_ZERO",
+  "tier_now": "unmeasured",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "false"
+ },
+ {
+  "id": "r3-R42",
+  "cod_id": "7110095",
+  "code": "UEQ_RANGE_WIDE",
+  "tier_now": "reliable",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "real"
+ },
+ {
+  "id": "r3-R47",
+  "cod_id": "2102042",
+  "code": "H_MULTIPLE_CONNECTIONS",
+  "tier_now": "prompt",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": true,
+  "pass2_note": "False positive (normal and expected).H231B (occupancy 0.45, disorder part 2) and O23Ab (occupancy 0.45, part 2) belong to the same disorder component. O23Aa (occupancy 0.55, part 1) is the complementary, mutually exclusive component.The hydrogen is correctly associated with one oxygen of a disordered water/hydroxyl pair. The second oxygen is never present at the same time.This is ordinary disorder modelling of a split oxygen site. PLAT303\u2019s suggestion to split the hydrogen is not required; the existing model already treats the atoms as alternative components. A crystallographer would not act on it.",
+  "model": "false"
+ },
+ {
+  "id": "r3-R58",
+  "cod_id": "4123080",
+  "code": "ISOLATED_H",
+  "tier_now": "unmeasured",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "false"
+ },
+ {
+  "id": "r4-T10",
+  "cod_id": "7035070",
+  "code": "FORMULA_SITES_MISMATCH",
+  "tier_now": "reliable",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "false"
+ },
+ {
+  "id": "r4-T29",
+  "cod_id": "4342071",
+  "code": "DISORDER_SUM_NOT_ONE",
+  "tier_now": "prompt",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "false"
+ },
+ {
+  "id": "r4-T41",
+  "cod_id": "4342016",
+  "code": "NO_HYDROGENS_WITH_CARBON",
+  "tier_now": "reliable",
+  "expert_pass1": "real",
+  "expert_pass2": "false",
+  "ai_assisted_pass2": false,
+  "pass2_note": "",
+  "model": "real"
+ }
+]

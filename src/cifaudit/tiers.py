@@ -9,6 +9,9 @@ Counts are pooled over the four pre-registered precision rounds
 (data/processed/precision_*results.md): 237 findings drawn from 2,800 COD
 structures never used for tuning, each judged against the full CIF by an
 independent model adjudicator. That is model adjudication, not expert review.
+In a blind expert review of 20 of those findings (expert_review_results.md) a
+crystallographer marked none of the 7 from RELIABLE checks as worth acting on;
+the tiers describe the model's judgement, not an expert's.
 The rounds measured four successive code versions, so these are the checks'
 behaviour across versions, not one release. tests/test_tiers.py recomputes every
 number from the published sample and verdict files.

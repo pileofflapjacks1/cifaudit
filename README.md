@@ -60,6 +60,15 @@ model adjudication, not expert review.
 | **prompt** | judged ≥ 8 times, right in fewer than half | `SHORT_HH_CONTACT` 5/16, `DENSITY_BELOW_ONE` 2/8, `SHORT_XH` 3/15, `SHORT_NONBONDED_CONTACT` 2/11, `ATOMS_TOO_CLOSE` 2/12, `H_MULTIPLE_CONNECTIONS` 2/14, `ISOLATED_ATOM` 4/40, `DISORDER_SUM_NOT_ONE` 0/12 |
 | **unmeasured** | judged fewer than 8 times, never drawn, or redefined since | everything else, including `ADP_NPD`, `SYMMETRY_POSSIBLY_MISSED` (3/4) and `NON_INTEGRAL_CELL_CONTENT` (0/10, before it was redefined) |
 
+**An expert does not share these tiers.** In a blind, pre-registered review of
+20 of the sampled findings, a crystallographer marked **none** of the 7 from
+"reliable" checks as worth acting on (the model marked 5). Overall the expert
+found 2 of 20 worth acting on, against the model's 6, with no overlap between
+the two sets (κ = −0.18). The tiers describe how an independent model judged
+these checks. They are not an expert's judgement, and one expert on 20 items is
+not enough to replace them. See
+[`data/processed/expert_review_results.md`](data/processed/expert_review_results.md).
+
 A prompt is something to look at, not a verdict. The text report lists prompts
 in their own section, and they do not affect the exit code unless you pass
 `--fail-on-prompts`. Each finding's `track_record` gives the counts behind its
@@ -426,7 +435,11 @@ Pooled over all four rounds (exploratory, 237 judged findings):
 | | | `ISOLATED_ATOM` | 4/40 |
 | | | `DISORDER_SUM_NOT_ONE` | 0/12 |
 
-Reliable or not, it is the same checks every time. Rather than a fifth
+Reliable or not, it is the same checks every time, as judged by the model. A
+blind expert review of 20 of these findings disagreed with the model about
+which ones were real, and marked none from the "reliable" checks as worth
+acting on
+([`expert_review_results.md`](data/processed/expert_review_results.md)). Rather than a fifth
 fix-and-measure round, each structural finding now carries this track record as
 a tier (see [How far to trust each check](#how-far-to-trust-each-check)). On
 the 700 held-out files, 466 (67%) have no structural finding at all, and 528
