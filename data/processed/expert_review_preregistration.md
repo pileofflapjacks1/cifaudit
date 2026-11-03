@@ -47,3 +47,33 @@ With 20 items, kappa will have a wide interval and will be reported as such.
 If fewer than 20 are marked, the analysis covers those marked, and the count is
 stated. Nothing in the code or the tiers changes on the basis of these marks
 until the analysis is published.
+
+## Amendment 1 — 2026-11-02, after the first pass was scored, before any item-level model verdict was shown
+
+The expert marked all 20 items. Scored as registered, agreement was 7/20 (35%),
+kappa 0.04, with 19/20 marked real by the expert and 6/20 by the model.
+
+The expert's notes call several items "real (and expected)": a declared
+mixed-occupancy site, a chloride counter-ion, H near the alternative position
+of a disordered group. The registered rubric scores conditions that are
+present but normal and expected as **false**. So the first pass largely
+answered "is what the tool says true?" rather than the registered question,
+"is it worth a crystallographer's attention?". The expert was told this and
+chose to re-mark.
+
+How the second pass is run:
+
+- The 20 items are re-marked blind on the same page into a separate store.
+- The rubric is restated as that question. A third button label makes explicit
+  that normal and expected conditions are false positives.
+- The expert's first-pass marks are not shown.
+- Item-level model verdicts are still not shown. The expert has seen only the
+  totals above and the rubric explanation.
+- Each mark records whether an AI assistant helped with it. Several first-pass
+  notes contain LaTeX markup and verbatim PLATON test text, which suggests
+  assistant drafting, and the comparison is meant to be expert against model.
+
+Both passes will be reported. The **second pass is the comparable figure**,
+scored exactly as registered. The first pass is reported separately and
+labelled as a "condition present" reading. Any second-pass marks made with AI
+assistance are reported separately, and also left out in a sensitivity row.
