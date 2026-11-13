@@ -76,3 +76,45 @@ an undetermined result is likely, and is a finding in itself.
 
 Nothing in the code, the tiers or the write-up's conclusions changes on the
 basis of these marks until this analysis is published.
+
+## Amendment 1 — 2026-11-12, before any second rater was recruited or saw an item
+
+Three changes, made before anyone outside the author has seen the page.
+
+**1. A deadline.** If no second rater has marked all 20 items by
+**1 December 2026**, the write-up is published as a single-expert pilot. Its
+claim is then limited to what one expert supports: expert and model judge
+disagreed about which findings matter, and whether experts agree with each
+other is untested. Marks that arrive later are reported as an update, not
+folded in silently.
+
+**2. Possibly several raters.** The call may go to a public crystallography list
+and to professional groups, so more than one person may mark. Each rater's marks
+are stored in a record only they can write and no other rater can read.
+
+- Every pair is reported: each rater against each other rater, and each rater
+  against the model, with raw agreement, κ and a bootstrap interval.
+- **Decision rule.** Items are resampled 4,000 times, and on each resample the
+  mean pairwise κ among the experts and the mean expert–model κ are computed.
+  "Experts agree with each other more than with the model" is claimed only if
+  the 95% interval of the difference (expert–expert minus expert–model) lies
+  above zero.
+  - The reverse claim needs that interval to include zero and the mean
+    expert–expert κ to be below 0.40.
+  - Otherwise the result is undetermined.
+  - With exactly two experts this is the original rule restated as a paired
+    comparison.
+- A rater who marks fewer than 20 items is included only on the items both raters
+  in a pair marked, and the count is stated.
+
+**3. A consistency re-mark by the first rater.** The first rater's two earlier
+passes used different questions, so they say nothing about how stable a single
+expert's judgement is. The first rater re-marks the same 20 items blind, under
+the second-pass question, no sooner than **26 November 2026**. They mark on
+their own review page, in a new store, with no earlier marks shown.
+
+- Intra-rater agreement is reported: second pass against third pass, κ with a
+  bootstrap interval.
+- **The third pass does not replace the second.** The second pass stays the
+  first rater's comparable set in every expert–model and expert–expert
+  comparison, as registered. The third pass measures consistency only.
